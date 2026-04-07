@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>逮JOB | Vertical Job Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#462e00",
+                    "on-tertiary-fixed-variant": "#523600",
+                    "tertiary-dim": "#6c4900",
+                    "surface-bright": "#f6f6f4",
+                    "tertiary": "#7b5400",
+                    "primary-dim": "#8a3500",
+                    "on-secondary-container": "#733700",
+                    "on-primary-fixed": "#000000",
+                    "primary": "#9d3d00",
+                    "surface": "#f6f6f4",
+                    "error-dim": "#9f0519",
+                    "secondary-container": "#ffc6a1",
+                    "secondary-dim": "#7f3d00",
+                    "on-primary-fixed-variant": "#501b00",
+                    "tertiary-fixed": "#eda611",
+                    "on-surface-variant": "#5a5c5b",
+                    "on-background": "#2d2f2e",
+                    "secondary": "#914700",
+                    "inverse-on-surface": "#9c9d9b",
+                    "surface-container-low": "#f0f1ef",
+                    "surface-tint": "#9d3d00",
+                    "primary-fixed-dim": "#f26a1e",
+                    "background": "#f6f6f4",
+                    "outline": "#767776",
+                    "error-container": "#fb5151",
+                    "on-tertiary": "#fff0e0",
+                    "primary-fixed": "#ff7a34",
+                    "on-surface": "#2d2f2e",
+                    "surface-container-high": "#e1e3e1",
+                    "on-error-container": "#570008",
+                    "on-error": "#ffefee",
+                    "on-secondary-fixed": "#562700",
+                    "secondary-fixed-dim": "#ffb37f",
+                    "tertiary-container": "#eda611",
+                    "surface-container-highest": "#dcdddb",
+                    "tertiary-fixed-dim": "#dc9900",
+                    "surface-dim": "#d3d5d3",
+                    "on-tertiary-fixed": "#271800",
+                    "on-primary": "#fff0ea",
+                    "inverse-surface": "#0d0f0e",
+                    "secondary-fixed": "#ffc6a1",
+                    "primary-container": "#ff7a34",
+                    "surface-variant": "#dcdddb",
+                    "outline-variant": "#acadac",
+                    "on-secondary": "#fff0e8",
+                    "inverse-primary": "#f96f23",
+                    "error": "#b31b25",
+                    "on-primary-container": "#411500",
+                    "on-secondary-fixed-variant": "#813e00",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#e7e8e6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Plus Jakarta Sans"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .snap-y-mandatory { scroll-snap-type: y mandatory; }
+        .snap-start { scroll-snap-align: start; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#f6f6f4]/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-[0_12px_32px_rgba(45,47,46,0.06)]">
+<div class="flex justify-between items-center h-16 px-6 md:px-12 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tighter text-[#2d2f2e] dark:text-zinc-100">逮JOB</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-[#D45500] dark:text-[#ff7a34] font-bold border-b-2 border-[#D45500] pb-1 font-['Plus_Jakarta_Sans'] text-sm tracking-tight" href="#">Find Jobs</a>
+<a class="text-[#2d2f2e]/60 dark:text-zinc-400 font-medium hover:text-[#2d2f2e] dark:hover:text-zinc-100 transition-colors font-['Plus_Jakarta_Sans'] text-sm tracking-tight" href="#">Companies</a>
+<a class="text-[#2d2f2e]/60 dark:text-zinc-400 font-medium hover:text-[#2d2f2e] dark:hover:text-zinc-100 transition-colors font-['Plus_Jakarta_Sans'] text-sm tracking-tight" href="#">Salaries</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-[#f0f1ef] rounded-lg transition-all active:scale-95 duration-200">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-[#f0f1ef] rounded-lg transition-all active:scale-95 duration-200">account_circle</button>
+</div>
+</div>
+</nav>
+<div class="flex min-h-screen pt-16">
+<!-- SideNavBar -->
+<aside class="h-[calc(100vh-64px)] w-64 hidden lg:flex flex-col fixed left-0 bg-[#f6f6f4] dark:bg-zinc-950 p-4 gap-2">
+<div class="mb-6 px-4">
+<h2 class="font-['Plus_Jakarta_Sans'] text-base font-bold text-on-surface">For You</h2>
+<p class="text-xs text-on-surface-variant">Personalized job feed</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900 text-[#D45500] rounded-xl shadow-sm font-['Plus_Jakarta_Sans'] text-base font-semibold hover:translate-x-1 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span>Discover</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-zinc-400 hover:bg-[#f0f1ef] dark:hover:bg-zinc-900 rounded-xl font-['Plus_Jakarta_Sans'] text-base font-semibold hover:translate-x-1 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+<span>Saved Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-zinc-400 hover:bg-[#f0f1ef] dark:hover:bg-zinc-900 rounded-xl font-['Plus_Jakarta_Sans'] text-base font-semibold hover:translate-x-1 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span>Applications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-zinc-400 hover:bg-[#f0f1ef] dark:hover:bg-zinc-900 rounded-xl font-['Plus_Jakarta_Sans'] text-base font-semibold hover:translate-x-1 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span>Messages</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-zinc-400 hover:bg-[#f0f1ef] dark:hover:bg-zinc-900 rounded-xl font-['Plus_Jakarta_Sans'] text-base font-semibold hover:translate-x-1 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</aside>
+<!-- Main Feed Canvas -->
+<main class="flex-1 lg:ml-64 min-h-[calc(100vh-64px)] overflow-y-auto bg-surface-container-low">
+<div class="max-w-2xl mx-auto px-4 py-8">
+<!-- Search & Filter Bar -->
+<div class="mb-6 flex flex-col gap-3">
+  <div class="flex gap-2">
+    <input id="searchInput" type="text" placeholder="搜索职位、公司..."
+      class="flex-1 px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary text-sm" />
+    <button id="searchBtn"
+      class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:shadow-md hover:shadow-primary/20 transition-all active:scale-95">
+      搜索
+    </button>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <select id="cityFilter"
+      class="px-3 py-2 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+      <option value="">全部城市</option>
+    </select>
+    <select id="typeFilter"
+      class="px-3 py-2 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+      <option value="">全部类型</option>
+    </select>
+    <select id="categoryFilter"
+      class="px-3 py-2 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+      <option value="">全部类别</option>
+    </select>
+  </div>
+</div>
+<!-- Job List -->
+<div id="jobList" class="flex flex-col gap-4"></div>
+<!-- Pagination -->
+<div id="pagination"></div>
+</div>
+</main>
+<!-- Contextual FAB -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</div>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 w-full h-16 bg-white/90 backdrop-blur-lg flex justify-around items-center px-4 z-50 border-t border-surface-container-high">
+<button class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="text-[10px] font-bold uppercase mt-1">Discover</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+<span class="text-[10px] font-bold uppercase mt-1">Saved</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span class="text-[10px] font-bold uppercase mt-1">Messages</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-bold uppercase mt-1">Profile</span>
+</button>
+</nav>
+<script type="module">
+import { getJobs, getFilters, getToken, matchJobs } from '../js/api.js';
+import { assembleResumeText } from '../js/resume.js';
+
+let currentFilters = { page: 1, page_size: 20, sort: 'latest' };
+let matchScores = {};
+
+async function loadFilters() {
+  try {
+    const filters = await getFilters();
+    populateSelect('cityFilter', filters.cities, '全部城市');
+    populateSelect('typeFilter', filters.recruit_types, '全部类型');
+    populateSelect('categoryFilter', filters.job_categories, '全部类别');
+  } catch (e) {
+    console.error('Failed to load filters:', e);
+  }
+}
+
+function populateSelect(id, options, placeholder) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = `<option value="">${placeholder}</option>`;
+  options.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt;
+    o.textContent = opt;
+    el.appendChild(o);
+  });
+}
+
+async function loadJobs() {
+  const container = document.getElementById('jobList');
+  if (container) container.innerHTML = '<div class="text-center py-8 text-on-surface-variant">加载中...</div>';
+  try {
+    const data = await getJobs(currentFilters);
+    window._lastTotal = data.total;
+    renderJobs(data.items);
+    renderPagination(data.total, data.page, data.page_size);
+    if (getToken() && data.items.length > 0) {
+      loadMatchScores(data.items.map(j => j.id));
+    }
+  } catch (e) {
+    if (container) container.innerHTML = '<div class="text-center py-8 text-error">加载失败，请稍后重试</div>';
+  }
+}
+
+async function loadMatchScores(jobIds) {
+  const resumeText = assembleResumeText();
+  if (!resumeText) return;
+  try {
+    const result = await matchJobs(resumeText, jobIds.slice(0, 50));
+    matchScores = result.scores || {};
+    updateMatchBadges();
+  } catch (e) {
+    console.error('Match scores failed:', e);
+  }
+}
+
+function updateMatchBadges() {
+  Object.entries(matchScores).forEach(([jobId, score]) => {
+    if (score === null) return;
+    const card = document.querySelector(`[data-job-id="${jobId}"]`);
+    if (!card) return;
+    const existing = card.querySelector('.match-badge');
+    if (existing) existing.remove();
+    const badge = document.createElement('span');
+    badge.className = 'match-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-primary text-on-primary ml-2';
+    badge.textContent = `匹配 ${score}%`;
+    const titleEl = card.querySelector('.job-title');
+    if (titleEl) titleEl.appendChild(badge);
+  });
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    return new Date(dateStr).toLocaleDateString('zh-CN');
+  } catch {
+    return '';
+  }
+}
+
+function renderJobs(jobs) {
+  const container = document.getElementById('jobList');
+  if (!container) return;
+  if (!jobs || jobs.length === 0) {
+    container.innerHTML = '<div class="text-center py-12 text-on-surface-variant">暂无符合条件的职位</div>';
+    return;
+  }
+  container.innerHTML = jobs.map(job => `
+    <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-outline-variant/20"
+         data-job-id="${job.id}"
+         onclick="window.location.href='/pages/job-detail.html?id=${job.id}'">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex-1 min-w-0">
+          <h3 class="job-title text-lg font-bold text-on-surface truncate">${escapeHtml(job.title)}</h3>
+          <p class="text-on-surface-variant mt-1">${escapeHtml(job.company)}</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 shrink-0">
+          ${job.recruit_type ? `<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary-container text-on-secondary-container">${escapeHtml(job.recruit_type)}</span>` : ''}
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-3 mt-3 text-sm text-on-surface-variant">
+        ${job.work_city ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span>${escapeHtml(job.work_city)}</span>` : ''}
+        ${job.job_category ? `<span>${escapeHtml(job.job_category)}</span>` : ''}
+        ${job.publish_time ? `<span>${formatDate(job.publish_time)}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPagination(total, page, pageSize) {
+  const container = document.getElementById('pagination');
+  if (!container) return;
+  const totalPages = Math.ceil(total / pageSize);
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+  const pages = [];
+  for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) pages.push(i);
+  container.innerHTML = `
+    <div class="flex items-center justify-center gap-2 py-6">
+      <button onclick="goToPage(${page - 1})" ${page <= 1 ? 'disabled' : ''}
+        class="px-3 py-1.5 rounded-lg text-sm font-medium ${page <= 1 ? 'text-outline cursor-not-allowed' : 'text-on-surface hover:bg-surface-container-high'}">
+        上一页
+      </button>
+      ${pages.map(p => `
+        <button onclick="goToPage(${p})"
+          class="px-3 py-1.5 rounded-lg text-sm font-medium ${p === page ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-container-high'}">
+          ${p}
+        </button>
+      `).join('')}
+      <button onclick="goToPage(${page + 1})" ${page >= totalPages ? 'disabled' : ''}
+        class="px-3 py-1.5 rounded-lg text-sm font-medium ${page >= totalPages ? 'text-outline cursor-not-allowed' : 'text-on-surface hover:bg-surface-container-high'}">
+        下一页
+      </button>
+      <span class="text-sm text-on-surface-variant ml-2">共 ${total} 个职位</span>
+    </div>
+  `;
+}
+
+window.goToPage = function(page) {
+  const totalPages = Math.ceil((window._lastTotal || 0) / currentFilters.page_size);
+  if (page < 1 || page > totalPages) return;
+  currentFilters.page = page;
+  loadJobs();
+};
+
+window.applyFilters = function() {
+  const q = document.getElementById('searchInput')?.value?.trim();
+  const city = document.getElementById('cityFilter')?.value;
+  const recruit_type = document.getElementById('typeFilter')?.value;
+  const job_category = document.getElementById('categoryFilter')?.value;
+  currentFilters = { page: 1, page_size: 20, sort: 'latest' };
+  if (q) currentFilters.q = q;
+  if (city) currentFilters.city = city;
+  if (recruit_type) currentFilters.recruit_type = recruit_type;
+  if (job_category) currentFilters.job_category = job_category;
+  loadJobs();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadFilters();
+  loadJobs();
+  document.getElementById('searchBtn')?.addEventListener('click', applyFilters);
+  document.getElementById('searchInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') applyFilters();
+  });
+});
+</script>
+</body></html>
