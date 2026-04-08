@@ -2,8 +2,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
-from services.job_service import list_jobs, get_job, get_filters
-from schemas.job import JobListResponse, JobDetail, FiltersResponse
+from services.job_service import list_jobs, get_job, get_filters, get_dynamic_filters
+from schemas.job import JobListResponse, JobDetail, FiltersResponse, DynamicFiltersResponse
 
 router = APIRouter()
 
@@ -28,6 +28,19 @@ async def get_jobs(
 @router.get("/meta/filters", response_model=FiltersResponse)
 async def filters_meta(db: AsyncSession = Depends(get_db)):
     return await get_filters(db)
+
+
+@router.get("/meta/dynamic-filters", response_model=DynamicFiltersResponse)
+async def dynamic_filters_meta(
+    q: Optional[str] = Query(None),
+    city: Optional[str] = Query(None),
+    recruit_type: Optional[str] = Query(None),
+    job_category: Optional[str] = Query(None),
+    company: Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db),
+):
+    return await get_dynamic_filters(db, q=q, city=city, recruit_type=recruit_type,
+                                     job_category=job_category, company=company)
 
 
 @router.get("/{job_id}", response_model=JobDetail)

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>首页/搜索大厅 (Kinetic Minimal) - Catch a Job</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#dc9900",
+                        "on-secondary-fixed-variant": "#813e00",
+                        "on-error": "#ffefee",
+                        "secondary-dim": "#7f3d00",
+                        "primary-dim": "#8a3500",
+                        "secondary-fixed-dim": "#ffb37f",
+                        "surface-container-high": "#e1e3e1",
+                        "secondary": "#914700",
+                        "outline": "#767776",
+                        "on-primary-container": "#411500",
+                        "surface-container": "#e7e8e6",
+                        "on-secondary-container": "#733700",
+                        "on-tertiary-fixed-variant": "#523600",
+                        "error": "#b31b25",
+                        "on-primary": "#fff0ea",
+                        "on-error-container": "#570008",
+                        "surface-tint": "#9d3d00",
+                        "tertiary-container": "#eda611",
+                        "inverse-primary": "#f96f23",
+                        "on-tertiary-fixed": "#271800",
+                        "error-container": "#fb5151",
+                        "on-secondary-fixed": "#562700",
+                        "surface-dim": "#d3d5d3",
+                        "on-secondary": "#fff0e8",
+                        "surface-container-low": "#f0f1ef",
+                        "inverse-surface": "#0d0f0e",
+                        "on-background": "#2d2f2e",
+                        "on-surface": "#2d2f2e",
+                        "primary-fixed": "#ff7a34",
+                        "surface-container-highest": "#dcdddb",
+                        "on-surface-variant": "#5a5c5b",
+                        "primary": "#9d3d00",
+                        "primary-fixed-dim": "#f26a1e",
+                        "outline-variant": "#acadac",
+                        "tertiary": "#7b5400",
+                        "surface-bright": "#f6f6f4",
+                        "on-primary-fixed-variant": "#501b00",
+                        "tertiary-dim": "#6c4900",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#ff7a34",
+                        "tertiary-fixed": "#eda611",
+                        "surface-variant": "#dcdddb",
+                        "surface": "#f6f6f4",
+                        "secondary-container": "#ffc6a1",
+                        "on-tertiary-container": "#462e00",
+                        "on-primary-fixed": "#000000",
+                        "error-dim": "#9f0519",
+                        "inverse-on-surface": "#9c9d9b",
+                        "on-tertiary": "#fff0e0",
+                        "background": "#f6f6f4",
+                        "secondary-fixed": "#ffc6a1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f6f6f4; color: #2d2f2e; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-nav { background: rgba(246, 246, 244, 0.8); backdrop-filter: blur(20px); }
+        .punch-gradient { background: linear-gradient(135deg, #9d3d00 0%, #ff7a34 100%); }
+        .punch-gradient:hover { background: linear-gradient(135deg, #8a3500 0%, #f26a1e 100%); }
+        .ghost-border { border: 1px solid rgba(172, 173, 172, 0.15); }
+        .ambient-shadow { box-shadow: 0 12px 32px rgba(45, 47, 46, 0.06); }
+    </style>
+</head>
+<body class="min-h-screen">
+<header class="glass-nav sticky top-0 z-50 flex items-center justify-between px-8 py-4 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<img alt="Catch a Job Logo" class="h-8 w-auto" data-alt="Minimalist abstract bird-like logo in warm orange and dark brown representing agility and professional growth" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU__tOyDcZ_U4x7irLUkAfzc1JCfQq2ywfGdQKnQxUNwhUREZkA2JcsZ7j6rMNnkaGzyyUwW80jWkfragZ_oTmHryzRTJ4VoJ3Ui_4gD4gZTtU-ABFrxNIt8WLTU-BfcT6gdcOze3GDwSc2zzHeeuJ1dxjfZmr16gzZsMN5PGx0nXwcgp1qLTmLpZFm_aNoPtZvQPLik4LkziQTpPvzRYRcfBasStOTiqUeYwamFColRssXwGyb8N2fbQEPsAWkJMR7Z-SOHAEbRI"/>
+<span class="text-xl font-extrabold tracking-tighter text-on-surface">CATCH A JOB</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold text-primary" href="#">职位搜索</a>
+<a class="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">求职地图</a>
+<a class="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">AI简历助手</a>
+<a class="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">关于我们</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary/10">
+<img alt="User Profile" data-alt="Modern professional portrait of a young adult, clean business casual style, soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDDi155WgRWOdo0aDPWvG16XT6AfWBrKBkjkgbrNpJqBiguOq3bkPtVCVDFmnVw8OD9ed55r_g76guOqxnDcNfOpY6C7eHQIqvr4OQWQozmVI84hXBmrVMA6O_kdVmt2wLsCuQDA7VvYVc0J_ayGeDejhtBcACA6ldDBi3X4wnYZoMIMDzaHex-V9AM0lKhNeJItlZWFlbjlicNpNdImAGp3SNujndNJ2j20yGElIsVMP1zvXHXpbmZUXz2scTvwdElfrtwNbk0Lk"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-12">
+<section class="relative mb-16 overflow-hidden rounded-3xl bg-surface-container-low p-12 lg:p-20">
+<div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[400px]" data-icon="work">work</span>
+</div>
+<div class="relative z-10 max-w-3xl">
+<h1 class="text-5xl lg:text-7xl font-extrabold tracking-tighter leading-none mb-6 text-on-surface">
+                    捕捉属于你的<br/><span class="text-primary">理想机遇</span>
+</h1>
+<p class="text-lg text-on-surface-variant mb-10 max-w-xl leading-relaxed">
+                    结合最新AI匹配算法，连接顶尖雇主与卓越人才。让每一次职场跳跃都精准有力。
+                </p>
+<div class="flex flex-col md:flex-row gap-3 bg-surface-container-lowest p-2 rounded-2xl ambient-shadow ghost-border">
+<div class="flex-1 flex items-center px-4 gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+<input id="homeSearchInput" class="w-full border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 bg-transparent py-4" placeholder="职位名称、公司或关键词" type="text"/>
+</div>
+<div class="hidden md:block w-px bg-outline-variant/20 my-3"></div>
+<div class="flex-1 flex items-center px-4 gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="location_on">location_on</span>
+<select id="homeCityFilter" class="w-full border-none focus:ring-0 text-on-surface bg-transparent py-4 text-sm cursor-pointer">
+  <option value="">全部城市</option>
+</select>
+</div>
+<button id="homeSearchBtn" class="punch-gradient text-on-primary font-bold px-10 py-4 rounded-xl transition-all shadow-lg shadow-primary/20">
+                        立即搜索
+                    </button>
+</div>
+<div class="mt-8 flex flex-wrap gap-3">
+<span class="text-sm font-semibold text-on-surface-variant mr-2 py-1">热门搜索:</span>
+<a class="px-4 py-1 rounded-full bg-surface-container-high text-sm font-medium text-on-surface-variant hover:bg-secondary-container transition-colors" href="#">后端开发</a>
+<a class="px-4 py-1 rounded-full bg-surface-container-high text-sm font-medium text-on-surface-variant hover:bg-secondary-container transition-colors" href="#">产品经理</a>
+<a class="px-4 py-1 rounded-full bg-surface-container-high text-sm font-medium text-on-surface-variant hover:bg-secondary-container transition-colors" href="#">UI设计</a>
+<a class="px-4 py-1 rounded-full bg-surface-container-high text-sm font-medium text-on-surface-variant hover:bg-secondary-container transition-colors" href="#">AI研究员</a>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10">
+<aside class="space-y-8">
+<div class="bg-surface-container-lowest rounded-2xl p-6 ghost-border">
+<h3 class="text-sm font-extrabold uppercase tracking-widest text-on-surface mb-6 flex items-center justify-between">
+                        筛选条件
+                        <button id="homeResetBtn" class="text-primary text-xs font-bold lowercase">重置</button>
+</h3>
+<div class="space-y-5">
+<div>
+  <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">公司</label>
+  <select id="homeCompanyFilter" class="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 focus:ring-primary text-sm p-3 text-on-surface">
+    <option value="">全部公司</option>
+  </select>
+</div>
+<div>
+  <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">招聘类型</label>
+  <select id="homeTypeFilter" class="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 focus:ring-primary text-sm p-3 text-on-surface">
+    <option value="">全部类型</option>
+  </select>
+</div>
+<div>
+  <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">职位类别</label>
+  <select id="homeCategoryFilter" class="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 focus:ring-primary text-sm p-3 text-on-surface">
+    <option value="">全部类别</option>
+  </select>
+</div>
+</div>
+</div>
+<div class="bg-primary/5 rounded-2xl p-6 ghost-border relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="text-sm font-bold text-primary mb-2">想要更精准的匹配？</h4>
+<p class="text-xs text-on-surface-variant mb-4">上传您的最新简历，AI将为您自动分析并推荐最合适的职位。</p>
+<button class="w-full py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-dim transition-colors">立即上传</button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-primary/10 text-6xl rotate-12" data-icon="description">description</span>
+</div>
+</aside>
+<section class="space-y-6">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-xl font-extrabold text-on-surface flex items-center gap-2">
+                        发现 <span id="jobCount" class="text-primary">...</span> 个职位
+                    </h2>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-on-surface-variant uppercase">排序方式:</span>
+<select class="bg-transparent border-none focus:ring-0 text-sm font-bold text-on-surface py-0 cursor-pointer">
+<option>最新发布</option>
+<option>薪资最高</option>
+</select>
+</div>
+</div>
+<div id="jobList" class="space-y-4">
+<div class="text-center py-8 text-on-surface-variant">加载中...</div>
+</div>
+<div id="homePagination"></div>
+</section>
+</div>
+</main>
+<footer class="mt-20 py-20 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<img alt="Catch a Job Logo" class="h-6 w-auto" data-alt="Catch a Job Brand Logo - refined icon version" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRkg5L2fVBCBlN9Ewipb0mo97kPJ0fFUR3BQxGVnagLzZ1LHHV6hNPZbakqb2ft4zgaHIPEeq9wdRFQCCNlxsZ7bl4fgqCMoYA8p_fcpj0fz15rX3HuzPFdLBTmv099zKoUT0RTwxHlRAlyfDyr_CMtM4TfOe0KBUNRSgd3lqU807WCrhub9TYzzN4ZjLvulW-u07hNb4lqjnxu5ndtMrQERvNDCXSy_NnEmC_UrPDKEWAh8dbFtC3OEUYzNYWfSicmSqsHCNtWwk"/>
+<span class="text-lg font-extrabold tracking-tighter text-on-surface">CATCH A JOB</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-6">
+                    致力于用科技手段让职场招聘更透明、更智能、更人性化。
+                </p>
+<div class="flex gap-4">
+<div class="h-8 w-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="public">public</span>
+</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-extrabold uppercase mb-6 text-on-surface">求职者</h4>
+<ul class="space-y-4 text-sm font-medium text-on-surface-variant">
+<li><a class="hover:text-primary" href="#">搜索职位</a></li>
+<li><a class="hover:text-primary" href="#">名企入驻</a></li>
+<li><a class="hover:text-primary" href="#">薪资报告</a></li>
+<li><a class="hover:text-primary" href="#">简历模板</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-sm font-extrabold uppercase mb-6 text-on-surface">雇主</h4>
+<ul class="space-y-4 text-sm font-medium text-on-surface-variant">
+<li><a class="hover:text-primary" href="#">发布职位</a></li>
+<li><a class="hover:text-primary" href="#">人才搜寻</a></li>
+<li><a class="hover:text-primary" href="#">企业内推</a></li>
+<li><a class="hover:text-primary" href="#">招聘解决方案</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-sm font-extrabold uppercase mb-6 text-on-surface">订阅资讯</h4>
+<p class="text-xs text-on-surface-variant mb-4">第一时间获取最新的职场趋势与高薪机会。</p>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-lowest border-none rounded-lg text-sm px-4 py-2 focus:ring-1 focus:ring-primary" placeholder="您的邮箱" type="email"/>
+<button class="bg-primary text-white p-2 rounded-lg"><span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span></button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-on-surface-variant/40 uppercase tracking-widest">
+<p>© 2024 Catch a Job. All rights reserved.</p>
+<div class="flex gap-8">
+<a href="#">Privacy Policy</a>
+<a href="#">Terms of Service</a>
+<a href="#">Cookie Settings</a>
+</div>
+</div>
+</footer>
+<script type="module">
+import { getJobs, getDynamicFilters } from '../js/api.js';
+
+let currentPage = 1;
+let lastTotal = 0;
+const PAGE_SIZE = 10;
+
+function escapeHtml(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  try { return new Date(s).toLocaleDateString('zh-CN'); } catch { return ''; }
+}
+
+function getActiveFilters() {
+  return {
+    q: document.getElementById('homeSearchInput')?.value?.trim() || undefined,
+    city: document.getElementById('homeCityFilter')?.value || undefined,
+    company: document.getElementById('homeCompanyFilter')?.value || undefined,
+    recruit_type: document.getElementById('homeTypeFilter')?.value || undefined,
+    job_category: document.getElementById('homeCategoryFilter')?.value || undefined,
+  };
+}
+
+function populateSelect(id, options, placeholder, keepValue) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const prev = keepValue ? el.value : '';
+  el.innerHTML = `<option value="">${placeholder}</option>`;
+  options.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt; o.textContent = opt;
+    el.appendChild(o);
+  });
+  if (prev && options.includes(prev)) el.value = prev;
+}
+
+async function refreshDynamicFilters() {
+  const active = getActiveFilters();
+  const params = {};
+  if (active.q) params.q = active.q;
+  if (active.city) params.city = active.city;
+  if (active.company) params.company = active.company;
+  if (active.recruit_type) params.recruit_type = active.recruit_type;
+  if (active.job_category) params.job_category = active.job_category;
+  try {
+    const f = await getDynamicFilters(params);
+    populateSelect('homeCityFilter', f.cities, '全部城市', true);
+    populateSelect('homeCompanyFilter', f.companies, '全部公司', true);
+    populateSelect('homeTypeFilter', f.recruit_types, '全部类型', true);
+    populateSelect('homeCategoryFilter', f.job_categories, '全部类别', true);
+  } catch (e) {
+    console.error('Failed to load filters:', e);
+  }
+}
+
+function renderJobs(jobs) {
+  const container = document.getElementById('jobList');
+  if (!container) return;
+  if (!jobs || jobs.length === 0) {
+    container.innerHTML = '<div class="text-center py-12 text-on-surface-variant">暂无符合条件的职位</div>';
+    return;
+  }
+  container.innerHTML = jobs.map(job => `
+    <div class="group bg-surface-container-lowest rounded-2xl p-8 ghost-border ambient-shadow transition-all hover:scale-[1.01] hover:shadow-xl cursor-pointer"
+         onclick="window.location.href='/pages/job-detail.html?id=${job.id}'">
+      <div class="flex justify-between items-start gap-4 mb-4">
+        <div>
+          <h3 class="text-xl font-extrabold text-on-surface mb-1 group-hover:text-primary transition-colors">${escapeHtml(job.title)}</h3>
+          <div class="flex flex-wrap items-center gap-3 text-sm font-medium text-on-surface-variant">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">corporate_fare</span>${escapeHtml(job.company || '')}</span>
+            ${job.work_city ? `<span class="text-outline-variant/30">•</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span>${escapeHtml(job.work_city)}</span>` : ''}
+            ${job.publish_time ? `<span class="text-outline-variant/30">•</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_month</span>${formatDate(job.publish_time)}</span>` : ''}
+          </div>
+        </div>
+        ${job.recruit_type ? `<span class="shrink-0 px-3 py-1 bg-secondary-container rounded-full text-xs font-bold text-on-secondary-container">${escapeHtml(job.recruit_type)}</span>` : ''}
+      </div>
+      ${job.job_category ? `<div class="flex gap-2"><span class="px-3 py-1 bg-surface-container text-xs font-bold rounded-lg text-on-surface-variant">${escapeHtml(job.job_category)}</span></div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderPagination(total, page, pageSize) {
+  const container = document.getElementById('homePagination');
+  if (!container) return;
+  const totalPages = Math.ceil(total / pageSize);
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+  const pages = [];
+  for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) pages.push(i);
+  container.innerHTML = `
+    <div class="flex items-center justify-center gap-2 py-8">
+      <button onclick="window._homeGoToPage(${page - 1})" ${page <= 1 ? 'disabled' : ''}
+        class="px-3 py-1.5 rounded-lg text-sm font-medium ${page <= 1 ? 'text-outline cursor-not-allowed' : 'text-on-surface hover:bg-surface-container-high'}">上一页</button>
+      ${pages.map(p => `
+        <button onclick="window._homeGoToPage(${p})"
+          class="px-3 py-1.5 rounded-lg text-sm font-medium ${p === page ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-container-high'}">${p}</button>
+      `).join('')}
+      <button onclick="window._homeGoToPage(${page + 1})" ${page >= totalPages ? 'disabled' : ''}
+        class="px-3 py-1.5 rounded-lg text-sm font-medium ${page >= totalPages ? 'text-outline cursor-not-allowed' : 'text-on-surface hover:bg-surface-container-high'}">下一页</button>
+      <span class="text-sm text-on-surface-variant ml-2">共 ${total} 个职位</span>
+    </div>
+  `;
+}
+
+async function loadJobs(page = 1) {
+  const container = document.getElementById('jobList');
+  if (container) container.innerHTML = '<div class="text-center py-8 text-on-surface-variant">加载中...</div>';
+  const active = getActiveFilters();
+  const params = { page, page_size: PAGE_SIZE, sort: 'latest' };
+  if (active.q) params.q = active.q;
+  if (active.city) params.city = active.city;
+  if (active.company) params.company = active.company;
+  if (active.recruit_type) params.recruit_type = active.recruit_type;
+  if (active.job_category) params.job_category = active.job_category;
+  try {
+    const data = await getJobs(params);
+    lastTotal = data.total;
+    currentPage = data.page;
+    const countEl = document.getElementById('jobCount');
+    if (countEl) countEl.textContent = data.total;
+    renderJobs(data.items);
+    renderPagination(data.total, data.page, data.page_size);
+  } catch (e) {
+    if (container) container.innerHTML = '<div class="text-center py-8 text-error">加载失败，请稍后重试</div>';
+  }
+}
+
+async function applyFilters() {
+  currentPage = 1;
+  await Promise.all([refreshDynamicFilters(), loadJobs(1)]);
+}
+
+window._homeGoToPage = function(page) {
+  const totalPages = Math.ceil(lastTotal / PAGE_SIZE);
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  loadJobs(page);
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await refreshDynamicFilters();
+  await loadJobs(1);
+
+  document.getElementById('homeSearchBtn')?.addEventListener('click', applyFilters);
+  document.getElementById('homeSearchInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') applyFilters();
+  });
+  ['homeCityFilter', 'homeCompanyFilter', 'homeTypeFilter', 'homeCategoryFilter'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', applyFilters);
+  });
+  document.getElementById('homeResetBtn')?.addEventListener('click', () => {
+    document.getElementById('homeSearchInput').value = '';
+    ['homeCityFilter', 'homeCompanyFilter', 'homeTypeFilter', 'homeCategoryFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    applyFilters();
+  });
+});
+</script>
+</body></html>

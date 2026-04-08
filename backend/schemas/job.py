@@ -50,3 +50,11 @@ class FiltersResponse(BaseModel):
     cities: list[str]
     recruit_types: list[str]
     job_categories: list[str]
+    companies: list[str] = []
+
+
+class DynamicFiltersResponse(BaseModel):
+    cities: list[str]
+    recruit_types: list[str]
+    job_categories: list[str]
+    companies: list[str]

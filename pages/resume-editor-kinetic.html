@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#562700",
+                        "on-secondary-container": "#733700",
+                        "error-dim": "#9f0519",
+                        "on-error-container": "#570008",
+                        "on-tertiary": "#fff0e0",
+                        "on-surface": "#2d2f2e",
+                        "on-tertiary-fixed": "#271800",
+                        "outline": "#767776",
+                        "tertiary-dim": "#6c4900",
+                        "secondary-container": "#ffc6a1",
+                        "surface-container-high": "#e1e3e1",
+                        "surface-container": "#e7e8e6",
+                        "primary-fixed-dim": "#f26a1e",
+                        "on-primary-fixed-variant": "#501b00",
+                        "surface": "#f6f6f4",
+                        "surface-dim": "#d3d5d3",
+                        "on-error": "#ffefee",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f6f6f4",
+                        "primary-dim": "#8a3500",
+                        "on-primary-container": "#411500",
+                        "surface-variant": "#dcdddb",
+                        "on-primary-fixed": "#000000",
+                        "primary": "#9d3d00",
+                        "outline-variant": "#acadac",
+                        "inverse-on-surface": "#9c9d9b",
+                        "secondary-fixed": "#ffc6a1",
+                        "surface-bright": "#f6f6f4",
+                        "on-tertiary-container": "#462e00",
+                        "surface-tint": "#9d3d00",
+                        "error": "#b31b25",
+                        "error-container": "#fb5151",
+                        "secondary-fixed-dim": "#ffb37f",
+                        "secondary": "#914700",
+                        "surface-container-highest": "#dcdddb",
+                        "primary-container": "#ff7a34",
+                        "tertiary": "#7b5400",
+                        "on-tertiary-fixed-variant": "#523600",
+                        "on-secondary": "#fff0e8",
+                        "secondary-dim": "#7f3d00",
+                        "primary-fixed": "#ff7a34",
+                        "surface-container-low": "#f0f1ef",
+                        "tertiary-fixed": "#eda611",
+                        "inverse-primary": "#f96f23",
+                        "on-secondary-fixed-variant": "#813e00",
+                        "on-primary": "#fff0ea",
+                        "tertiary-fixed-dim": "#dc9900",
+                        "inverse-surface": "#0d0f0e",
+                        "tertiary-container": "#eda611",
+                        "on-background": "#2d2f2e",
+                        "on-surface-variant": "#5a5c5b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-[#f6f6f4]/80 dark:bg-stone-900/80 backdrop-blur-md shadow-[0_12px_32px_rgba(45,47,46,0.06)] flex justify-between items-center px-8 py-4 w-full max-w-full mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-extrabold tracking-tighter text-[#2d2f2e] dark:text-stone-100">Catch a Job</span>
+<div class="hidden md:flex items-center gap-6 font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<a class="text-[#2d2f2e] dark:text-stone-400 hover:text-[#9d3d00] transition-colors duration-200" href="#">Hall</a>
+<a class="text-[#2d2f2e] dark:text-stone-400 hover:text-[#9d3d00] transition-colors duration-200" href="#">Pulse</a>
+<a class="text-[#d45500] border-b-2 border-[#d45500] pb-1" href="#">Editor</a>
+<a class="text-[#2d2f2e] dark:text-stone-400 hover:text-[#9d3d00] transition-colors duration-200" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#2d2f2e] dark:text-stone-400 hover:text-[#d45500] active:scale-95 transition-all">notifications</button>
+<button class="material-symbols-outlined text-[#2d2f2e] dark:text-stone-400 hover:text-[#d45500] active:scale-95 transition-all">bolt</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant/15" data-alt="professional portrait of a young adult creative professional with a friendly smile on a clean grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRPFb7MwMiPERbm0qMWVnVjZ17cv-9U45klUnXaBON_4STlHGcy5RmpYS91SxA6BzHrvEFALOfnhiNV4qecqVkmS65R3PM9gwjXqsEWfIpJi_h-WprjlsFTQj_wM_S9_agG9dppw-UXoyXCCIFyz5hoaqTu0ccsKy-VanQ9dIDzCSCLJq2TEqzRmT_5klHUFIImteE1NdAxtCjT1lzRogvoFReAjk9t4oCGiLQ--n46ajP4Qc-n6_bMU8Qi6X52-Cvi1ThyMBrZAI"/>
+</div>
+</nav>
+<!-- SideNavBar (Shared Component - Hidden on Mobile) -->
+<aside class="hidden lg:flex flex-col p-6 space-y-4 h-screen w-64 fixed left-0 top-0 pt-24 bg-[#f0f1ef] dark:bg-stone-900 border-r border-[#acadac]/15 z-40">
+<div class="mb-4">
+<span class="text-lg font-bold text-[#2d2f2e] dark:text-stone-100 font-['Plus_Jakarta_Sans']">Catch a Job</span>
+<p class="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant/60 font-semibold">AI Recruitment</p>
+</div>
+<nav class="flex flex-col gap-1 font-['Plus_Jakarta_Sans'] text-sm font-semibold tracking-wide">
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-stone-500 hover:bg-[#e1e3e1] dark:hover:bg-stone-800/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span>Search Hall</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-stone-500 hover:bg-[#e1e3e1] dark:hover:bg-stone-800/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Pulse</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 text-[#d45500] rounded-xl shadow-sm transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span>Resume Editor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-stone-500 hover:bg-[#e1e3e1] dark:hover:bg-stone-800/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span>AI Insights</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2d2f2e]/70 dark:text-stone-500 hover:bg-[#e1e3e1] dark:hover:bg-stone-800/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold active:scale-95 transition-all shadow-lg shadow-primary/20">
+                Post a Job
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:pl-64 pt-20 min-h-screen bg-background">
+<div class="max-w-[1400px] mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8">
+<!-- Left Pane: Experience Snippets (The Library) -->
+<section class="w-full md:w-80 flex flex-col gap-6 order-2 md:order-1">
+<header class="flex flex-col gap-1">
+<h2 class="text-xl font-bold tracking-tight text-on-surface">简历片段</h2>
+<p class="text-sm text-on-surface-variant font-medium">拖拽或点击添加经验到简历</p>
+</header>
+<div class="flex flex-col gap-4">
+<!-- Snippet Category -->
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant/50 font-bold px-2">工作经验</div>
+<!-- Snippet Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-md hover:-translate-y-0.5 transition-all group relative">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-primary bg-secondary-container/30 px-2 py-0.5 rounded-full">高级 UI 设计师</span>
+<button class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">add_circle</button>
+</div>
+<h4 class="text-sm font-bold text-on-surface mb-1">阿里巴巴集团</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed line-clamp-3">负责核心产品体验升级，主导设计系统 2.0 构建，协同 50+ 开发人员完成落地。</p>
+</div>
+<!-- Snippet Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-md hover:-translate-y-0.5 transition-all group relative">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-primary bg-secondary-container/30 px-2 py-0.5 rounded-full">产品经理</span>
+<button class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">add_circle</button>
+</div>
+<h4 class="text-sm font-bold text-on-surface mb-1">字节跳动</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed line-clamp-3">从 0 到 1 打造 AIGC 创作平台，上线 3 个月实现百万日活，并获得内部创新奖。</p>
+</div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant/50 font-bold px-2 mt-4">核心技能</div>
+<!-- Snippet Skill -->
+<div class="flex flex-wrap gap-2">
+<div class="bg-surface-container-low px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface hover:bg-primary-container/20 cursor-pointer transition-colors border border-outline-variant/5">+ Figma &amp; Prototyping</div>
+<div class="bg-surface-container-low px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface hover:bg-primary-container/20 cursor-pointer transition-colors border border-outline-variant/5">+ React &amp; Tailwind</div>
+<div class="bg-surface-container-low px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface hover:bg-primary-container/20 cursor-pointer transition-colors border border-outline-variant/5">+ 用户增长模型</div>
+</div>
+<!-- AI Generation CTA -->
+<div class="mt-6 p-4 rounded-xl bg-gradient-to-br from-primary to-primary-dim text-on-primary">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="text-sm font-bold">AI 智能辅助</span>
+</div>
+<p class="text-xs opacity-90 leading-relaxed mb-4">根据您的 JD 自动润色经验描述，提升 30% 匹配度。</p>
+<button class="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-xs font-bold transition-all">立即优化</button>
+</div>
+</div>
+</section>
+<!-- Right Pane: Live Preview (The Canvas) -->
+<section class="flex-1 order-1 md:order-2">
+<div class="mb-6 flex justify-between items-center">
+<h2 class="text-xl font-bold tracking-tight text-on-surface">预览</h2>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low rounded-lg text-sm font-bold hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-sm">download</span>
+                            导出 PDF
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-sm">save</span>
+                            保存草稿
+                        </button>
+</div>
+</div>
+<!-- High-Fidelity Resume Canvas -->
+<div class="aspect-[1/1.414] w-full bg-white shadow-[0_20px_50px_rgba(45,47,46,0.12)] rounded-sm p-12 md:p-16 flex flex-col gap-8 relative overflow-hidden select-none cursor-default border border-outline-variant/5">
+<!-- Resume Header -->
+<header class="flex justify-between items-start border-b border-surface-container-low pb-8">
+<div>
+<h1 class="text-3xl font-extrabold tracking-tighter text-on-surface mb-2">张小秋</h1>
+<p class="text-primary font-bold text-sm tracking-widest uppercase">Senior Product Designer</p>
+</div>
+<div class="text-right flex flex-col gap-1 text-[11px] font-medium text-on-surface-variant">
+<div class="flex items-center justify-end gap-2">
+<span>hello.zhang@email.com</span>
+<span class="material-symbols-outlined text-[14px]">mail</span>
+</div>
+<div class="flex items-center justify-end gap-2">
+<span>+86 138 0000 0000</span>
+<span class="material-symbols-outlined text-[14px]">call</span>
+</div>
+<div class="flex items-center justify-end gap-2">
+<span>Shanghai, China</span>
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+</div>
+</div>
+</header>
+<!-- Work Experience Section -->
+<section class="flex flex-col gap-6">
+<h3 class="text-xs font-black uppercase tracking-[0.3em] text-on-surface-variant/40 border-b border-surface-container-low pb-2">工作经历</h3>
+<div class="flex flex-col gap-1 relative group">
+<div class="flex justify-between items-baseline">
+<h4 class="text-base font-bold text-on-surface">阿里巴巴集团</h4>
+<span class="text-xs font-medium text-on-surface-variant">2020.06 - 至今</span>
+</div>
+<p class="text-sm font-semibold text-primary/80 mb-2">高级 UI 设计师</p>
+<ul class="flex flex-col gap-1.5 text-xs text-on-surface-variant leading-relaxed list-disc list-inside">
+<li>主导淘宝首页双 11 视觉改版，通过 A/B 测试实现点击率 12% 的显著提升。</li>
+<li>负责 Fusion Design 系统的核心组件维护，赋能内部 200+ 个业务子系统。</li>
+<li>协同前端团队优化动画性能，将页面加载首帧时长降低 400ms。</li>
+</ul>
+<!-- Edit Marker (Hover only) -->
+<div class="absolute -right-4 top-0 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="material-symbols-outlined text-sm text-outline-variant hover:text-primary">edit</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 relative group">
+<div class="flex justify-between items-baseline">
+<h4 class="text-base font-bold text-on-surface">字节跳动</h4>
+<span class="text-xs font-medium text-on-surface-variant">2018.03 - 2020.05</span>
+</div>
+<p class="text-sm font-semibold text-primary/80 mb-2">交互设计师</p>
+<ul class="flex flex-col gap-1.5 text-xs text-on-surface-variant leading-relaxed list-disc list-inside">
+<li>参与抖音短视频创作套件的设计研发，优化视频剪辑交互路径。</li>
+<li>建立全链路用户行为追踪模型，通过设计迭代减少 15% 的新手流失率。</li>
+<li>独立完成跨平台（iOS/Android）的设计规范适配工作。</li>
+</ul>
+</div>
+</section>
+<!-- Education Section -->
+<section class="flex flex-col gap-4">
+<h3 class="text-xs font-black uppercase tracking-[0.3em] text-on-surface-variant/40 border-b border-surface-container-low pb-2">教育背景</h3>
+<div class="flex justify-between items-baseline">
+<div>
+<h4 class="text-sm font-bold text-on-surface">清华大学美术学院</h4>
+<p class="text-xs text-on-surface-variant">视觉传达设计 · 本科</p>
+</div>
+<span class="text-xs font-medium text-on-surface-variant">2014.09 - 2018.07</span>
+</div>
+</section>
+<!-- Skills Matrix (Bento style minimal) -->
+<section class="flex flex-col gap-4">
+<h3 class="text-xs font-black uppercase tracking-[0.3em] text-on-surface-variant/40 border-b border-surface-container-low pb-2">专业技能</h3>
+<div class="grid grid-cols-2 gap-x-8 gap-y-3">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant/70">设计工具</span>
+<div class="text-xs font-medium">Figma, Adobe Creative Suite, Sketch, Blender</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant/70">开发协作</span>
+<div class="text-xs font-medium">HTML5, CSS3, Tailwind CSS, Git, Webflow</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant/70">语言能力</span>
+<div class="text-xs font-medium">中文 (母语), 英语 (专业八级)</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-on-surface-variant/70">方法论</span>
+<div class="text-xs font-medium">Design Sprint, Jobs to be Done, Atomic Design</div>
+</div>
+</div>
+</section>
+<!-- Watermark -->
+<div class="mt-auto pt-8 flex items-center gap-2 opacity-20 hover:opacity-50 transition-opacity">
+<span class="text-[9px] font-bold tracking-widest text-on-surface uppercase">Generated by Catch a Job Editor</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Contextual FAB (Only for specific pages like Dashboard, but here as a quick tools access) -->
+<div class="fixed bottom-8 right-8 flex flex-col gap-3">
+<button class="w-14 h-14 bg-surface-container-lowest text-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all border border-primary/10">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<button class="w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>逮JOB · Catch a Job — AI招聘平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #1A56DB;
+      --surface: #F8F9FA;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 { font-family: 'Manrope', sans-serif; }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: #1a1a2e;
+      box-shadow: 0 2px 12px rgba(26,86,219,0.08);
+      transition: transform 0.15s, box-shadow 0.15s;
+      border: 1px solid rgba(26,86,219,0.08);
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(26,86,219,0.15);
+    }
+    .icon-box {
+      width: 48px; height: 48px;
+      background: #EBF2FF;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: #1A56DB;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width:600px; width:100%; padding:32px 20px;">
+    <div style="text-align:center; margin-bottom:40px;">
+      <h1 style="font-size:2.5rem; font-weight:800; color:#1a1a2e; letter-spacing:-1px; margin-bottom:8px;">
+        逮JOB
+        <span style="color:#1A56DB;">·</span>
+        Catch a Job
+      </h1>
+      <p style="color:#6b7280; font-size:0.95rem;">AI 招聘平台 — 设计稿页面导航</p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <a class="card" href="pages/home.html">
+        <div class="icon-box"><span class="material-symbols-outlined">home</span></div>
+        <div>
+          <div style="font-weight:700; font-size:1rem;">首页 / 职位搜索大厅</div>
+          <div style="color:#6b7280; font-size:0.85rem; margin-top:2px;">Hero 区域 · 搜索框 · 筛选面板 · 职位列表</div>
+        </div>
+        <span class="material-symbols-outlined" style="margin-left:auto; color:#9ca3af;">arrow_forward</span>
+      </a>
+
+      <a class="card" href="pages/job-feed.html">
+        <div class="icon-box"><span class="material-symbols-outlined">view_agenda</span></div>
+        <div>
+          <div style="font-weight:700; font-size:1rem;">职位信息流</div>
+          <div style="color:#6b7280; font-size:0.85rem; margin-top:2px;">逮JOB 纵向 Feed · 卡片式浏览</div>
+        </div>
+        <span class="material-symbols-outlined" style="margin-left:auto; color:#9ca3af;">arrow_forward</span>
+      </a>
+
+      <a class="card" href="pages/job-detail.html">
+        <div class="icon-box"><span class="material-symbols-outlined">work</span></div>
+        <div>
+          <div style="font-weight:700; font-size:1rem;">职位详情 · AI 匹配建议</div>
+          <div style="color:#6b7280; font-size:0.85rem; margin-top:2px;">岗位详情 · AI 分析 · 技能匹配度</div>
+        </div>
+        <span class="material-symbols-outlined" style="margin-left:auto; color:#9ca3af;">arrow_forward</span>
+      </a>
+
+      <a class="card" href="pages/resume-manager.html">
+        <div class="icon-box"><span class="material-symbols-outlined">folder_open</span></div>
+        <div>
+          <div style="font-weight:700; font-size:1rem;">简历管理中心</div>
+          <div style="color:#6b7280; font-size:0.85rem; margin-top:2px;">简历列表 · 状态管理 · 版本控制</div>
+        </div>
+        <span class="material-symbols-outlined" style="margin-left:auto; color:#9ca3af;">arrow_forward</span>
+      </a>
+
+      <a class="card" href="pages/resume-editor-kinetic.html">
+        <div class="icon-box"><span class="material-symbols-outlined">edit_document</span></div>
+        <div>
+          <div style="font-weight:700; font-size:1rem;">简历编辑器 · Kinetic 极简</div>
+          <div style="color:#6b7280; font-size:0.85rem; margin-top:2px;">简历组装 · 实时预览 · 模块化编辑</div>
+        </div>
+        <span class="material-symbols-outlined" style="margin-left:auto; color:#9ca3af;">arrow_forward</span>
+      </a>
+
+      <a class="card" href="pages/resume-editor-precision.html">
+        <div class="icon-box" style="background:#EBF5FF;"><span class="material-symbols-outlined">auto_fix_high</span></div>
+        <div>
+          <div style="font-weight:700; font-size:1rem;">简历编辑器 · Precision Curator</div>
+          <div style="color:#6b7280; font-size:0.85rem; margin-top:2px;">AI 驱动的精准简历构建器</div>
+        </div>
+        <span class="material-symbols-outlined" style="margin-left:auto; color:#9ca3af;">arrow_forward</span>
+      </a>
+    </div>
+
+    <p style="text-align:center; color:#d1d5db; font-size:0.75rem; margin-top:32px;">
+      © 2024 Catch a Job · 设计稿由 Google Stitch AI 生成
+    </p>
+  </div>
+</body>
+</html>

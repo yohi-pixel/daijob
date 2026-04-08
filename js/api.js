@@ -74,6 +74,11 @@ async function getFilters() {
   return apiFetch('/jobs/meta/filters');
 }
 
+async function getDynamicFilters(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return apiFetch(`/jobs/meta/dynamic-filters?${query}`);
+}
+
 async function matchJobs(resumeText, jobIds) {
   return apiFetch('/ai/match', {
     method: 'POST',
@@ -99,6 +104,7 @@ export {
   getJobs,
   getJobDetail,
   getFilters,
+  getDynamicFilters,
   matchJobs,
   optimizeResume,
 };

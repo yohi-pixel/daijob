@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>职位详情 | 逮JOB</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-tertiary-container": "#462e00", "on-tertiary-fixed-variant": "#523600",
+        "tertiary-dim": "#6c4900", "surface-bright": "#f6f6f4", "tertiary": "#7b5400",
+        "primary-dim": "#8a3500", "on-secondary-container": "#733700",
+        "on-primary-fixed": "#000000", "primary": "#9d3d00", "surface": "#f6f6f4",
+        "error-dim": "#9f0519", "secondary-container": "#ffc6a1", "secondary-dim": "#7f3d00",
+        "on-primary-fixed-variant": "#501b00", "tertiary-fixed": "#eda611",
+        "on-surface-variant": "#5a5c5b", "on-background": "#2d2f2e", "secondary": "#914700",
+        "inverse-on-surface": "#9c9d9b", "surface-container-low": "#f0f1ef",
+        "surface-tint": "#9d3d00", "primary-fixed-dim": "#f26a1e",
+        "background": "#f6f6f4", "outline": "#767776", "error-container": "#fb5151",
+        "on-tertiary": "#fff0e0", "primary-fixed": "#ff7a34", "on-surface": "#2d2f2e",
+        "surface-container-high": "#e1e3e1", "on-error-container": "#570008",
+        "on-error": "#ffefee", "on-secondary-fixed": "#562700",
+        "secondary-fixed-dim": "#ffb37f", "tertiary-container": "#eda611",
+        "surface-container-highest": "#dcdddb", "tertiary-fixed-dim": "#dc9900",
+        "surface-dim": "#d3d5d3", "on-tertiary-fixed": "#271800",
+        "on-primary": "#fff0ea", "inverse-surface": "#0d0f0e",
+        "secondary-fixed": "#ffc6a1", "primary-container": "#ff7a34",
+        "surface-variant": "#dcdddb", "outline-variant": "#acadac",
+        "on-secondary": "#fff0e8", "inverse-primary": "#f96f23",
+        "error": "#b31b25", "on-primary-container": "#411500",
+        "on-secondary-fixed-variant": "#813e00", "surface-container-lowest": "#ffffff",
+        "surface-container": "#e7e8e6"
+      },
+      borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+      fontFamily: { headline: ["Plus Jakarta Sans"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"] }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .prose-section p { white-space: pre-wrap; line-height: 1.8; }
+</style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+
+<!-- Top Nav -->
+<nav class="fixed top-0 w-full z-50 bg-[#f6f6f4]/80 backdrop-blur-xl shadow-[0_12px_32px_rgba(45,47,46,0.06)]">
+  <div class="flex justify-between items-center h-16 px-6 md:px-12 max-w-[1440px] mx-auto">
+    <div class="flex items-center gap-4">
+      <button onclick="history.back()" class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <a href="/pages/job-feed.html" class="text-2xl font-black tracking-tighter text-[#2d2f2e]">逮JOB</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="saveBtn" class="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-all text-sm font-medium">
+        <span class="material-symbols-outlined text-base">bookmark</span>收藏
+      </button>
+      <a id="applyLink" href="#" target="_blank"
+        class="px-5 py-2 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:shadow-md hover:shadow-primary/20 transition-all active:scale-95">
+        前往投递
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Loading / Error states -->
+<div id="loadingState" class="flex items-center justify-center min-h-screen">
+  <div class="text-center text-on-surface-variant">
+    <span class="material-symbols-outlined text-5xl animate-spin block mb-3">progress_activity</span>
+    <p>加载中...</p>
+  </div>
+</div>
+<div id="errorState" class="hidden flex items-center justify-center min-h-screen">
+  <div class="text-center">
+    <span class="material-symbols-outlined text-5xl text-error block mb-3">error</span>
+    <p class="text-on-surface-variant mb-4">职位不存在或已下线</p>
+    <a href="/pages/job-feed.html" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-semibold text-sm">返回职位列表</a>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main id="mainContent" class="hidden pt-20 pb-16 px-4 md:px-8 max-w-5xl mx-auto">
+
+  <!-- Header -->
+  <header class="mb-8 pt-4">
+    <div id="recruitTypeBadge" class="hidden inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold mb-3"></div>
+    <h1 id="jobTitle" class="text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface leading-tight mb-3"></h1>
+    <div class="flex flex-wrap items-center gap-4 text-on-surface-variant text-sm font-medium">
+      <span id="companyName" class="flex items-center gap-1.5 text-base font-bold text-on-surface">
+        <span class="material-symbols-outlined text-primary text-lg">business</span>
+      </span>
+      <span id="cityInfo" class="hidden flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">location_on</span>
+      </span>
+      <span id="categoryInfo" class="hidden flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">category</span>
+      </span>
+      <span id="publishTime" class="hidden flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">schedule</span>
+      </span>
+    </div>
+    <!-- Tags -->
+    <div id="tagsRow" class="hidden flex flex-wrap gap-2 mt-3"></div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left: Job Details -->
+    <div class="lg:col-span-2 space-y-5">
+
+      <section id="teamIntroSection" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
+        <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-tertiary rounded-full"></span>团队介绍
+        </h2>
+        <div class="prose-section text-on-surface-variant text-sm leading-relaxed">
+          <p id="teamIntroText"></p>
+        </div>
+      </section>
+
+      <section id="responsibilitiesSection" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
+        <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-primary rounded-full"></span>工作职责
+        </h2>
+        <div class="prose-section text-on-surface-variant text-sm leading-relaxed">
+          <p id="responsibilitiesText"></p>
+        </div>
+      </section>
+
+      <section id="requirementsSection" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
+        <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-secondary rounded-full"></span>任职要求
+        </h2>
+        <div class="prose-section text-on-surface-variant text-sm leading-relaxed">
+          <p id="requirementsText"></p>
+        </div>
+      </section>
+
+      <section id="bonusSection" class="hidden bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
+        <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-tertiary-fixed-dim rounded-full"></span>加分项
+        </h2>
+        <div class="prose-section text-on-surface-variant text-sm leading-relaxed">
+          <p id="bonusText"></p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right: Action Sidebar -->
+    <aside class="space-y-4 lg:sticky lg:top-20 self-start">
+
+      <!-- Apply Card -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 shadow-sm">
+        <a id="applyBtn" href="#" target="_blank"
+          class="block w-full py-3.5 bg-primary text-on-primary font-bold text-center rounded-xl shadow-[0_6px_16px_rgba(157,61,0,0.25)] hover:shadow-[0_8px_20px_rgba(157,61,0,0.35)] active:scale-95 transition-all duration-200 mb-3">
+          前往投递
+        </a>
+        <p class="text-center text-xs text-on-surface-variant">将跳转至哔哩哔哩招聘官网</p>
+      </div>
+
+      <!-- Job Meta -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 space-y-3 text-sm">
+        <div class="flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-base text-primary">business</span>
+          <span id="sideCompany" class="font-medium text-on-surface"></span>
+        </div>
+        <div id="sideCities" class="hidden flex items-start gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-base text-primary mt-0.5">location_on</span>
+          <span id="sideCitiesText" class="font-medium text-on-surface"></span>
+        </div>
+        <div id="sideType" class="hidden flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-base text-primary">work</span>
+          <span id="sideTypeText" class="font-medium text-on-surface"></span>
+        </div>
+        <div id="sideCategory" class="hidden flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-base text-primary">category</span>
+          <span id="sideCategoryText" class="font-medium text-on-surface"></span>
+        </div>
+        <div id="sideFunction" class="hidden flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-base text-primary">badge</span>
+          <span id="sideFunctionText" class="font-medium text-on-surface"></span>
+        </div>
+        <div id="sidePublish" class="hidden flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-base text-primary">calendar_today</span>
+          <span id="sidePublishText" class="font-medium text-on-surface"></span>
+        </div>
+      </div>
+
+      <!-- AI Optimize CTA -->
+      <div class="bg-on-surface text-surface rounded-2xl p-5 relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-primary/20 blur-[60px] rounded-full"></div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">psychology</span>
+            <span class="font-bold text-sm">AI 简历优化</span>
+          </div>
+          <p class="text-xs opacity-70 mb-4 leading-relaxed">上传简历，让 AI 针对此职位重写你的简历，提升匹配度</p>
+          <a href="/pages/resume-manager.html" class="block w-full py-2.5 border border-surface/20 rounded-xl text-xs font-bold text-center hover:bg-surface/10 transition-colors">
+            去管理简历 →
+          </a>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</main>
+
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 w-full h-16 bg-white/90 backdrop-blur-lg flex justify-around items-center px-4 z-50 border-t border-surface-container-high">
+  <a href="/pages/job-feed.html" class="flex flex-col items-center text-on-surface-variant">
+    <span class="material-symbols-outlined">explore</span>
+    <span class="text-[10px] font-bold uppercase mt-1">发现</span>
+  </a>
+  <button id="mobileApplyBtn" class="flex flex-col items-center text-primary">
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">open_in_new</span>
+    <span class="text-[10px] font-bold uppercase mt-1">投递</span>
+  </button>
+  <a href="/pages/resume-manager.html" class="flex flex-col items-center text-on-surface-variant">
+    <span class="material-symbols-outlined">description</span>
+    <span class="text-[10px] font-bold uppercase mt-1">简历</span>
+  </a>
+</nav>
+
+<script type="module">
+import { getJobDetail } from '../js/api.js';
+
+function esc(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val || '';
+}
+
+function showIf(id, condition) {
+  const el = document.getElementById(id);
+  if (el && condition) el.classList.remove('hidden');
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  try { return new Date(s).toLocaleDateString('zh-CN'); } catch { return ''; }
+}
+
+// ── Save Jobs (localStorage) ──────────────────────────────────────────────
+const SAVED_KEY = 'yesjob_saved_jobs';
+
+function getSavedJobs() {
+  try { return JSON.parse(localStorage.getItem(SAVED_KEY)) || []; } catch { return []; }
+}
+
+function setSavedJobs(jobs) {
+  localStorage.setItem(SAVED_KEY, JSON.stringify(jobs));
+}
+
+function isJobSaved(id) {
+  return getSavedJobs().some(j => String(j.id) === String(id));
+}
+
+function toggleSaveJob(job) {
+  let saved = getSavedJobs();
+  if (isJobSaved(job.id)) {
+    saved = saved.filter(j => String(j.id) !== String(job.id));
+  } else {
+    saved.unshift(job);
+  }
+  setSavedJobs(saved);
+  return isJobSaved(job.id);
+}
+
+function updateSaveBtn(saved) {
+  const btn = document.getElementById('saveBtn');
+  if (!btn) return;
+  const icon = btn.querySelector('.material-symbols-outlined');
+  if (saved) {
+    btn.classList.add('bg-secondary-container', 'text-on-secondary-container', 'border-secondary-container');
+    btn.classList.remove('text-on-surface-variant');
+    if (icon) icon.style.fontVariationSettings = "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24";
+    btn.querySelector('span:last-child') && (btn.querySelector('span:last-child').textContent = '已收藏');
+  } else {
+    btn.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'border-secondary-container');
+    btn.classList.add('text-on-surface-variant');
+    if (icon) icon.style.fontVariationSettings = "'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24";
+    btn.querySelector('span:last-child') && (btn.querySelector('span:last-child').textContent = '收藏');
+  }
+}
+
+async function init() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (!id) { showError(); return; }
+
+  try {
+    const job = await getJobDetail(id);
+    renderJob(job);
+    // Init save button
+    updateSaveBtn(isJobSaved(id));
+    document.getElementById('saveBtn')?.addEventListener('click', () => {
+      const nowSaved = toggleSaveJob(job);
+      updateSaveBtn(nowSaved);
+    });
+  } catch (e) {
+    showError();
+  }
+}
+
+function showError() {
+  document.getElementById('loadingState').classList.add('hidden');
+  document.getElementById('errorState').classList.remove('hidden');
+}
+
+function renderJob(job) {
+  document.title = `${job.title || '职位详情'} | 逮JOB`;
+
+  // Header
+  if (job.recruit_type) {
+    const badge = document.getElementById('recruitTypeBadge');
+    badge.textContent = job.recruit_type;
+    badge.classList.remove('hidden');
+  }
+  setText('jobTitle', job.title);
+
+  const companyEl = document.getElementById('companyName');
+  companyEl.innerHTML = `<span class="material-symbols-outlined text-primary text-lg">business</span>${esc(job.company || '哔哩哔哩')}`;
+
+  if (job.work_city) {
+    const el = document.getElementById('cityInfo');
+    el.innerHTML = `<span class="material-symbols-outlined text-base">location_on</span>${esc(job.work_city)}`;
+    el.classList.remove('hidden');
+  }
+  if (job.job_category) {
+    const el = document.getElementById('categoryInfo');
+    el.innerHTML = `<span class="material-symbols-outlined text-base">category</span>${esc(job.job_category)}`;
+    el.classList.remove('hidden');
+  }
+  if (job.publish_time) {
+    const el = document.getElementById('publishTime');
+    el.innerHTML = `<span class="material-symbols-outlined text-base">schedule</span>${formatDate(job.publish_time)}`;
+    el.classList.remove('hidden');
+  }
+
+  // Tags
+  if (job.tags && job.tags.length > 0) {
+    const row = document.getElementById('tagsRow');
+    row.innerHTML = job.tags.map(t =>
+      `<span class="px-3 py-1 bg-surface-container rounded-full text-xs font-medium text-on-surface-variant">${esc(t)}</span>`
+    ).join('');
+    row.classList.remove('hidden');
+  }
+
+  // Sections
+  if (job.team_intro?.trim()) {
+    setText('teamIntroText', job.team_intro);
+    showIf('teamIntroSection', true);
+  }
+  if (job.responsibilities?.trim()) {
+    setText('responsibilitiesText', job.responsibilities);
+    showIf('responsibilitiesSection', true);
+  }
+  if (job.requirements?.trim()) {
+    setText('requirementsText', job.requirements);
+    showIf('requirementsSection', true);
+  }
+  if (job.bonus_points?.trim()) {
+    setText('bonusText', job.bonus_points);
+    showIf('bonusSection', true);
+  }
+
+  // Sidebar meta
+  setText('sideCompany', job.company || '哔哩哔哩');
+
+  const cities = job.work_cities?.length ? job.work_cities.join(' / ') : job.work_city;
+  if (cities) {
+    setText('sideCitiesText', cities);
+    showIf('sideCities', true);
+  }
+  if (job.recruit_type) {
+    setText('sideTypeText', job.recruit_type);
+    showIf('sideType', true);
+  }
+  if (job.job_category) {
+    setText('sideCategoryText', job.job_category);
+    showIf('sideCategory', true);
+  }
+  if (job.job_function) {
+    setText('sideFunctionText', job.job_function);
+    showIf('sideFunction', true);
+  }
+  if (job.publish_time) {
+    setText('sidePublishText', formatDate(job.publish_time));
+    showIf('sidePublish', true);
+  }
+
+  // Apply links
+  const url = job.detail_url || '#';
+  document.getElementById('applyLink').href = url;
+  document.getElementById('applyBtn').href = url;
+  document.getElementById('mobileApplyBtn').onclick = () => window.open(url, '_blank');
+
+  // Show content
+  document.getElementById('loadingState').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+}
+
+init();
+</script>
+</body>
+</html>
