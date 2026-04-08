@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import select, func, distinct, nullslast
+from sqlalchemy import select, func, distinct, case
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from models.job import Job
@@ -33,7 +33,11 @@ async def list_jobs(
     total_result = await db.execute(count_stmt)
     total = total_result.scalar() or 0
     if sort == "latest":
-        stmt = stmt.order_by(nullslast(Job.publish_time.desc()))
+        # MySQL compatible: put NULL values last
+        stmt = stmt.order_by(
+            case((Job.publish_time.isnot(None), 0), else_=1),
+            Job.publish_time.desc()
+        )
     else:
         stmt = stmt.order_by(Job.id.asc())
     stmt = stmt.offset((page - 1) * page_size).limit(page_size)

@@ -28,9 +28,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
-app.include_router(jobs.router, prefix="/jobs", tags=["jobs"])
-app.include_router(ai.router, prefix="/ai", tags=["ai"])
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(jobs.router, prefix="/api/jobs", tags=["jobs"])
+app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
 
 
 @app.get("/health")

@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY index.html .
+COPY pages/ pages/
+COPY css/ css/
+COPY js/ js/
+COPY serve.py .
+
+ENV BACKEND_URL=http://backend:8080
+
+EXPOSE 3000
+
+CMD ["python", "serve.py", "3000"]

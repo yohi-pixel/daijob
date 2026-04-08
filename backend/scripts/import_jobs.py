@@ -2,8 +2,8 @@ import asyncio
 import json
 from datetime import datetime
 from pathlib import Path
-from sqlalchemy import select, func
-from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy import select, func, text
+from sqlalchemy.dialects.mysql import insert as mysql_insert
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from database import Base
 from models.job import Job
@@ -85,13 +85,13 @@ async def run_import(jobs_file: str, session: AsyncSession | None = None):
                     continue
                 batch.append(record_to_dict(record))
                 if len(batch) >= 500:
-                    await session.execute(sqlite_insert(Job).prefix_with("OR IGNORE"), batch)
+                    await session.execute(mysql_insert(Job).prefix_with("IGNORE"), batch)
                     await session.commit()
                     total += len(batch)
                     batch = []
 
         if batch:
-            await session.execute(sqlite_insert(Job).prefix_with("OR IGNORE"), batch)
+            await session.execute(mysql_insert(Job).prefix_with("IGNORE"), batch)
             await session.commit()
             total += len(batch)
 

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = '/api';
 
 function getToken() {
   return sessionStorage.getItem('yesjob_token');
