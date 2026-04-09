@@ -1,9 +1,56 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>首页/搜索大厅 (Kinetic Minimal) - Catch a Job</title>
+<!-- 基础样式 Fallback (CDN失败时使用) -->
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f6f6f4;color:#2d2f2e;margin:0;min-height:100vh}
+header{background:rgba(246,246,244,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(172,173,172,0.1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{display:flex;align-items:center;gap:0.75rem}
+.logo img{height:2rem}
+.logo span{font-size:1.25rem;font-weight:800;letter-spacing:-0.5px}
+nav{display:flex;gap:2rem}
+nav a{font-size:0.875rem;font-weight:600;color:#5a5c5b;text-decoration:none}
+nav a:hover,nav a.primary{color:#9d3d00}
+.user-info{display:flex;align-items:center;gap:1rem}
+.user-avatar{width:2.5rem;height:2.5rem;border-radius:50%;overflow:hidden;border:2px solid rgba(157,61,0,0.1)}
+.user-avatar img{width:100%;height:100%;object-fit:cover}
+main{max-width:1280px;margin:0 auto;padding:3rem 1.5rem}
+.hero{background:#ffffff;border-radius:1.5rem;padding:3rem 5rem;margin-bottom:2.5rem;position:relative;overflow:hidden}
+.hero h1{font-size:3rem;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:1.5rem}
+.hero h1 span{color:#9d3d00}
+.hero p{font-size:1.125rem;color:#5a5c5b;margin-bottom:2.5rem;max-width:36rem;line-height:1.6}
+.search-box{background:#fff;border:1px solid rgba(172,173,172,0.15);border-radius:1rem;padding:0.5rem;display:flex;gap:0.5rem;box-shadow:0 12px 32px rgba(45,47,46,0.06)}
+.search-box input,.search-box select{border:none;background:transparent;padding:1rem;font-size:1rem;flex:1;outline:none}
+.search-box button{background:linear-gradient(135deg,#9d3d00,#ff7a34);color:#fff;font-weight:700;padding:1rem 2.5rem;border-radius:0.75rem;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(157,61,0,0.25)}
+.search-tags{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:2rem}
+.search-tags a{padding:0.25rem 1rem;background:#e1e3e1;border-radius:9999px;font-size:0.875rem;color:#5a5c5b;text-decoration:none}
+.search-tags a:hover{background:#ffc6a1}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:2.5rem}
+.sidebar{background:#fff;border-radius:1rem;padding:1.5rem;border:1px solid rgba(172,173,172,0.15)}
+.sidebar h3{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.5rem;display:flex;justify-content:space-between}
+.sidebar label{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#5a5c5b;display:block;margin-bottom:0.5rem}
+.sidebar select{width:100%;padding:0.75rem;border-radius:0.75rem;background:#e7e8e6;border:1px solid rgba(172,173,172,0.3);margin-bottom:1.25rem;font-size:0.875rem}
+.sidebar .reset{color:#9d3d00;font-size:0.75rem;font-weight:700;text-transform:lowercase}
+.job-list{background:#fff;border-radius:1rem;padding:2rem;border:1px solid rgba(172,173,172,0.15)}
+.job-card{background:#fff;border-radius:1rem;padding:2rem;margin-bottom:1rem;border:1px solid #e5e7eb;cursor:pointer;transition:all 0.2s}
+.job-card:hover{border-color:#9d3d00;transform:scale(1.01);box-shadow:0 4px 20px rgba(157,61,0,0.1)}
+.job-card h3{font-size:1.25rem;font-weight:800;margin-bottom:0.5rem}
+.job-meta{display:flex;flex-wrap:wrap;align-items:center;gap:0.75rem;font-size:0.875rem;color:#5a5c5b;margin-bottom:0.75rem}
+.tag{padding:0.25rem 0.75rem;background:#ffc6a1;border-radius:9999px;font-size:0.75rem;font-weight:700;color:#733700}
+footer{margin-top:5rem;padding:5rem 2rem;background:#e7e8e6}
+.footer-content{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:3rem}
+.footer-col h4{font-size:0.875rem;font-weight:800;text-transform:uppercase;margin-bottom:1.5rem}
+.footer-col ul{list-style:none;padding:0;margin:0}
+.footer-col li{margin-bottom:1rem}
+.footer-col a{color:#5a5c5b;text-decoration:none;font-size:0.875rem}
+.footer-col a:hover{color:#9d3d00}
+.footer-bottom{max-width:1280px;margin:5rem auto 0;padding-top:2rem;border-top:1px solid rgba(172,173,172,0.1);display:flex;justify-content:space-between;font-size:0.75rem;font-weight:700;color:rgba(45,47,46,0.4);text-transform:uppercase;letter-spacing:0.1em}
+.icon{font-style:normal;display:inline-flex;align-items:center;justify-content:center}
+.empty{text-align:center;padding:3rem;color:#5a5c5b}
+</style>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
