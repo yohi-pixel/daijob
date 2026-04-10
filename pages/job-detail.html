@@ -60,7 +60,7 @@ tailwind.config = {
       <button onclick="history.back()" class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors">
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
-      <a href="/pages/job-feed.html" class="text-2xl font-black tracking-tighter text-[#2d2f2e]">逮JOB</a>
+      <a href="/pages/home.html" class="text-2xl font-black tracking-tighter text-[#2d2f2e]">逮JOB</a>
     </div>
     <div class="flex items-center gap-3">
       <button id="saveBtn" class="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-all text-sm font-medium">
@@ -85,7 +85,7 @@ tailwind.config = {
   <div class="text-center">
     <span class="material-symbols-outlined text-5xl text-error block mb-3">error</span>
     <p class="text-on-surface-variant mb-4">职位不存在或已下线</p>
-    <a href="/pages/job-feed.html" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-semibold text-sm">返回职位列表</a>
+    <a href="/pages/home.html" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-semibold text-sm">返回职位列表</a>
   </div>
 </div>
 
@@ -205,7 +205,7 @@ tailwind.config = {
             <span class="font-bold text-sm">AI 简历优化</span>
           </div>
           <p class="text-xs opacity-70 mb-4 leading-relaxed">上传简历，让 AI 针对此职位重写你的简历，提升匹配度</p>
-          <a href="/pages/resume-manager.html" class="block w-full py-2.5 border border-surface/20 rounded-xl text-xs font-bold text-center hover:bg-surface/10 transition-colors">
+          <a href="/pages/home.html?tab=resume" class="block w-full py-2.5 border border-surface/20 rounded-xl text-xs font-bold text-center hover:bg-surface/10 transition-colors">
             去管理简历 →
           </a>
         </div>
@@ -217,7 +217,7 @@ tailwind.config = {
 
 <!-- Mobile Bottom Nav -->
 <nav class="md:hidden fixed bottom-0 w-full h-16 bg-white/90 backdrop-blur-lg flex justify-around items-center px-4 z-50 border-t border-surface-container-high">
-  <a href="/pages/job-feed.html" class="flex flex-col items-center text-on-surface-variant">
+  <a href="/pages/home.html" class="flex flex-col items-center text-on-surface-variant">
     <span class="material-symbols-outlined">explore</span>
     <span class="text-[10px] font-bold uppercase mt-1">发现</span>
   </a>
@@ -225,7 +225,7 @@ tailwind.config = {
     <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">open_in_new</span>
     <span class="text-[10px] font-bold uppercase mt-1">投递</span>
   </button>
-  <a href="/pages/resume-manager.html" class="flex flex-col items-center text-on-surface-variant">
+  <a href="/pages/home.html?tab=resume" class="flex flex-col items-center text-on-surface-variant">
     <span class="material-symbols-outlined">description</span>
     <span class="text-[10px] font-bold uppercase mt-1">简历</span>
   </a>
