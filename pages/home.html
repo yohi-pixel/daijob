@@ -78,11 +78,8 @@
       <button onclick="switchTab('saved')" class="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors nav-tab-btn" data-nav="saved">已收藏</button>
     </nav>
     <div class="flex items-center gap-3">
-      <button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
-        <span class="material-symbols-outlined">notifications</span>
-      </button>
-      <div class="h-9 w-9 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary/10 flex items-center justify-center">
-        <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+      <div id="authArea" class="flex items-center gap-2">
+        <!-- populated by renderAuthArea() -->
       </div>
     </div>
   </div>
@@ -285,72 +282,204 @@
     </div>
 
     <!-- ── Tab: 简历管理 ── -->
-    <div id="tab-resume" class="tab-panel px-6 md:px-12 py-8 pb-20 max-w-5xl">
-      <header class="mb-8">
-        <h1 class="text-3xl font-extrabold tracking-tight text-on-surface mb-1">简历管理中心</h1>
-        <p class="text-on-surface-variant text-sm">管理并优化你的简历，提升岗位匹配度</p>
-      </header>
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <!-- Left -->
-        <div class="md:col-span-4 space-y-5">
-          <div class="bg-surface-container-low border-2 border-dashed border-outline-variant/40 rounded-xl">
-            <div class="bg-surface-container-lowest rounded-xl m-1 p-8 flex flex-col items-center justify-center text-center space-y-4">
-              <div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
-                <span class="material-symbols-outlined text-2xl">upload_file</span>
-              </div>
-              <div>
-                <p class="font-bold text-on-surface text-sm">拖拽简历至此</p>
-                <p class="text-xs text-on-surface-variant mt-0.5">支持 PDF, DOCX (最大 10MB)</p>
-              </div>
-              <button class="px-5 py-2 bg-primary text-on-primary rounded-xl font-bold text-sm active:scale-95 transition-all">
-                浏览文件
-              </button>
+    <div id="tab-resume" class="tab-panel">
+      <!-- 存储警告横幅 -->
+      <div id="storageWarning" class="hidden bg-amber-50 border-b border-amber-200 px-6 py-2.5 flex items-center gap-2 text-amber-800 text-xs font-medium">
+        <span class="material-symbols-outlined text-base text-amber-500">warning</span>
+        <span>存储空间即将用满，请删除部分模块或快照以释放空间</span>
+      </div>
+
+      <div class="flex h-[calc(100vh-64px)]">
+
+        <!-- 左侧：模块类型导航 -->
+        <aside class="w-52 shrink-0 bg-[#f0f1ef] border-r border-outline-variant/20 flex flex-col overflow-y-auto no-scrollbar">
+          <div class="p-4 pt-5">
+            <p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-3">模块库</p>
+            <nav id="moduleTypeNav" class="flex flex-col gap-0.5">
+              <!-- 由 JS 渲染 -->
+            </nav>
+          </div>
+          <div class="p-4 border-t border-outline-variant/10 mt-auto">
+            <p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-2">标签筛选</p>
+            <div id="tagFilterList" class="flex flex-wrap gap-1.5">
+              <span class="text-xs text-on-surface-variant opacity-50">暂无标签</span>
             </div>
           </div>
-          <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/20">
-            <div class="flex items-center justify-between mb-3">
-              <h2 class="text-sm font-bold text-on-surface">简历文本</h2>
-              <button id="saveResumeBtn" class="text-xs font-bold text-primary hover:underline">保存</button>
+          <div class="p-4 border-t border-outline-variant/10">
+            <p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-1.5">存储用量</p>
+            <div class="flex items-center justify-between text-xs text-on-surface-variant mb-1">
+              <span id="storageUsedText">0 KB</span>
+              <span>/ 5120 KB</span>
             </div>
-            <textarea id="resumeTextArea"
-              class="w-full h-48 text-xs text-on-surface-variant bg-surface-container-low rounded-lg p-3 border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-              placeholder="在此粘贴或编辑你的简历文本，AI 将使用此内容计算岗位匹配分..."></textarea>
+            <div class="h-1.5 bg-surface-container rounded-full overflow-hidden">
+              <div id="storageBar" class="h-full bg-primary rounded-full transition-all" style="width:0%"></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- 中间：模块列表 + 表单 -->
+        <main class="flex-1 overflow-y-auto bg-background">
+          <div class="px-6 py-5 max-w-2xl">
+            <!-- 标题行 -->
+            <div class="flex items-center justify-between mb-5">
+              <div>
+                <h2 id="moduleListTitle" class="text-lg font-extrabold text-on-surface">工作/实习经历</h2>
+                <p id="moduleListQuota" class="text-xs text-on-surface-variant mt-0.5"></p>
+              </div>
+              <button id="addModuleBtn"
+                class="flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all hover:shadow-md hover:shadow-primary/20">
+                <span class="material-symbols-outlined text-base">add</span>新增
+              </button>
+              <button id="uploadResumeBtn"
+                class="flex items-center gap-1.5 px-4 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-semibold active:scale-95 transition-all hover:bg-surface-container-high border border-outline-variant/30"
+                title="上传简历文件自动解析">
+                <span class="material-symbols-outlined text-base">upload_file</span>上传解析
+              </button>
+              <input id="resumeFileInput" type="file" accept=".pdf,.docx" class="hidden" />
+            </div>
+
+            <!-- 内联表单（默认隐藏） -->
+            <div id="moduleForm" class="hidden mb-5 bg-surface-container-lowest rounded-2xl p-5 border border-primary/20 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h3 id="moduleFormTitle" class="font-bold text-on-surface text-sm">新增模块</h3>
+                <button id="moduleFormClose" class="text-on-surface-variant hover:text-on-surface">
+                  <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+              </div>
+              <div id="moduleFormFields" class="space-y-3"></div>
+              <!-- 标签输入 -->
+              <div class="mt-4">
+                <label class="block text-xs font-bold text-on-surface-variant mb-1.5 uppercase">求职方向标签</label>
+                <div class="flex gap-2">
+                  <input id="moduleTagInput" type="text" placeholder="输入标签后按 Enter"
+                    class="flex-1 px-3 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm focus:outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div id="moduleTagChips" class="flex flex-wrap gap-1.5 mt-2"></div>
+                <div id="tagSuggestions" class="flex flex-wrap gap-1.5 mt-1.5"></div>
+              </div>
+              <div class="flex gap-2 mt-5">
+                <button id="moduleFormSave"
+                  class="px-5 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all">保存</button>
+                <button id="moduleFormCancel"
+                  class="px-5 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-medium active:scale-95 transition-all">取消</button>
+              </div>
+            </div>
+
+            <!-- 模块卡片列表 -->
+            <div id="moduleCardList" class="space-y-3">
+              <div class="text-center py-12 text-on-surface-variant">
+                <span class="material-symbols-outlined text-4xl block mb-2 opacity-30">inbox</span>
+                <p class="text-sm">暂无模块，点击"新增"开始添加</p>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- 右侧：快照 + AI 设置 -->
+        <aside class="w-64 shrink-0 bg-[#f0f1ef] border-l border-outline-variant/20 overflow-y-auto no-scrollbar flex flex-col">
+          <!-- 快照区 -->
+          <div class="p-4 pt-5 flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">简历快照</p>
+              <span id="snapshotQuotaText" class="text-[10px] text-on-surface-variant"></span>
+            </div>
+            <div id="snapshotList" class="space-y-2 mb-3">
+              <div class="text-xs text-on-surface-variant opacity-50 text-center py-4">暂无快照</div>
+            </div>
+            <button id="newSnapshotBtn"
+              class="w-full py-2.5 border-2 border-dashed border-outline-variant/40 rounded-xl text-xs font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-base">add</span>新建快照
+            </button>
+          </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- ── 快照组装模态框 ── -->
+    <div id="snapshotModal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="snapshotModalBg"></div>
+      <div class="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
+          <h3 class="font-extrabold text-on-surface">组装简历</h3>
+          <button id="snapshotModalClose" class="text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="px-6 py-4 border-b border-outline-variant/10 flex gap-3">
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase">简历名称</label>
+            <input id="snapName" type="text" placeholder="数据分析方向简历 v1"
+              class="w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm focus:outline-none focus:ring-1 focus:ring-primary"/>
+          </div>
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-on-surface-variant mb-1 uppercase">目标方向标签</label>
+            <input id="snapTags" type="text" placeholder="数据分析, 产品"
+              class="w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm focus:outline-none focus:ring-1 focus:ring-primary"/>
           </div>
         </div>
-        <!-- Right -->
-        <div class="md:col-span-8 space-y-6">
-          <div class="bg-on-surface text-surface rounded-2xl p-7 relative overflow-hidden">
-            <div class="absolute -right-8 -bottom-8 w-48 h-48 bg-primary opacity-10 rounded-full blur-3xl"></div>
-            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div>
-                <h3 class="text-xl font-bold mb-1">准备好起航了吗？</h3>
-                <p class="text-xs opacity-70 leading-relaxed">保存简历后，AI 会在职位列表中显示匹配度分数</p>
-              </div>
-              <button onclick="switchTab('discover')"
-                class="whitespace-nowrap px-6 py-2.5 bg-primary text-on-primary rounded-xl font-bold text-sm active:scale-95 transition-all hover:shadow-lg">
-                前往发现职位
-              </button>
+        <div class="flex flex-1 overflow-hidden">
+          <!-- 可用模块 -->
+          <div class="w-1/2 border-r border-outline-variant/10 overflow-y-auto p-4">
+            <p class="text-xs font-bold text-on-surface-variant uppercase mb-3">可用模块（点击添加）</p>
+            <div id="snapAvailableModules" class="space-y-1.5"></div>
+          </div>
+          <!-- 已选模块 -->
+          <div class="w-1/2 overflow-y-auto p-4">
+            <p class="text-xs font-bold text-on-surface-variant uppercase mb-3">已选模块（拖拽排序）</p>
+            <div id="snapSelectedModules" class="space-y-1.5 min-h-[100px]">
+              <p class="text-xs text-on-surface-variant opacity-50 text-center py-4">点击左侧模块添加</p>
             </div>
           </div>
-          <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/20 space-y-3">
-            <h2 class="font-bold text-on-surface text-sm mb-3">简历优化建议</h2>
-            <div class="flex items-start gap-3">
-              <span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
-              <p class="text-sm text-on-surface-variant">用数字量化你的成就，例如"提升了 40% 的用户留存率"</p>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
-              <p class="text-sm text-on-surface-variant">突出与目标岗位相关的核心技能，移除无关经历</p>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
-              <p class="text-sm text-on-surface-variant">保持格式简洁，确保 ATS 系统可以正确解析</p>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="material-symbols-outlined text-outline text-base mt-0.5">radio_button_unchecked</span>
-              <p class="text-sm text-on-surface-variant">在职位详情页使用 AI 简历优化功能，针对特定岗位重写简历</p>
-            </div>
+        </div>
+        <div class="flex justify-end gap-2 px-6 py-4 border-t border-outline-variant/10">
+          <button id="snapshotModalCancel" class="px-5 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-medium">取消</button>
+          <button id="snapshotModalSave" class="px-5 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all">保存快照</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AI 优化模态框 ── -->
+    <div id="aiModal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="aiModalBg"></div>
+      <div class="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
+          <h3 class="font-extrabold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">psychology</span>AI 优化预览
+          </h3>
+          <button id="aiModalClose" class="text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <!-- JD 选择 -->
+        <div class="px-6 py-3 border-b border-outline-variant/10 flex items-center gap-3">
+          <label class="text-xs font-bold text-on-surface-variant uppercase shrink-0">针对岗位（可选）</label>
+          <select id="aiJobSelect" class="flex-1 px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-container-low text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+            <option value="">不指定岗位，通用优化</option>
+          </select>
+          <button id="aiRunBtn" class="px-4 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-bold active:scale-95 transition-all flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">auto_fix_high</span>开始优化
+          </button>
+        </div>
+        <div class="flex flex-1 overflow-hidden">
+          <div class="w-1/2 border-r border-outline-variant/10 p-4 overflow-y-auto">
+            <p class="text-xs font-bold text-on-surface-variant uppercase mb-2">原文</p>
+            <div id="aiOriginalText" class="text-sm text-on-surface-variant whitespace-pre-wrap leading-relaxed"></div>
           </div>
+          <div class="w-1/2 p-4 overflow-y-auto">
+            <p class="text-xs font-bold text-on-surface-variant uppercase mb-2">优化后（可编辑）</p>
+            <div id="aiResultText" contenteditable="true"
+              class="text-sm text-on-surface whitespace-pre-wrap leading-relaxed min-h-[100px] focus:outline-none"
+              data-placeholder="点击"开始优化"生成..."></div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 px-6 py-4 border-t border-outline-variant/10">
+          <button id="aiModalCancel" class="px-5 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-medium">取消</button>
+          <button id="aiSaveNew" class="px-5 py-2 border border-primary text-primary rounded-xl text-sm font-bold active:scale-95 transition-all">另存为新模块</button>
+          <button id="aiSaveOverwrite" class="px-5 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all">覆盖保存</button>
         </div>
       </div>
     </div>
@@ -379,7 +508,16 @@
 </nav>
 
 <script type="module">
-import { getJobs, getDynamicFilters, getToken, matchJobs } from '../js/api.js';
+import { getJobs, getDynamicFilters, getToken, getUser, login, register, logout, matchJobs } from '../js/api.js';
+import {
+  getModules, getModulesByType, getModulesByTag, getAllTags,
+  addModule, updateModule, deleteModule, cloneModule,
+  getSnapshots, addSnapshot, updateSnapshot, deleteSnapshot,
+  getStorageUsageKB, getQuotaStatus, checkQuota,
+  MODULE_TYPE_LABELS, EXPERIENCE_TYPES, QUOTA, generateId,
+} from '../js/resume-store.js';
+import { optimizeModuleWithAI } from '../js/resume-ai.js';
+import { exportSnapshotToPDF } from '../js/resume-pdf.js';
 
 // ── Saved Jobs (localStorage) ─────────────────────────────────────────────
 const SAVED_KEY = 'yesjob_saved_jobs';
@@ -691,9 +829,677 @@ window.unsaveJob = function(event, jobId) {
 };
 
 // ── Resume Tab ─────────────────────────────────────────────────────────────
+let resumeInitialized = false;
+let currentModuleType = 'experience';
+let activeTagFilter = null;
+let editingModuleId = null;
+let editingSnapshotId = null;
+let aiTargetModuleId = null;
+let formTags = [];
+
+const MODULE_TYPE_ORDER = [
+  'basic_info', 'experience', 'education', 'award', 'skill', 'summary',
+];
+
 function initResume() {
-  const ta = document.getElementById('resumeTextArea');
-  if (ta) ta.value = getResumeText();
+  if (resumeInitialized) { refreshResumeUI(); return; }
+  resumeInitialized = true;
+  renderModuleTypeNav();
+  renderTagFilters();
+  renderModuleList();
+  renderSnapshotList();
+  updateStorageBar();
+  bindResumeEvents();
+}
+
+function refreshResumeUI() {
+  renderModuleTypeNav();
+  renderTagFilters();
+  renderModuleList();
+  renderSnapshotList();
+  updateStorageBar();
+}
+
+function updateStorageBar() {
+  const kb = getStorageUsageKB();
+  const pct = Math.min(100, Math.round(kb / 5120 * 100));
+  const bar = document.getElementById('storageBar');
+  const label = document.getElementById('storageUsedText');
+  if (bar) { bar.style.width = pct + '%'; bar.className = `h-full rounded-full transition-all ${pct > 80 ? 'bg-error' : 'bg-primary'}`; }
+  if (label) label.textContent = `${kb} KB`;
+  const warn = document.getElementById('storageWarning');
+  if (warn) warn.classList.toggle('hidden', kb < 4096);
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function moduleCardDate(m) {
+  if (!m.updated_at) return '';
+  try { return new Date(m.updated_at).toLocaleDateString('zh-CN'); } catch { return ''; }
+}
+
+function moduleCardSummary(m) {
+  const d = m.data || {};
+  switch (m.module_type) {
+    case 'basic_info': return [d.name, d.phone, d.email].filter(Boolean).join(' · ');
+    case 'experience': return [d.org, d.role, d.start_date && d.end_date ? `${d.start_date}—${d.end_date}` : ''].filter(Boolean).join(' · ');
+    case 'education': return [d.school, d.degree, d.major].filter(Boolean).join(' · ');
+    case 'skill': return Array.isArray(d.items) ? d.items.join(', ') : (d.category || '');
+    case 'award': return [d.name || d.title, d.issuer, d.date].filter(Boolean).join(' · ');
+    case 'summary': return (d.content || '').slice(0, 80);
+    default: return '';
+  }
+}
+
+function getDisplayModules() {
+  let mods = getModulesByType(currentModuleType);
+  if (activeTagFilter) mods = mods.filter(m => m.tags && m.tags.includes(activeTagFilter));
+  return mods;
+}
+
+function renderModuleTypeNav() {
+  const nav = document.getElementById('moduleTypeNav');
+  if (!nav) return;
+  const status = getQuotaStatus();
+  nav.innerHTML = MODULE_TYPE_ORDER.map(type => {
+    const label = MODULE_TYPE_LABELS[type];
+    const active = type === currentModuleType;
+    let quota = '';
+    if (type === 'basic_info') quota = `${status.basic_info.used}/${status.basic_info.max}`;
+    else if (type === 'summary') quota = `${status.summary.used}/${status.summary.max}`;
+    else if (type === 'skill') quota = `${status.skill.used}/${status.skill.max}`;
+    else if (EXPERIENCE_TYPES.includes(type)) quota = `${status.experience.used}/${status.experience.max}`;
+    return `<button onclick="window._setModuleType('${type}')"
+      class="w-full text-left px-3 py-2 rounded-xl text-sm font-medium flex items-center justify-between transition-colors
+        ${active ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container'}">
+      <span>${escHtml(label)}</span>
+      <span class="text-xs opacity-60">${quota}</span>
+    </button>`;
+  }).join('');
+}
+
+function renderTagFilters() {
+  const container = document.getElementById('tagFilterList');
+  if (!container) return;
+  const tags = getAllTags();
+  if (tags.length === 0) { container.innerHTML = '<p class="text-xs text-on-surface-variant opacity-60">暂无标签</p>'; return; }
+  container.innerHTML = ['<button onclick="window._setTagFilter(null)" class="px-2.5 py-1 rounded-full text-xs font-medium ' + (!activeTagFilter ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high') + '">全部</button>',
+    ...tags.map(t => `<button onclick="window._setTagFilter('${escHtml(t)}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${activeTagFilter === t ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}">${escHtml(t)}</button>`)
+  ].join('');
+}
+
+function renderModuleList() {
+  const container = document.getElementById('moduleCardList');
+  if (!container) return;
+  const mods = getDisplayModules();
+  const status = getQuotaStatus();
+  let canAdd = true;
+  if (currentModuleType === 'basic_info') canAdd = status.basic_info.used < status.basic_info.max;
+  else if (currentModuleType === 'summary') canAdd = status.summary.used < status.summary.max;
+  else if (currentModuleType === 'skill') canAdd = status.skill.used < status.skill.max;
+  else if (EXPERIENCE_TYPES.includes(currentModuleType)) canAdd = status.experience.used < status.experience.max;
+  const addBtn = document.getElementById('addModuleBtn');
+  if (addBtn) {
+    addBtn.disabled = !canAdd;
+    addBtn.className = `flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${canAdd ? 'bg-primary text-on-primary hover:shadow-md' : 'bg-surface-container text-outline cursor-not-allowed'}`;
+    addBtn.title = canAdd ? '' : '已达配额上限';
+  }
+  if (mods.length === 0) {
+    container.innerHTML = `<div class="text-center py-12 text-on-surface-variant"><span class="material-symbols-outlined text-5xl block mb-3 opacity-30">description</span><p class="text-sm">暂无模块，点击"新增"添加</p></div>`;
+    return;
+  }
+  container.innerHTML = mods.map(m => `
+    <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/20 hover:shadow-sm transition-shadow">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-on-surface truncate">${escHtml(moduleCardSummary(m)) || '(空)'}</p>
+          <div class="flex flex-wrap gap-1.5 mt-1.5">
+            ${(m.tags || []).map(t => `<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-xs">${escHtml(t)}</span>`).join('')}
+            ${m.source === 'ai_generated' ? '<span class="px-2 py-0.5 bg-tertiary-container text-on-tertiary-container rounded-full text-xs">AI生成</span>' : ''}
+          </div>
+          <p class="text-xs text-on-surface-variant mt-1.5 opacity-60">${moduleCardDate(m)}</p>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button onclick="window._openEditForm('${m.id}')" class="p-1.5 rounded-lg hover:bg-surface-container transition-colors" title="编辑">
+            <span class="material-symbols-outlined text-base text-on-surface-variant">edit</span>
+          </button>
+          <button onclick="window._handleCloneModule('${m.id}')" class="p-1.5 rounded-lg hover:bg-surface-container transition-colors" title="复制">
+            <span class="material-symbols-outlined text-base text-on-surface-variant">content_copy</span>
+          </button>
+          <button onclick="window._handleAIOptimize('${m.id}')" class="p-1.5 rounded-lg hover:bg-surface-container transition-colors" title="AI优化">
+            <span class="material-symbols-outlined text-base text-tertiary">psychology</span>
+          </button>
+          <button onclick="window._handleDeleteModule('${m.id}')" class="p-1.5 rounded-lg hover:bg-error/10 transition-colors" title="删除">
+            <span class="material-symbols-outlined text-base text-error">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── Module Form ────────────────────────────────────────────────────────────
+const FORM_FIELDS = {
+  basic_info: [
+    {key:'name',label:'姓名',type:'text',required:true},
+    {key:'phone',label:'电话',type:'text'},
+    {key:'email',label:'邮箱',type:'email'},
+    {key:'location',label:'所在城市',type:'text'},
+    {key:'linkedin',label:'LinkedIn',type:'text'},
+    {key:'github',label:'GitHub',type:'text'},
+    {key:'website',label:'个人网站',type:'text'},
+    {key:'birth_year',label:'出生年份',type:'number'},
+    {key:'gender',label:'性别',type:'select',options:[{v:'',l:'不填'},{v:'male',l:'男'},{v:'female',l:'女'}]},
+  ],
+  experience: [
+    {key:'org',label:'公司/项目名',type:'text',required:true},
+    {key:'role',label:'职位/角色',type:'text',required:true},
+    {key:'start_date',label:'开始时间',type:'text',placeholder:'2023-07'},
+    {key:'end_date',label:'结束时间',type:'text',placeholder:'2023-10'},
+    {key:'is_current',label:'至今',type:'checkbox'},
+    {key:'description',label:'描述',type:'textarea'},
+  ],
+  education: [
+    {key:'school',label:'学校',type:'text',required:true},
+    {key:'degree',label:'学历',type:'text',required:true},
+    {key:'major',label:'专业',type:'text'},
+    {key:'start_date',label:'开始时间',type:'text',placeholder:'2020-09'},
+    {key:'end_date',label:'结束时间',type:'text',placeholder:'2024-06'},
+    {key:'gpa',label:'GPA',type:'text'},
+    {key:'description',label:'补充说明',type:'textarea'},
+  ],
+  skill: [
+    {key:'category',label:'技能类别',type:'text',required:true,placeholder:'编程语言 / 工具与框架 / 语言能力'},
+    {key:'items',label:'技能项（逗号分隔）',type:'text',required:true,isArray:true,sep:','},
+    {key:'proficiency',label:'熟练度',type:'select',options:[{v:'familiar',l:'了解'},{v:'proficient',l:'熟练'},{v:'expert',l:'精通'}]},
+  ],
+  award: [
+    {key:'name',label:'奖项名称',type:'text',required:true},
+    {key:'issuer',label:'颁发机构',type:'text'},
+    {key:'date',label:'获奖时间',type:'text',placeholder:'2023-10'},
+    {key:'description',label:'补充说明',type:'textarea'},
+  ],
+
+  summary: [
+    {key:'content',label:'自我描述',type:'textarea',required:true,rows:6},
+  ],
+};
+
+function buildFormFields(type, data = {}) {
+  const fields = FORM_FIELDS[type] || [];
+  return fields.map(f => {
+    let val = data[f.key];
+    if (f.isArray && Array.isArray(val)) val = f.sep ? val.join(f.sep + ' ') : val.join('\n');
+    else if (f.isArray && !val) val = '';
+    const id = `ff_${f.key}`;
+    const req = f.required ? '<span class="text-error ml-0.5">*</span>' : '';
+    const base = `class="w-full px-3 py-2 rounded-xl border border-outline-variant bg-surface-container-lowest text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"`;
+    if (f.type === 'textarea') {
+      return `<div><label class="block text-xs font-medium text-on-surface-variant mb-1">${escHtml(f.label)}${req}</label>
+        <textarea id="${id}" name="${f.key}" rows="${f.rows||3}" ${base} placeholder="${escHtml(f.placeholder||'')}">${escHtml(String(val||''))}</textarea></div>`;
+    } else if (f.type === 'select') {
+      const opts = f.options.map(o => `<option value="${o.v}" ${val===o.v?'selected':''}>${o.l}</option>`).join('');
+      return `<div><label class="block text-xs font-medium text-on-surface-variant mb-1">${escHtml(f.label)}</label>
+        <select id="${id}" name="${f.key}" ${base}>${opts}</select></div>`;
+    } else if (f.type === 'checkbox') {
+      return `<div class="flex items-center gap-2"><input type="checkbox" id="${id}" name="${f.key}" ${val?'checked':''} class="rounded border-outline-variant text-primary focus:ring-primary/30">
+        <label for="${id}" class="text-sm text-on-surface-variant">${escHtml(f.label)}</label></div>`;
+    } else {
+      return `<div><label class="block text-xs font-medium text-on-surface-variant mb-1">${escHtml(f.label)}${req}</label>
+        <input type="${f.type}" id="${id}" name="${f.key}" value="${escHtml(String(val||''))}" placeholder="${escHtml(f.placeholder||'')}" ${base}></div>`;
+    }
+  }).join('');
+}
+
+function collectFormData(type) {
+  const fields = FORM_FIELDS[type] || [];
+  const data = {};
+  fields.forEach(f => {
+    const el = document.getElementById(`ff_${f.key}`);
+    if (!el) return;
+    if (f.type === 'checkbox') data[f.key] = el.checked;
+    else if (f.type === 'number') data[f.key] = el.value ? Number(el.value) : undefined;
+    else if (f.isArray) {
+      const raw = el.value.trim();
+      data[f.key] = raw ? (f.sep ? raw.split(f.sep).map(s=>s.trim()).filter(Boolean) : raw.split('\n').map(s=>s.trim()).filter(Boolean)) : [];
+    } else data[f.key] = el.value.trim();
+  });
+  return data;
+}
+
+function openAddForm() {
+  editingModuleId = null;
+  formTags = [];
+  const panel = document.getElementById('moduleForm');
+  const title = document.getElementById('moduleFormTitle');
+  const fields = document.getElementById('moduleFormFields');
+  if (!panel || !fields) return;
+  if (title) title.textContent = '新增 ' + (MODULE_TYPE_LABELS[currentModuleType] || '');
+  fields.innerHTML = buildFormFields(currentModuleType, {});
+  renderFormTags();
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function openEditForm(id) {
+  const mods = getModules();
+  const m = mods.find(x => x.id === id);
+  if (!m) return;
+  editingModuleId = id;
+  formTags = [...(m.tags || [])];
+  const panel = document.getElementById('moduleForm');
+  const title = document.getElementById('moduleFormTitle');
+  const fields = document.getElementById('moduleFormFields');
+  if (!panel || !fields) return;
+  if (title) title.textContent = '编辑 ' + (MODULE_TYPE_LABELS[m.module_type] || '');
+  fields.innerHTML = buildFormFields(m.module_type, m.data || {});
+  renderFormTags();
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeModuleForm() {
+  const panel = document.getElementById('moduleForm');
+  if (panel) panel.classList.add('hidden');
+  editingModuleId = null;
+  formTags = [];
+}
+
+function renderFormTags() {
+  const container = document.getElementById('moduleTagChips');
+  if (!container) return;
+  container.innerHTML = formTags.map((t, i) =>
+    `<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-medium">
+      ${escHtml(t)}<button type="button" onclick="window._removeFormTag(${i})" class="hover:text-error">×</button>
+    </span>`
+  ).join('');
+  renderTagSuggestions();
+}
+
+function renderTagSuggestions() {
+  const input = document.getElementById('moduleTagInput');
+  const list = document.getElementById('tagSuggestions');
+  if (!list) return;
+  const q = input ? input.value.trim().toLowerCase() : '';
+  const existing = getAllTags().filter(t => !formTags.includes(t) && (!q || t.toLowerCase().includes(q)));
+  list.innerHTML = existing.slice(0, 6).map(t =>
+    `<button type="button" onclick="window._addFormTag('${escHtml(t)}')" class="px-2.5 py-1 bg-surface-container text-on-surface-variant rounded-full text-xs hover:bg-surface-container-high">${escHtml(t)}</button>`
+  ).join('');
+}
+
+function addFormTag(tag) {
+  tag = tag.trim();
+  if (!tag || formTags.includes(tag)) return;
+  formTags.push(tag);
+  const input = document.getElementById('moduleTagInput');
+  if (input) input.value = '';
+  renderFormTags();
+}
+
+function removeFormTag(idx) {
+  formTags.splice(idx, 1);
+  renderFormTags();
+}
+
+function saveModuleForm() {
+  const type = editingModuleId ? (getModules().find(m => m.id === editingModuleId)?.module_type || currentModuleType) : currentModuleType;
+  const data = collectFormData(type);
+  try {
+    if (editingModuleId) {
+      updateModule(editingModuleId, { data, tags: formTags });
+    } else {
+      addModule(type, data, formTags);
+    }
+    closeModuleForm();
+    refreshResumeUI();
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+function handleCloneModule(id) {
+  try {
+    cloneModule(id);
+    refreshResumeUI();
+    showToast('已复制模块');
+  } catch (e) { alert(e.message); }
+}
+
+function handleDeleteModule(id) {
+  if (!confirm('确认删除此模块？')) return;
+  deleteModule(id);
+  refreshResumeUI();
+}
+
+function handleAIOptimize(id) {
+  aiTargetModuleId = id;
+  const m = getModules().find(x => x.id === id);
+  if (!m) return;
+  const modal = document.getElementById('aiModal');
+  if (!modal) return;
+  document.getElementById('aiOriginalText').textContent = JSON.stringify(m.data, null, 2);
+  const resultEl = document.getElementById('aiResultText');
+  if (resultEl) resultEl.textContent = '';
+  // Populate saved jobs for JD selection
+  const sel = document.getElementById('aiJobSelect');
+  if (sel) {
+    const saved = getSavedJobs();
+    sel.innerHTML = '<option value="">不指定岗位，通用优化</option>' +
+      saved.map(j => `<option value="${j.id}">${escHtml(j.title)} - ${escHtml(j.company)}</option>`).join('');
+  }
+  modal.classList.remove('hidden');
+}
+
+function runAIOptimize() {
+  const m = getModules().find(x => x.id === aiTargetModuleId);
+  if (!m) return;
+  const jobId = document.getElementById('aiJobSelect')?.value || null;
+  const resultEl = document.getElementById('aiResultText');
+  if (resultEl) resultEl.textContent = '正在优化...';
+  optimizeModuleWithAI(m, jobId, (chunk) => {
+    if (resultEl) {
+      if (resultEl.textContent === '正在优化...') resultEl.textContent = '';
+      resultEl.textContent += chunk;
+    }
+  }).catch(e => {
+    if (resultEl) resultEl.textContent = '优化失败: ' + e.message;
+  });
+}
+
+// ── Snapshot List ──────────────────────────────────────────────────────────
+function renderSnapshotList() {
+  const container = document.getElementById('snapshotList');
+  if (!container) return;
+  const snaps = getSnapshots();
+  const status = getQuotaStatus();
+  const addBtn = document.getElementById('newSnapshotBtn');
+  const quotaText = document.getElementById('snapshotQuotaText');
+  if (quotaText) quotaText.textContent = `${status.snapshots.used}/${status.snapshots.max}`;
+  if (addBtn) {
+    addBtn.disabled = status.snapshots.used >= status.snapshots.max;
+    addBtn.className = `w-full py-2.5 border-2 border-dashed rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${status.snapshots.used < status.snapshots.max ? 'border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-primary' : 'border-outline-variant/20 text-outline cursor-not-allowed'}`;
+  }
+  if (snaps.length === 0) {
+    container.innerHTML = `<p class="text-xs text-on-surface-variant text-center py-4 opacity-60">暂无快照</p>`;
+    return;
+  }
+  container.innerHTML = snaps.map(s => `
+    <div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/20">
+      <div class="flex items-start justify-between gap-2">
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-on-surface truncate">${escHtml(s.name)}</p>
+          <div class="flex flex-wrap gap-1 mt-1">
+            ${(s.target_tags||[]).map(t=>`<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-xs">${escHtml(t)}</span>`).join('')}
+          </div>
+          <p class="text-xs text-on-surface-variant mt-1 opacity-60">${s.sections?.length||0} 个模块 · ${new Date(s.created_at).toLocaleDateString('zh-CN')}</p>
+        </div>
+        <div class="flex gap-1 shrink-0">
+          <button onclick="window._openSnapshotModal('${s.id}')" class="p-1.5 rounded-lg hover:bg-surface-container" title="编辑"><span class="material-symbols-outlined text-sm text-on-surface-variant">edit</span></button>
+          <button onclick="window._handleExportPDF('${s.id}')" class="p-1.5 rounded-lg hover:bg-surface-container" title="导出PDF"><span class="material-symbols-outlined text-sm text-primary">picture_as_pdf</span></button>
+          <button onclick="window._handleDeleteSnapshot('${s.id}')" class="p-1.5 rounded-lg hover:bg-error/10" title="删除"><span class="material-symbols-outlined text-sm text-error">delete</span></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function handleDeleteSnapshot(id) {
+  if (!confirm('确认删除此简历快照？')) return;
+  deleteSnapshot(id);
+  renderSnapshotList();
+  updateStorageBar();
+}
+
+function handleExportPDF(id) {
+  const snap = getSnapshots().find(s => s.id === id);
+  if (!snap) return;
+  exportSnapshotToPDF(snap);
+}
+
+// ── AI Modal actions ───────────────────────────────────────────────────────
+function aiSaveOverwrite() {
+  if (!aiTargetModuleId) return;
+  const text = document.getElementById('aiResultText')?.textContent || '';
+  try {
+    const parsed = JSON.parse(text);
+    updateModule(aiTargetModuleId, { data: parsed });
+  } catch {
+    const m = getModules().find(x => x.id === aiTargetModuleId);
+    if (m) updateModule(aiTargetModuleId, { data: { ...m.data, description: text } });
+  }
+  document.getElementById('aiModal')?.classList.add('hidden');
+  refreshResumeUI();
+  showToast('已覆盖保存');
+}
+
+function aiSaveAsNew() {
+  if (!aiTargetModuleId) return;
+  const text = document.getElementById('aiResultText')?.textContent || '';
+  const m = getModules().find(x => x.id === aiTargetModuleId);
+  if (!m) return;
+  let newData;
+  try { newData = JSON.parse(text); } catch { newData = { ...m.data, description: text }; }
+  try {
+    addModule(m.module_type, newData, [...(m.tags||[])]);
+    document.getElementById('aiModal')?.classList.add('hidden');
+    refreshResumeUI();
+    showToast('已另存为新模块');
+  } catch (e) { alert(e.message); }
+}
+
+// ── Event Bindings ─────────────────────────────────────────────────────────
+function bindResumeEvents() {
+  window._setModuleType = (type) => { currentModuleType = type; activeTagFilter = null; refreshResumeUI(); };
+  window._setTagFilter = (tag) => { activeTagFilter = tag; renderModuleList(); renderTagFilters(); };
+  window._openEditForm = openEditForm;
+  window._openAddForm = openAddForm;
+  window._handleCloneModule = handleCloneModule;
+  window._handleDeleteModule = handleDeleteModule;
+  window._handleAIOptimize = handleAIOptimize;
+  window._handleDeleteSnapshot = handleDeleteSnapshot;
+  window._handleExportPDF = handleExportPDF;
+  window._addFormTag = addFormTag;
+  window._removeFormTag = removeFormTag;
+  window._openSnapshotModal = openSnapshotModal;
+
+  document.getElementById('addModuleBtn')?.addEventListener('click', openAddForm);
+  document.getElementById('moduleFormSave')?.addEventListener('click', saveModuleForm);
+  document.getElementById('moduleFormCancel')?.addEventListener('click', closeModuleForm);
+  document.getElementById('moduleFormClose')?.addEventListener('click', closeModuleForm);
+  document.getElementById('aiSaveOverwrite')?.addEventListener('click', aiSaveOverwrite);
+  document.getElementById('aiSaveNew')?.addEventListener('click', aiSaveAsNew);
+  document.getElementById('aiModalClose')?.addEventListener('click', () => document.getElementById('aiModal')?.classList.add('hidden'));
+  document.getElementById('aiModalCancel')?.addEventListener('click', () => document.getElementById('aiModal')?.classList.add('hidden'));
+  document.getElementById('aiRunBtn')?.addEventListener('click', runAIOptimize);
+  document.getElementById('newSnapshotBtn')?.addEventListener('click', () => openSnapshotModal(null));
+  document.getElementById('snapshotModalClose')?.addEventListener('click', closeSnapshotModal);
+  document.getElementById('snapshotModalCancel')?.addEventListener('click', closeSnapshotModal);
+  document.getElementById('snapshotModalBg')?.addEventListener('click', closeSnapshotModal);
+  document.getElementById('aiModalBg')?.addEventListener('click', () => document.getElementById('aiModal')?.classList.add('hidden'));
+  document.getElementById('snapshotModalSave')?.addEventListener('click', saveSnapshot);
+
+  document.getElementById('uploadResumeBtn')?.addEventListener('click', () => {
+    document.getElementById('resumeFileInput')?.click();
+  });
+  document.getElementById('resumeFileInput')?.addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (file) await handleResumeUpload(file);
+    e.target.value = '';
+  });
+
+  const tagInput = document.getElementById('moduleTagInput');
+  if (tagInput) {
+    tagInput.addEventListener('input', renderTagSuggestions);
+    tagInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); addFormTag(tagInput.value); }
+    });
+  }
+}
+
+// ── Resume Upload & Parse ───────────────────────────────────────────────────
+async function handleResumeUpload(file) {
+  const btn = document.getElementById('uploadResumeBtn');
+  const origHTML = btn?.innerHTML;
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined text-base animate-spin">progress_activity</span>解析中…'; }
+  try {
+    const token = getToken();
+    if (!token) { openAuthModal('login'); return; }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('has_basic_info', String(getModulesByType('basic_info').length > 0));
+
+    const res = await fetch('/api/resume/parse', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      showToast(`解析失败：${err.detail || res.statusText}`);
+      return;
+    }
+    const parsed = await res.json();
+    openResumePreviewModal(parsed);
+  } catch (e) {
+    showToast(`解析出错：${e.message}`);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = origHTML; }
+  }
+}
+
+// ── Snapshot Modal ─────────────────────────────────────────────────────────
+let snapSelectedIds = []; // ordered list of module IDs for current snapshot assembly
+
+function openSnapshotModal(snapId) {
+  editingSnapshotId = snapId;
+  snapSelectedIds = [];
+  const modal = document.getElementById('snapshotModal');
+  if (!modal) return;
+  if (snapId) {
+    const snap = getSnapshots().find(s => s.id === snapId);
+    if (snap) {
+      document.getElementById('snapName').value = snap.name || '';
+      document.getElementById('snapTags').value = (snap.target_tags || []).join(', ');
+      // Reconstruct selected IDs from sections (best-effort match by content)
+      snapSelectedIds = (snap.sections || []).map((_, i) => `__snap_${i}`);
+    }
+  } else {
+    document.getElementById('snapName').value = '';
+    document.getElementById('snapTags').value = '';
+  }
+  renderSnapAvailable();
+  renderSnapSelected();
+  modal.classList.remove('hidden');
+}
+
+function closeSnapshotModal() {
+  document.getElementById('snapshotModal')?.classList.add('hidden');
+  editingSnapshotId = null;
+  snapSelectedIds = [];
+}
+
+function renderSnapAvailable() {
+  const container = document.getElementById('snapAvailableModules');
+  if (!container) return;
+  const mods = getModules();
+  if (mods.length === 0) {
+    container.innerHTML = '<p class="text-xs text-on-surface-variant opacity-50 text-center py-4">模块库为空</p>';
+    return;
+  }
+  // Group by type
+  const groups = {};
+  MODULE_TYPE_ORDER.forEach(t => { groups[t] = []; });
+  mods.forEach(m => { if (groups[m.module_type]) groups[m.module_type].push(m); });
+  container.innerHTML = MODULE_TYPE_ORDER.filter(t => groups[t].length > 0).map(t => `
+    <div class="mb-3">
+      <p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-1.5">${escHtml(MODULE_TYPE_LABELS[t])}</p>
+      ${groups[t].map(m => {
+        const selected = snapSelectedIds.includes(m.id);
+        return `<button onclick="window._snapToggleModule('${m.id}')"
+          class="w-full text-left px-3 py-2 rounded-lg text-xs mb-1 transition-colors ${selected ? 'bg-primary/10 text-primary font-semibold' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}">
+          ${escHtml(moduleCardSummary(m) || '(空)')}
+        </button>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function renderSnapSelected() {
+  const container = document.getElementById('snapSelectedModules');
+  if (!container) return;
+  if (snapSelectedIds.length === 0) {
+    container.innerHTML = '<p class="text-xs text-on-surface-variant opacity-50 text-center py-4">点击左侧模块添加</p>';
+    return;
+  }
+  const mods = getModules();
+  container.innerHTML = snapSelectedIds.map((id, idx) => {
+    const m = mods.find(x => x.id === id);
+    if (!m) return '';
+    return `<div class="flex items-center gap-2 px-3 py-2 bg-surface-container rounded-lg mb-1 cursor-grab" draggable="true"
+      data-snap-idx="${idx}" data-snap-id="${id}"
+      ondragstart="window._snapDragStart(event,${idx})"
+      ondragover="event.preventDefault()"
+      ondrop="window._snapDrop(event,${idx})">
+      <span class="material-symbols-outlined text-sm text-on-surface-variant shrink-0">drag_indicator</span>
+      <span class="flex-1 text-xs text-on-surface truncate">${escHtml(moduleCardSummary(m) || '(空)')}</span>
+      <button onclick="window._snapRemoveModule('${id}')" class="text-on-surface-variant hover:text-error shrink-0">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>`;
+  }).filter(Boolean).join('');
+}
+
+window._snapToggleModule = function(id) {
+  if (snapSelectedIds.includes(id)) {
+    snapSelectedIds = snapSelectedIds.filter(x => x !== id);
+  } else {
+    snapSelectedIds.push(id);
+  }
+  renderSnapAvailable();
+  renderSnapSelected();
+};
+
+window._snapRemoveModule = function(id) {
+  snapSelectedIds = snapSelectedIds.filter(x => x !== id);
+  renderSnapAvailable();
+  renderSnapSelected();
+};
+
+let dragSrcIdx = null;
+window._snapDragStart = function(e, idx) { dragSrcIdx = idx; e.dataTransfer.effectAllowed = 'move'; };
+window._snapDrop = function(e, targetIdx) {
+  e.preventDefault();
+  if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+  const moved = snapSelectedIds.splice(dragSrcIdx, 1)[0];
+  snapSelectedIds.splice(targetIdx, 0, moved);
+  dragSrcIdx = null;
+  renderSnapSelected();
+};
+
+function saveSnapshot() {
+  const name = document.getElementById('snapName')?.value.trim();
+  if (!name) { alert('请填写简历名称'); return; }
+  const tagsRaw = document.getElementById('snapTags')?.value.trim();
+  const targetTags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+  if (snapSelectedIds.length === 0) { alert('请至少选择一个模块'); return; }
+  const mods = getModules();
+  const sections = snapSelectedIds.map((id, order) => {
+    const m = mods.find(x => x.id === id);
+    if (!m) return null;
+    return { module_type: m.module_type, order, content: JSON.parse(JSON.stringify(m.data)) };
+  }).filter(Boolean);
+  try {
+    if (editingSnapshotId) {
+      updateSnapshot(editingSnapshotId, { name, targetTags, sections });
+    } else {
+      addSnapshot(name, targetTags, sections);
+    }
+    closeSnapshotModal();
+    renderSnapshotList();
+    updateStorageBar();
+    showToast(editingSnapshotId ? '快照已更新' : '快照已保存');
+  } catch (e) { alert(e.message); }
 }
 
 // ── Map Tab (swipe cards) ──────────────────────────────────────────────────
@@ -861,6 +1667,165 @@ function saveMapCard(card, job) {
   }, 500);
 }
 
+// ── Resume Preview Modal ──────────────────────────────────────────────────
+let _previewParsed = null;
+
+function openResumePreviewModal(parsed) {
+  _previewParsed = parsed;
+  const modal = document.getElementById('resumePreviewModal');
+  if (!modal) return;
+  renderPreviewItems(parsed);
+  modal.classList.remove('hidden');
+}
+
+function closeResumePreviewModal() {
+  document.getElementById('resumePreviewModal')?.classList.add('hidden');
+  _previewParsed = null;
+}
+
+function renderPreviewItems(parsed) {
+  const container = document.getElementById('previewItemsContainer');
+  if (!container) return;
+  const items = [];
+
+  if (parsed.basic_info && Object.values(parsed.basic_info).some(Boolean)) {
+    items.push({ type: 'basic_info', data: parsed.basic_info, label: '基本信息',
+      summary: [parsed.basic_info.name, parsed.basic_info.phone, parsed.basic_info.email].filter(Boolean).join(' · ') });
+  }
+  for (const exp of parsed.experiences || []) {
+    const d = exp.data;
+    const label = MODULE_TYPE_LABELS[exp.module_type] || exp.module_type;
+    let summary = '';
+    if (exp.module_type === 'experience') summary = [d.org, d.role, d.start_date, d.end_date].filter(Boolean).join(' · ');
+    else if (exp.module_type === 'education') summary = [d.school, d.major, d.start_date, d.end_date].filter(Boolean).join(' · ');
+    else if (exp.module_type === 'award') summary = [d.name, d.date].filter(Boolean).join(' · ');
+    else summary = JSON.stringify(d).slice(0, 60);
+    items.push({ type: exp.module_type, data: d, label, summary });
+  }
+  if (parsed.skill?.items?.length) {
+    items.push({ type: 'skill', data: parsed.skill, label: '技能',
+      summary: parsed.skill.items.join(', ') });
+  }
+  if (parsed.summary?.content) {
+    items.push({ type: 'summary', data: parsed.summary, label: '自我描述',
+      summary: parsed.summary.content.slice(0, 60) });
+  }
+
+  if (!items.length) {
+    container.innerHTML = '<p class="text-sm text-on-surface-variant text-center py-8">未解析到有效内容</p>';
+    return;
+  }
+
+  container.innerHTML = items.map((item, idx) => `
+    <div class="preview-item border border-outline-variant/40 rounded-2xl p-4 flex flex-col gap-2" data-idx="${idx}">
+      <div class="flex items-start justify-between gap-2">
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <input type="checkbox" class="preview-check rounded border-outline-variant text-primary flex-shrink-0" data-idx="${idx}" checked>
+          <span class="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full flex-shrink-0">${escHtml(item.label)}</span>
+          <span class="text-sm text-on-surface-variant truncate">${escHtml(item.summary)}</span>
+        </div>
+        <button class="preview-edit-btn flex-shrink-0 text-xs text-on-surface-variant hover:text-primary transition-colors" data-idx="${idx}">编辑</button>
+      </div>
+      <div class="preview-edit-area hidden" data-idx="${idx}">
+        <div class="grid grid-cols-1 gap-2 mt-1">
+          ${buildPreviewEditFields(item.type, item.data)}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Store items for later use
+  container._items = items;
+
+  // Bind edit toggles
+  container.querySelectorAll('.preview-edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.idx;
+      const area = container.querySelector(`.preview-edit-area[data-idx="${idx}"]`);
+      if (area) {
+        area.classList.toggle('hidden');
+        btn.textContent = area.classList.contains('hidden') ? '编辑' : '收起';
+      }
+    });
+  });
+}
+
+function buildPreviewEditFields(type, data) {
+  const fields = FORM_FIELDS[type] || [];
+  if (!fields.length) {
+    // Fallback: render all keys as text inputs
+    return Object.entries(data).map(([k, v]) => `
+      <div><label class="block text-xs text-on-surface-variant mb-0.5">${escHtml(k)}</label>
+      <input type="text" name="${escHtml(k)}" value="${escHtml(String(v||''))}"
+        class="w-full px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"></div>
+    `).join('');
+  }
+  return fields.map(f => {
+    let val = data[f.key];
+    if (f.isArray && Array.isArray(val)) val = f.sep ? val.join(f.sep + ' ') : val.join('\n');
+    else if (f.isArray && !val) val = '';
+    const base = 'class="w-full px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"';
+    if (f.type === 'textarea') {
+      return `<div><label class="block text-xs text-on-surface-variant mb-0.5">${escHtml(f.label)}</label>
+        <textarea name="${f.key}" rows="3" ${base}>${escHtml(String(val||''))}</textarea></div>`;
+    }
+    return `<div><label class="block text-xs text-on-surface-variant mb-0.5">${escHtml(f.label)}</label>
+      <input type="text" name="${f.key}" value="${escHtml(String(val||''))}" ${base}></div>`;
+  }).join('');
+}
+
+function collectPreviewData(type, editArea) {
+  const fields = FORM_FIELDS[type] || [];
+  if (!fields.length) {
+    const data = {};
+    editArea.querySelectorAll('input,textarea').forEach(el => { if (el.name) data[el.name] = el.value.trim(); });
+    return data;
+  }
+  const data = {};
+  fields.forEach(f => {
+    const el = editArea.querySelector(`[name="${f.key}"]`);
+    if (!el) return;
+    if (f.type === 'checkbox') data[f.key] = el.checked;
+    else if (f.isArray) {
+      const raw = el.value.trim();
+      data[f.key] = raw ? (f.sep ? raw.split(f.sep).map(s=>s.trim()).filter(Boolean) : raw.split('\n').map(s=>s.trim()).filter(Boolean)) : [];
+    } else data[f.key] = el.value.trim();
+  });
+  return data;
+}
+
+function confirmResumeImport() {
+  const container = document.getElementById('previewItemsContainer');
+  if (!container || !container._items) return;
+  const items = container._items;
+  let added = 0;
+
+  items.forEach((item, idx) => {
+    const checkbox = container.querySelector(`.preview-check[data-idx="${idx}"]`);
+    if (!checkbox?.checked) return;
+
+    // Collect possibly-edited data
+    const editArea = container.querySelector(`.preview-edit-area[data-idx="${idx}"]`);
+    const data = editArea && !editArea.classList.contains('hidden')
+      ? collectPreviewData(item.type, editArea)
+      : item.data;
+
+    try {
+      if (item.type === 'basic_info' && getModulesByType('basic_info').length > 0) return;
+      addModule(item.type, data, []);
+      added++;
+    } catch (e) {
+      // quota hit, skip
+    }
+  });
+
+  closeResumePreviewModal();
+  refreshResumeUI();
+  showToast(added > 0 ? `已导入 ${added} 个模块` : '未导入任何模块');
+}
+
+// ── End Resume Preview Modal ──────────────────────────────────────────────
+
 function showToast(msg) {
   const t = document.createElement('div');
   t.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg z-[100] pointer-events-none transition-opacity';
@@ -919,9 +1884,202 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyFilters();
   });
 
+  // ── Auth UI ───────────────────────────────────────────────────────────────
+  function renderAuthArea() {
+    const area = document.getElementById('authArea');
+    if (!area) return;
+    const user = getUser();
+    if (user) {
+      const initial = (user.username || user.email || '?')[0].toUpperCase();
+      area.innerHTML = `
+        <div class="relative group">
+          <button class="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-surface-container transition-colors">
+            <div class="h-8 w-8 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">${initial}</div>
+            <span class="hidden md:block text-sm font-semibold text-on-surface max-w-[100px] truncate">${user.username || user.email}</span>
+            <span class="material-symbols-outlined text-base text-on-surface-variant">expand_more</span>
+          </button>
+          <div class="absolute right-0 top-full mt-1 w-40 bg-surface rounded-2xl shadow-lg border border-outline-variant/30 overflow-hidden opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all">
+            <button onclick="doLogout()" class="w-full text-left px-4 py-3 text-sm text-on-surface hover:bg-surface-container transition-colors flex items-center gap-2">
+              <span class="material-symbols-outlined text-base">logout</span>退出登录
+            </button>
+          </div>
+        </div>`;
+    } else {
+      area.innerHTML = `
+        <button onclick="openAuthModal('login')"
+          class="px-4 py-2 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors">登录</button>
+        <button onclick="openAuthModal('register')"
+          class="px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all hover:shadow-md hover:shadow-primary/20">注册</button>`;
+    }
+  }
+
+  function openAuthModal(tab = 'login') {
+    document.getElementById('authModal').classList.remove('hidden');
+    switchAuthTab(tab);
+  }
+
+  function closeAuthModal() {
+    document.getElementById('authModal').classList.add('hidden');
+    document.getElementById('loginError').classList.add('hidden');
+    document.getElementById('registerError').classList.add('hidden');
+  }
+
+  window.switchAuthTab = function(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
+    document.getElementById('loginForm').classList.toggle('flex', isLogin);
+    document.getElementById('registerForm').classList.toggle('hidden', isLogin);
+    document.getElementById('registerForm').classList.toggle('flex', !isLogin);
+    document.getElementById('authTabLogin').className = isLogin
+      ? 'flex-1 py-2 rounded-xl text-sm font-bold transition-all bg-surface shadow text-on-surface'
+      : 'flex-1 py-2 rounded-xl text-sm font-bold transition-all text-on-surface-variant';
+    document.getElementById('authTabRegister').className = !isLogin
+      ? 'flex-1 py-2 rounded-xl text-sm font-bold transition-all bg-surface shadow text-on-surface'
+      : 'flex-1 py-2 rounded-xl text-sm font-bold transition-all text-on-surface-variant';
+  };
+
+  window.openAuthModal = openAuthModal;
+
+  window.submitLogin = async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('loginSubmitBtn');
+    const errEl = document.getElementById('loginError');
+    errEl.classList.add('hidden');
+    btn.disabled = true; btn.textContent = '登录中…';
+    try {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      await login(email, password);
+      closeAuthModal();
+      renderAuthArea();
+      showToast('登录成功');
+    } catch (err) {
+      errEl.textContent = err.message === 'Invalid credentials' ? '邮箱或密码错误' : (err.message || '登录失败');
+      errEl.classList.remove('hidden');
+    } finally {
+      btn.disabled = false; btn.textContent = '登录';
+    }
+  };
+
+  window.submitRegister = async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('registerSubmitBtn');
+    const errEl = document.getElementById('registerError');
+    errEl.classList.add('hidden');
+    btn.disabled = true; btn.textContent = '注册中…';
+    try {
+      const username = document.getElementById('regUsername').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      if (password.length < 6) throw new Error('密码至少6位');
+      await register(username, email, password);
+      await login(email, password);
+      // enrich stored user with username
+      const u = getUser() || {};
+      u.username = username;
+      localStorage.setItem('yesjob_user', JSON.stringify(u));
+      closeAuthModal();
+      renderAuthArea();
+      showToast('注册成功，已自动登录');
+    } catch (err) {
+      errEl.textContent = err.message || '注册失败';
+      errEl.classList.remove('hidden');
+    } finally {
+      btn.disabled = false; btn.textContent = '注册';
+    }
+  };
+
+  window.doLogout = function() {
+    logout();
+  };
+
+  document.getElementById('resumePreviewBackdrop')?.addEventListener('click', closeResumePreviewModal);
+  window.closeResumePreviewModal = closeResumePreviewModal;
+  window.confirmResumeImport = confirmResumeImport;
+
+  document.getElementById('authModalBackdrop')?.addEventListener('click', closeAuthModal);
+
+  renderAuthArea();
+
+  // ── End Auth UI ───────────────────────────────────────────────────────────
+
   await refreshDynamicFilters();
   await loadJobs(1);
 });
 </script>
+<!-- Resume Preview Modal -->
+<div id="resumePreviewModal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="resumePreviewBackdrop"></div>
+  <div class="relative bg-surface rounded-3xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
+    <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-outline-variant/20">
+      <div>
+        <h2 class="text-base font-bold text-on-surface">解析结果预览</h2>
+        <p class="text-xs text-on-surface-variant mt-0.5">勾选要导入的模块，可点击「编辑」修改内容</p>
+      </div>
+      <button onclick="closeResumePreviewModal()" class="p-1.5 rounded-full hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-on-surface-variant">close</span>
+      </button>
+    </div>
+    <div id="previewItemsContainer" class="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3"></div>
+    <div class="flex gap-3 px-6 py-4 border-t border-outline-variant/20">
+      <button onclick="closeResumePreviewModal()"
+        class="flex-1 py-2.5 rounded-xl border border-outline-variant text-sm font-bold text-on-surface-variant hover:bg-surface-container transition-colors">取消</button>
+      <button onclick="confirmResumeImport()"
+        class="flex-1 py-2.5 rounded-xl bg-primary text-on-primary text-sm font-bold active:scale-95 transition-all">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- Auth Modal -->
+<div id="authModal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="authModalBackdrop"></div>
+  <div class="relative bg-surface rounded-3xl shadow-2xl w-full max-w-sm p-8 flex flex-col gap-6">
+    <!-- Tabs -->
+    <div class="flex gap-1 bg-surface-container rounded-2xl p-1">
+      <button id="authTabLogin" onclick="switchAuthTab('login')"
+        class="flex-1 py-2 rounded-xl text-sm font-bold transition-all bg-surface shadow text-on-surface">登录</button>
+      <button id="authTabRegister" onclick="switchAuthTab('register')"
+        class="flex-1 py-2 rounded-xl text-sm font-bold transition-all text-on-surface-variant">注册</button>
+    </div>
+    <!-- Login Form -->
+    <form id="loginForm" class="flex flex-col gap-4" onsubmit="submitLogin(event)">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-on-surface-variant">邮箱</label>
+        <input id="loginEmail" type="email" required placeholder="your@email.com"
+          class="px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-on-surface-variant">密码</label>
+        <input id="loginPassword" type="password" required placeholder="••••••••"
+          class="px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
+      </div>
+      <p id="loginError" class="hidden text-xs text-red-500 -mt-1"></p>
+      <button type="submit" id="loginSubmitBtn"
+        class="py-2.5 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all">登录</button>
+    </form>
+    <!-- Register Form -->
+    <form id="registerForm" class="hidden flex-col gap-4" onsubmit="submitRegister(event)">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-on-surface-variant">用户名</label>
+        <input id="regUsername" type="text" required placeholder="你的昵称"
+          class="px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-on-surface-variant">邮箱</label>
+        <input id="regEmail" type="email" required placeholder="your@email.com"
+          class="px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-semibold text-on-surface-variant">密码</label>
+        <input id="regPassword" type="password" required placeholder="至少6位"
+          class="px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
+      </div>
+      <p id="registerError" class="hidden text-xs text-red-500 -mt-1"></p>
+      <button type="submit" id="registerSubmitBtn"
+        class="py-2.5 bg-primary text-on-primary rounded-xl text-sm font-bold active:scale-95 transition-all">注册</button>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>

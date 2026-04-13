@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     QWEN_BASE_URL: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     QWEN_MODEL: str = "qwen-plus"
     JOBS_FILE: str = "data/jobs.jsonl"
+    OLLAMA_PARSE_MODEL: str = "qwen2.5:0.5b"
 
     class Config:
         env_file = ".env"

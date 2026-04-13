@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from models.job import Job
-from schemas.ai import MatchRequest, MatchResponse, OptimizeRequest, OptimizeResponse
+from schemas.ai import MatchRequest, MatchResponse, OptimizeRequest, OptimizeResponse, OptimizeModuleRequest
 from services.auth_service import get_current_user
 from services.ollama_service import batch_match
-from services.llm_service import optimize_resume
+from services.llm_service import optimize_resume, optimize_module_stream
 
 router = APIRouter()
 
@@ -48,3 +49,21 @@ async def optimize_resume_endpoint(
         job.bonus_points or "",
     )
     return OptimizeResponse(optimized_resume=optimized, suggestions=suggestions)
+
+
+@router.post("/optimize-module")
+async def optimize_module_endpoint(
+    body: OptimizeModuleRequest,
+    user_id: int = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    job = None
+    if body.job_id is not None:
+        result = await db.execute(select(Job).where(Job.id == body.job_id))
+        job = result.scalar_one_or_none()
+
+    return StreamingResponse(
+        optimize_module_stream(body.module_type, body.module_data, job),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )

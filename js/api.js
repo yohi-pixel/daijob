@@ -1,15 +1,24 @@
 const API_BASE_URL = '/api';
 
 function getToken() {
-  return sessionStorage.getItem('yesjob_token');
+  return localStorage.getItem('yesjob_token');
 }
 
 function setToken(token) {
-  sessionStorage.setItem('yesjob_token', token);
+  localStorage.setItem('yesjob_token', token);
 }
 
 function clearToken() {
-  sessionStorage.removeItem('yesjob_token');
+  localStorage.removeItem('yesjob_token');
+  localStorage.removeItem('yesjob_user');
+}
+
+function setUser(user) {
+  localStorage.setItem('yesjob_user', JSON.stringify(user));
+}
+
+function getUser() {
+  try { return JSON.parse(localStorage.getItem('yesjob_user')); } catch { return null; }
 }
 
 async function apiFetch(endpoint, options = {}) {
@@ -53,12 +62,13 @@ async function login(email, password) {
     body: JSON.stringify({ email, password }),
   });
   setToken(data.access_token);
+  setUser({ email });
   return data;
 }
 
 function logout() {
   clearToken();
-  window.location.href = '/pages/home.html';
+  window.location.reload();
 }
 
 async function getJobs(params = {}) {
@@ -97,6 +107,8 @@ export {
   getToken,
   setToken,
   clearToken,
+  getUser,
+  setUser,
   apiFetch,
   register,
   login,

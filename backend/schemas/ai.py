@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 from pydantic import BaseModel
 
 
@@ -19,3 +19,9 @@ class OptimizeRequest(BaseModel):
 class OptimizeResponse(BaseModel):
     optimized_resume: str
     suggestions: list[str]
+
+
+class OptimizeModuleRequest(BaseModel):
+    module_type: str
+    module_data: dict[str, Any]
+    job_id: Optional[int] = None

@@ -20,6 +20,9 @@ class ProxyHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith('/api'):
             self._proxy()
+        elif self.path == '/' or self.path == '':
+            self.path = '/pages/home.html'
+            super().do_GET()
         else:
             super().do_GET()
 
@@ -29,14 +32,31 @@ class ProxyHandler(http.server.SimpleHTTPRequestHandler):
         else:
             super().do_POST()
 
+    def do_PUT(self):
+        if self.path.startswith('/api'):
+            self._proxy()
+        else:
+            self.send_response(405)
+            self.end_headers()
+
+    def do_DELETE(self):
+        if self.path.startswith('/api'):
+            self._proxy()
+        else:
+            self.send_response(405)
+            self.end_headers()
+
     def _proxy(self):
         url = BACKEND + self.path
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length) if length else None
         req = urllib.request.Request(url, data=body, method=self.command)
-        for h in ('Content-Type', 'Authorization'):
-            if self.headers.get(h):
-                req.add_header(h, self.headers[h])
+        # Forward all relevant request headers
+        for h, v in self.headers.items():
+            hl = h.lower()
+            if hl in ('transfer-encoding', 'connection', 'host'):
+                continue
+            req.add_header(h, v)
         try:
             with urllib.request.urlopen(req) as resp:
                 self.send_response(resp.status)

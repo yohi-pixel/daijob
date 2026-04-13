@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import Base, engine
 from config import settings
 from routers import auth, jobs, ai
+from routers import resume_parse
 
 
 async def import_jobs_if_empty(jobs_file: str):
@@ -31,6 +32,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(jobs.router, prefix="/api/jobs", tags=["jobs"])
 app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
+app.include_router(resume_parse.router)
 
 
 @app.get("/health")
