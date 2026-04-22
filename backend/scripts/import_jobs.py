@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from database import Base
 from models.job import Job
 from config import settings
+from services.search_utils import normalize_city_values, normalize_job_category
 
 
 def parse_publish_time(value) -> datetime | None:
@@ -29,15 +30,16 @@ def parse_fetched_at(value) -> datetime | None:
 
 
 def record_to_dict(record: dict) -> dict:
+    normalized_cities = normalize_city_values(record.get("work_city"), record.get("work_cities") or [])
     return {
         "job_id": str(record.get("job_id", "")),
         "company": record.get("company"),
         "title": record.get("title"),
         "recruit_type": record.get("recruit_type"),
-        "job_category": record.get("job_category"),
+        "job_category": normalize_job_category(record.get("job_category")),
         "job_function": record.get("job_function"),
-        "work_city": record.get("work_city"),
-        "work_cities": record.get("work_cities") or [],
+        "work_city": normalized_cities[0] if normalized_cities else None,
+        "work_cities": normalized_cities,
         "team_intro": record.get("team_intro") or "",
         "responsibilities": record.get("responsibilities") or "",
         "requirements": record.get("requirements") or "",

@@ -24,6 +24,12 @@ async def seed_jobs(db_session):
             requirements="熟悉React或Vue", bonus_points="", tags=[],
             publish_time=datetime(2024, 8, 1, 10, 0, 0),
             detail_url="https://careers.tencent.com/30001"),
+        Job(job_id="J004", company="海外公司", title="AI Platform Engineer",
+            recruit_type="社招", job_category="研发类", work_city="东京/新加坡",
+            work_cities=["东京", "新加坡"], responsibilities="构建检索增强系统",
+            requirements="有RAG系统落地经验", bonus_points="懂BM25和向量召回", tags=[],
+            publish_time=datetime(2024, 8, 2, 10, 0, 0),
+            detail_url="https://example.com/40001"),
     ]
     for j in jobs:
         db_session.add(j)
@@ -38,8 +44,8 @@ async def test_list_jobs_default(client, seed_jobs):
     r = await client.get("/jobs")
     assert r.status_code == 200
     d = r.json()
-    assert d["total"] == 3
-    assert len(d["items"]) == 3
+    assert d["total"] == 4
+    assert len(d["items"]) == 4
 
 
 @pytest.mark.asyncio
@@ -76,6 +82,44 @@ async def test_list_jobs_search(client, seed_jobs):
 
 
 @pytest.mark.asyncio
+async def test_list_jobs_semantic_search_requirements_and_bonus(client, seed_jobs):
+    r = await client.get("/jobs", params={"q": "RAG 向量 BM25"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["total"] == 1
+    assert d["items"][0]["company"] == "海外公司"
+
+
+@pytest.mark.asyncio
+async def test_list_jobs_exclude_company(client, seed_jobs):
+    r = await client.get("/jobs", params={"company": "-字节跳动"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["total"] == 3
+    companies = {item["company"] for item in d["items"]}
+    assert "字节跳动" not in companies
+
+
+@pytest.mark.asyncio
+async def test_list_jobs_exclude_city(client, seed_jobs):
+    r = await client.get("/jobs", params={"city": "-深圳"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["total"] == 3
+    companies = {item["company"] for item in d["items"]}
+    assert "腾讯" not in companies
+
+
+@pytest.mark.asyncio
+async def test_list_jobs_city_normalization_overseas(client, seed_jobs):
+    r = await client.get("/jobs", params={"city": "海外"})
+    assert r.status_code == 200
+    d = r.json()
+    assert d["total"] == 1
+    assert d["items"][0]["company"] == "海外公司"
+
+
+@pytest.mark.asyncio
 async def test_list_jobs_search_no_results(client, seed_jobs):
     r = await client.get("/jobs", params={"q": "不存在XYZ"})
     assert r.status_code == 200
@@ -88,14 +132,14 @@ async def test_list_jobs_pagination(client, seed_jobs):
     assert r.status_code == 200
     d = r.json()
     assert len(d["items"]) == 2
-    assert d["total"] == 3
+    assert d["total"] == 4
 
 
 @pytest.mark.asyncio
 async def test_list_jobs_sort_latest(client, seed_jobs):
     r = await client.get("/jobs", params={"sort": "latest"})
     assert r.status_code == 200
-    assert r.json()["items"][0]["company"] == "腾讯"
+    assert r.json()["items"][0]["company"] == "海外公司"
 
 
 @pytest.mark.asyncio
@@ -120,6 +164,6 @@ async def test_filters_meta(client, seed_jobs):
     r = await client.get("/jobs/meta/filters")
     assert r.status_code == 200
     d = r.json()
-    assert set(d["cities"]) == {"上海", "北京", "深圳"}
-    assert set(d["recruit_types"]) == {"实习", "校招"}
+    assert set(d["cities"]) == {"上海", "北京", "深圳", "海外"}
+    assert set(d["recruit_types"]) == {"实习", "校招", "社招"}
     assert set(d["job_categories"]) == {"产品运营类", "技术类"}

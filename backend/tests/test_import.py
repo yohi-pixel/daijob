@@ -62,6 +62,25 @@ SAMPLE_JOBS = [
         "fetched_at": "2026-03-16T10:00:00+00:00",
         "source_page": "2",
     },
+    {
+        "company": "海外公司",
+        "job_id": "40001",
+        "title": "AI Platform Engineer",
+        "recruit_type": "社招",
+        "job_category": "研发类",
+        "job_function": "社招",
+        "work_city": "东京/新加坡",
+        "work_cities": [],
+        "team_intro": "",
+        "responsibilities": "构建检索增强系统",
+        "requirements": "有RAG系统落地经验",
+        "bonus_points": "懂BM25和向量召回",
+        "tags": [],
+        "publish_time": "2024-09-01 10:00:00",
+        "detail_url": "https://example.com/40001",
+        "fetched_at": "2026-03-17T10:00:00+00:00",
+        "source_page": "3",
+    },
 ]
 
 
@@ -79,7 +98,7 @@ async def test_import_inserts_jobs(db_session, sample_jsonl):
     await run_import(sample_jsonl, session=db_session)
     result = await db_session.execute(select(func.count()).select_from(Job))
     count = result.scalar()
-    assert count == 3
+    assert count == 4
 
 
 @pytest.mark.asyncio
@@ -88,7 +107,7 @@ async def test_import_is_idempotent(db_session, sample_jsonl):
     await run_import(sample_jsonl, session=db_session)
     result = await db_session.execute(select(func.count()).select_from(Job))
     count = result.scalar()
-    assert count == 3
+    assert count == 4
 
 
 @pytest.mark.asyncio
@@ -107,3 +126,13 @@ async def test_import_missing_file(db_session):
     result = await db_session.execute(select(func.count()).select_from(Job))
     count = result.scalar()
     assert count == 0
+
+
+@pytest.mark.asyncio
+async def test_import_normalizes_city_and_category(db_session, sample_jsonl):
+    await run_import(sample_jsonl, session=db_session)
+    result = await db_session.execute(select(Job).where(Job.job_id == "40001"))
+    job = result.scalar_one()
+    assert job.work_city == "海外"
+    assert job.work_cities == ["海外"]
+    assert job.job_category == "技术类"

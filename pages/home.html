@@ -61,6 +61,21 @@
     .sidebar-link.active .sidebar-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Multi-select filter */
+    .filter-multi { position: relative; }
+    .filter-trigger { display: flex; flex-wrap: wrap; gap: 4px; min-height: 38px; padding: 6px 10px; border-radius: 12px; border: 1px solid rgba(172,173,172,0.3); background: #e7e8e6; cursor: pointer; align-items: center; }
+    .filter-trigger:focus-within { outline: 2px solid #9d3d00; outline-offset: 1px; }
+    .filter-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; background: #9d3d00; color: #fff0ea; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .filter-chip button { background: none; border: none; color: inherit; cursor: pointer; padding: 0; line-height: 1; font-size: 13px; opacity: 0.8; }
+    .filter-chip button:hover { opacity: 1; }
+    .filter-placeholder { font-size: 13px; color: #5a5c5b; opacity: 0.6; }
+    .filter-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: white; border: 1px solid rgba(172,173,172,0.3); border-radius: 12px; box-shadow: 0 8px 24px rgba(45,47,46,0.12); z-index: 100; max-height: 220px; overflow-y: auto; }
+    .filter-dropdown.hidden { display: none; }
+    .filter-option { padding: 8px 12px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #2d2f2e; }
+    .filter-option:hover { background: #f0f1ef; }
+    .filter-option.selected { color: #9d3d00; font-weight: 600; }
+    .filter-option.selected::before { content: '✓'; font-size: 11px; }
+    .filter-option:not(.selected)::before { content: ''; display: inline-block; width: 11px; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -144,13 +159,6 @@
               <span class="material-symbols-outlined text-primary">search</span>
               <input id="homeSearchInput" class="w-full border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 bg-transparent py-3 text-sm" placeholder="职位名称、公司或关键词" type="text"/>
             </div>
-            <div class="hidden md:block w-px bg-outline-variant/20 my-3"></div>
-            <div class="flex-1 flex items-center px-4 gap-3">
-              <span class="material-symbols-outlined text-on-surface-variant">location_on</span>
-              <select id="homeCityFilter" class="w-full border-none focus:ring-0 text-on-surface bg-transparent py-3 text-sm cursor-pointer">
-                <option value="">全部城市</option>
-              </select>
-            </div>
             <button id="homeSearchBtn" class="punch-gradient text-on-primary font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/20 text-sm">
               立即搜索
             </button>
@@ -176,22 +184,40 @@
             </h3>
             <div class="space-y-4">
               <div>
+                <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">城市</label>
+                <div class="filter-multi" id="filterCity">
+                  <div class="filter-trigger" id="cityTrigger">
+                    <span class="filter-placeholder">全部城市</span>
+                  </div>
+                  <div class="filter-dropdown hidden" id="cityDropdown"></div>
+                </div>
+              </div>
+              <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">公司</label>
-                <select id="homeCompanyFilter" class="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 focus:ring-primary text-sm p-2.5 text-on-surface">
-                  <option value="">全部公司</option>
-                </select>
+                <div class="filter-multi" id="filterCompany">
+                  <div class="filter-trigger" id="companyTrigger">
+                    <span class="filter-placeholder">全部公司</span>
+                  </div>
+                  <div class="filter-dropdown hidden" id="companyDropdown"></div>
+                </div>
               </div>
               <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">招聘类型</label>
-                <select id="homeTypeFilter" class="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 focus:ring-primary text-sm p-2.5 text-on-surface">
-                  <option value="">全部类型</option>
-                </select>
+                <div class="filter-multi" id="filterType">
+                  <div class="filter-trigger" id="typeTrigger">
+                    <span class="filter-placeholder">全部类型</span>
+                  </div>
+                  <div class="filter-dropdown hidden" id="typeDropdown"></div>
+                </div>
               </div>
               <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">职位类别</label>
-                <select id="homeCategoryFilter" class="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 focus:ring-primary text-sm p-2.5 text-on-surface">
-                  <option value="">全部类别</option>
-                </select>
+                <div class="filter-multi" id="filterCategory">
+                  <div class="filter-trigger" id="categoryTrigger">
+                    <span class="filter-placeholder">全部类别</span>
+                  </div>
+                  <div class="filter-dropdown hidden" id="categoryDropdown"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -508,7 +534,7 @@
 </nav>
 
 <script type="module">
-import { getJobs, getDynamicFilters, getToken, getUser, login, register, logout, matchJobs } from '../js/api.js';
+import { getJobs, getFilters, getToken, getUser, login, register, logout, matchJobs } from '../js/api.js';
 import {
   getModules, getModulesByType, getModulesByTag, getAllTags,
   addModule, updateModule, deleteModule, cloneModule,
@@ -601,43 +627,110 @@ function formatDate(s) {
   try { return new Date(s).toLocaleDateString('zh-CN'); } catch { return ''; }
 }
 
+// Filter state management
+const filterState = {
+  city: [],
+  company: [],
+  recruit_type: [],
+  job_category: [],
+};
+
 function getActiveFilters() {
   return {
     q: document.getElementById('homeSearchInput')?.value?.trim() || undefined,
-    city: document.getElementById('homeCityFilter')?.value || undefined,
-    company: document.getElementById('homeCompanyFilter')?.value || undefined,
-    recruit_type: document.getElementById('homeTypeFilter')?.value || undefined,
-    job_category: document.getElementById('homeCategoryFilter')?.value || undefined,
+    city: filterState.city.length ? filterState.city.join(',') : undefined,
+    company: filterState.company.length ? filterState.company.join(',') : undefined,
+    recruit_type: filterState.recruit_type.length ? filterState.recruit_type.join(',') : undefined,
+    job_category: filterState.job_category.length ? filterState.job_category.join(',') : undefined,
   };
 }
 
-function populateSelect(id, options, placeholder, keepValue) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const prev = keepValue ? el.value : '';
-  el.innerHTML = `<option value="">${placeholder}</option>`;
+function renderFilterChips(filterKey, triggerId) {
+  const trigger = document.getElementById(triggerId);
+  if (!trigger) return;
+
+  const selected = filterState[filterKey];
+  trigger.innerHTML = '';
+
+  if (selected.length === 0) {
+    const placeholder = document.createElement('span');
+    placeholder.className = 'filter-placeholder';
+    placeholder.textContent = triggerId.includes('city') ? '全部城市' :
+                             triggerId.includes('company') ? '全部公司' :
+                             triggerId.includes('type') ? '全部类型' : '全部类别';
+    trigger.appendChild(placeholder);
+  } else {
+    selected.forEach(val => {
+      const chip = document.createElement('span');
+      chip.className = 'filter-chip';
+      chip.innerHTML = `${val} <button onclick="removeFilterValue('${filterKey}', '${val}'); event.stopPropagation();">×</button>`;
+      trigger.appendChild(chip);
+    });
+  }
+}
+
+function removeFilterValue(filterKey, value) {
+  filterState[filterKey] = filterState[filterKey].filter(v => v !== value);
+  const triggerMap = { city: 'cityTrigger', company: 'companyTrigger', recruit_type: 'typeTrigger', job_category: 'categoryTrigger' };
+  renderFilterChips(filterKey, triggerMap[filterKey]);
+  loadJobs();
+}
+
+function toggleFilterValue(filterKey, value, triggerId) {
+  const idx = filterState[filterKey].indexOf(value);
+  if (idx > -1) {
+    filterState[filterKey].splice(idx, 1);
+  } else {
+    filterState[filterKey].push(value);
+  }
+  renderFilterChips(filterKey, triggerId);
+  loadJobs();
+}
+
+function setupMultiSelectFilter(filterKey, triggerId, dropdownId, options) {
+  const trigger = document.getElementById(triggerId);
+  const dropdown = document.getElementById(dropdownId);
+  if (!trigger || !dropdown) return;
+
+  // Render options
+  dropdown.innerHTML = '';
   options.forEach(opt => {
-    const o = document.createElement('option');
-    o.value = opt; o.textContent = opt;
-    el.appendChild(o);
+    const div = document.createElement('div');
+    div.className = 'filter-option';
+    if (filterState[filterKey].includes(opt)) div.classList.add('selected');
+    div.textContent = opt;
+    div.onclick = () => {
+      toggleFilterValue(filterKey, opt, triggerId);
+      setupMultiSelectFilter(filterKey, triggerId, dropdownId, options); // Re-render
+    };
+    dropdown.appendChild(div);
   });
-  if (prev && options.includes(prev)) el.value = prev;
+
+  // Toggle dropdown
+  trigger.onclick = (e) => {
+    e.stopPropagation();
+    const isHidden = dropdown.classList.contains('hidden');
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.add('hidden'));
+    if (isHidden) dropdown.classList.remove('hidden');
+  };
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', () => {
+  document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.add('hidden'));
+});
+
+function populateSelect(id, options, placeholder, keepValue) {
+  // Deprecated - now using multi-select
 }
 
 async function refreshDynamicFilters() {
-  const active = getActiveFilters();
-  const params = {};
-  if (active.q) params.q = active.q;
-  if (active.city) params.city = active.city;
-  if (active.company) params.company = active.company;
-  if (active.recruit_type) params.recruit_type = active.recruit_type;
-  if (active.job_category) params.job_category = active.job_category;
   try {
-    const f = await getDynamicFilters(params);
-    populateSelect('homeCityFilter', f.cities, '全部城市', true);
-    populateSelect('homeCompanyFilter', f.companies, '全部公司', true);
-    populateSelect('homeTypeFilter', f.recruit_types, '全部类型', true);
-    populateSelect('homeCategoryFilter', f.job_categories, '全部类别', true);
+    const f = await getFilters();
+    setupMultiSelectFilter('city', 'cityTrigger', 'cityDropdown', f.cities);
+    setupMultiSelectFilter('company', 'companyTrigger', 'companyDropdown', f.companies);
+    setupMultiSelectFilter('recruit_type', 'typeTrigger', 'typeDropdown', f.recruit_types);
+    setupMultiSelectFilter('job_category', 'categoryTrigger', 'categoryDropdown', f.job_categories);
   } catch (e) {
     console.error('Failed to load filters:', e);
   }
@@ -1872,15 +1965,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('homeSearchInput')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') applyFilters();
   });
-  ['homeCityFilter', 'homeCompanyFilter', 'homeTypeFilter', 'homeCategoryFilter'].forEach(id => {
-    document.getElementById(id)?.addEventListener('change', applyFilters);
-  });
   document.getElementById('homeResetBtn')?.addEventListener('click', () => {
     document.getElementById('homeSearchInput').value = '';
-    ['homeCityFilter', 'homeCompanyFilter', 'homeTypeFilter', 'homeCategoryFilter'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
+    filterState.city = [];
+    filterState.company = [];
+    filterState.recruit_type = [];
+    filterState.job_category = [];
+    renderFilterChips('city', 'cityTrigger');
+    renderFilterChips('company', 'companyTrigger');
+    renderFilterChips('recruit_type', 'typeTrigger');
+    renderFilterChips('job_category', 'categoryTrigger');
     applyFilters();
   });
 

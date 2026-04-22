@@ -10,11 +10,11 @@ router = APIRouter()
 
 @router.get("", response_model=JobListResponse)
 async def get_jobs(
-    q: Optional[str] = Query(None),
-    city: Optional[str] = Query(None),
-    recruit_type: Optional[str] = Query(None),
-    job_category: Optional[str] = Query(None),
-    company: Optional[str] = Query(None),
+    q: Optional[str] = Query(None, description="Search keyword"),
+    city: Optional[str] = Query(None, description="Comma-separated cities (e.g., '北京,上海')"),
+    recruit_type: Optional[str] = Query(None, description="Comma-separated recruit types"),
+    job_category: Optional[str] = Query(None, description="Comma-separated job categories"),
+    company: Optional[str] = Query(None, description="Comma-separated company names"),
     sort: str = Query("latest", pattern="^(latest|relevance)$"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
