@@ -5,10 +5,10 @@ services:
     image: mysql:8.0
     container_name: yesjob-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
       MYSQL_DATABASE: yesjob
       MYSQL_USER: yesjob
-      MYSQL_PASSWORD: yesjob123
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-yesjob123}
     ports:
       - "3306:3306"
     volumes:
@@ -20,20 +20,24 @@ services:
       retries: 5
     networks:
       - yesjob-net
+    restart: unless-stopped
 
   backend:
     build: .
     container_name: yesjob-backend
-    environment:
-      - DATABASE_URL=mysql+aiomysql://yesjob:yesjob123@mysql:3306/yesjob
-      - JOBS_FILE=/app/data/jobs.jsonl
+    env_file:
+      - .env
     ports:
       - "8000:8080"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
     depends_on:
       mysql:
         condition: service_healthy
     networks:
       - yesjob-net
+    restart: unless-stopped
 
   frontend:
     build:
@@ -49,6 +53,7 @@ services:
       - backend
     networks:
       - yesjob-net
+    restart: unless-stopped
 
 volumes:
   mysql_data:

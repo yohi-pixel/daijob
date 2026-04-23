@@ -60,11 +60,20 @@ class ProxyHandler(http.server.SimpleHTTPRequestHandler):
         try:
             with urllib.request.urlopen(req) as resp:
                 self.send_response(resp.status)
+                is_sse = 'text/event-stream' in resp.headers.get('Content-Type', '')
                 for k, v in resp.headers.items():
                     if k.lower() not in ('transfer-encoding', 'connection'):
                         self.send_header(k, v)
                 self.end_headers()
-                self.wfile.write(resp.read())
+                if is_sse:
+                    while True:
+                        chunk = resp.read(64)
+                        if not chunk:
+                            break
+                        self.wfile.write(chunk)
+                        self.wfile.flush()
+                else:
+                    self.wfile.write(resp.read())
         except urllib.error.HTTPError as e:
             self.send_response(e.code)
             self.send_header('Content-Type', 'application/json')

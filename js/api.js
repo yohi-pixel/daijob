@@ -33,18 +33,18 @@ async function apiFetch(endpoint, options = {}) {
   }
   try {
     const response = await fetch(url, { ...options, headers });
-    if (response.status === 401) {
-      clearToken();
-      window.location.href = '/pages/home.html';
-      throw new Error('Unauthorized');
-    }
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json().catch(() => ({}));
+      // Only redirect on 401 for authenticated endpoints, not for login itself
+      if (response.status === 401 && !endpoint.includes('/auth/')) {
+        clearToken();
+        window.location.href = '/pages/home.html';
+      }
       throw new Error(error.detail || 'Request failed');
     }
     return await response.json();
   } catch (error) {
-    console.error('API Error:', error);
+    if (!(error instanceof TypeError)) console.error('API Error:', error);
     throw error;
   }
 }

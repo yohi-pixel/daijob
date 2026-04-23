@@ -543,7 +543,10 @@ import {
   MODULE_TYPE_LABELS, EXPERIENCE_TYPES, QUOTA, generateId,
 } from '../js/resume-store.js';
 import { optimizeModuleWithAI } from '../js/resume-ai.js';
-import { exportSnapshotToPDF } from '../js/resume-pdf.js';
+import { exportSnapshotToPDF, exportSnapshotToWord } from '../js/resume-pdf.js';
+import { initPixelAssistant } from '../js/pixel-assistant.js';
+
+window.ResumeStore = { addModule, updateModule, getModules };
 
 // ── Saved Jobs (localStorage) ─────────────────────────────────────────────
 const SAVED_KEY = 'yesjob_saved_jobs';
@@ -1331,6 +1334,7 @@ function renderSnapshotList() {
         <div class="flex gap-1 shrink-0">
           <button onclick="window._openSnapshotModal('${s.id}')" class="p-1.5 rounded-lg hover:bg-surface-container" title="编辑"><span class="material-symbols-outlined text-sm text-on-surface-variant">edit</span></button>
           <button onclick="window._handleExportPDF('${s.id}')" class="p-1.5 rounded-lg hover:bg-surface-container" title="导出PDF"><span class="material-symbols-outlined text-sm text-primary">picture_as_pdf</span></button>
+          <button onclick="window._handleExportWord('${s.id}')" class="p-1.5 rounded-lg hover:bg-surface-container" title="导出Word"><span class="material-symbols-outlined text-sm text-on-surface-variant">description</span></button>
           <button onclick="window._handleDeleteSnapshot('${s.id}')" class="p-1.5 rounded-lg hover:bg-error/10" title="删除"><span class="material-symbols-outlined text-sm text-error">delete</span></button>
         </div>
       </div>
@@ -1348,6 +1352,12 @@ function handleExportPDF(id) {
   const snap = getSnapshots().find(s => s.id === id);
   if (!snap) return;
   exportSnapshotToPDF(snap);
+}
+
+function handleExportWord(id) {
+  const snap = getSnapshots().find(s => s.id === id);
+  if (!snap) return;
+  exportSnapshotToWord(snap);
 }
 
 // ── AI Modal actions ───────────────────────────────────────────────────────
@@ -1392,6 +1402,7 @@ function bindResumeEvents() {
   window._handleAIOptimize = handleAIOptimize;
   window._handleDeleteSnapshot = handleDeleteSnapshot;
   window._handleExportPDF = handleExportPDF;
+  window._handleExportWord = handleExportWord;
   window._addFormTag = addFormTag;
   window._removeFormTag = removeFormTag;
   window._openSnapshotModal = openSnapshotModal;
@@ -2094,6 +2105,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('authModalBackdrop')?.addEventListener('click', closeAuthModal);
 
   renderAuthArea();
+
+  // ── Pixel Assistant ───────────────────────────────────────────────────────
+  initPixelAssistant();
 
   // ── End Auth UI ───────────────────────────────────────────────────────────
 

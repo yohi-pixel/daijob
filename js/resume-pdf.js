@@ -307,6 +307,117 @@ function pickTemplate() {
   });
 }
 
+// ── Word Export ───────────────────────────────────────────────────────────
+async function loadDocxLib() {
+  if (window.docx) return;
+  await loadScript('https://unpkg.com/docx@8.5.0/build/index.js');
+}
+
+/**
+ * Export snapshot to .docx Word file.
+ * @param {object} snapshot
+ */
+export async function exportSnapshotToWord(snapshot) {
+  await loadDocxLib();
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle } = window.docx;
+
+  const sections = snapshot.sections || [];
+  const children = [];
+
+  for (const sec of sections) {
+    const { module_type: type, content: d } = sec;
+    if (!d) continue;
+
+    switch (type) {
+      case 'basic_info': {
+        if (d.name) children.push(new Paragraph({
+          text: d.name,
+          heading: HeadingLevel.TITLE,
+          alignment: AlignmentType.CENTER,
+        }));
+        const contact = [d.phone, d.email, d.location].filter(Boolean).join('  ·  ');
+        if (contact) children.push(new Paragraph({ text: contact, alignment: AlignmentType.CENTER }));
+        const links = [d.linkedin && `LinkedIn: ${d.linkedin}`, d.github && `GitHub: ${d.github}`, d.website].filter(Boolean).join('  ·  ');
+        if (links) children.push(new Paragraph({ text: links, alignment: AlignmentType.CENTER }));
+        children.push(new Paragraph({ text: '' }));
+        break;
+      }
+      case 'work_experience':
+      case 'project':
+      case 'research':
+      case 'education':
+      case 'award':
+      case 'certificate': {
+        const label = TYPE_LABELS[type] || type;
+        children.push(new Paragraph({
+          text: label,
+          heading: HeadingLevel.HEADING_2,
+          border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '1a1a1a' } },
+        }));
+        if (type === 'work_experience') {
+          const period = [d.start_date, d.is_current ? '至今' : d.end_date].filter(Boolean).join(' — ');
+          children.push(new Paragraph({ children: [new TextRun({ text: d.company || '', bold: true }), new TextRun({ text: `  ${period}`, color: '555555' })] }));
+          if (d.position) children.push(new Paragraph({ text: d.position + (d.employment_type === 'internship' ? ' · 实习' : ''), color: '444444' }));
+          if (d.description) children.push(new Paragraph({ text: d.description }));
+          (d.highlights || []).forEach(h => children.push(new Paragraph({ text: `• ${h}`, indent: { left: 360 } })));
+        } else if (type === 'project') {
+          const period = [d.start_date, d.is_current ? '至今' : d.end_date].filter(Boolean).join(' — ');
+          children.push(new Paragraph({ children: [new TextRun({ text: d.name || '', bold: true }), new TextRun({ text: `  ${period}`, color: '555555' })] }));
+          if (d.role) children.push(new Paragraph({ text: d.role + (d.tech_stack?.length ? `  ${d.tech_stack.join(' / ')}` : ''), color: '444444' }));
+          if (d.description) children.push(new Paragraph({ text: d.description }));
+          (d.highlights || []).forEach(h => children.push(new Paragraph({ text: `• ${h}`, indent: { left: 360 } })));
+        } else if (type === 'education') {
+          const period = [d.start_date, d.end_date].filter(Boolean).join(' — ');
+          children.push(new Paragraph({ children: [new TextRun({ text: d.school || '', bold: true }), new TextRun({ text: `  ${period}`, color: '555555' })] }));
+          children.push(new Paragraph({ text: [d.degree, d.major].filter(Boolean).join(' · ') + (d.gpa ? ` · GPA ${d.gpa}` : ''), color: '444444' }));
+        } else if (type === 'award') {
+          children.push(new Paragraph({ children: [new TextRun({ text: d.title || '', bold: true }), new TextRun({ text: `  ${d.date || ''}`, color: '555555' })] }));
+          if (d.issuer) children.push(new Paragraph({ text: d.issuer, color: '444444' }));
+          if (d.description) children.push(new Paragraph({ text: d.description }));
+        } else if (type === 'certificate') {
+          children.push(new Paragraph({ children: [new TextRun({ text: d.name || '', bold: true }), new TextRun({ text: `  ${d.date || ''}`, color: '555555' })] }));
+          if (d.issuer) children.push(new Paragraph({ text: d.issuer, color: '444444' }));
+        } else if (type === 'research') {
+          const period = [d.start_date, d.is_current ? '至今' : d.end_date].filter(Boolean).join(' — ');
+          children.push(new Paragraph({ children: [new TextRun({ text: d.institution || '', bold: true }), new TextRun({ text: `  ${period}`, color: '555555' })] }));
+          if (d.topic) children.push(new Paragraph({ text: d.topic, color: '444444' }));
+          if (d.description) children.push(new Paragraph({ text: d.description }));
+        }
+        children.push(new Paragraph({ text: '' }));
+        break;
+      }
+      case 'skill': {
+        children.push(new Paragraph({
+          text: '技能',
+          heading: HeadingLevel.HEADING_2,
+          border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '1a1a1a' } },
+        }));
+        children.push(new Paragraph({ text: `${d.category ? d.category + '：' : ''}${(d.items || []).join(' · ')}` }));
+        children.push(new Paragraph({ text: '' }));
+        break;
+      }
+      case 'summary': {
+        children.push(new Paragraph({
+          text: '自我描述',
+          heading: HeadingLevel.HEADING_2,
+          border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '1a1a1a' } },
+        }));
+        children.push(new Paragraph({ text: d.content || '' }));
+        break;
+      }
+    }
+  }
+
+  const doc = new Document({ sections: [{ children }] });
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${snapshot.name || 'resume'}.docx`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function pickPhoto() {
   return new Promise(resolve => {
     const overlay = document.createElement('div');

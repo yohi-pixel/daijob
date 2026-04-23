@@ -56,7 +56,7 @@ FastAPI async app with SQLAlchemy 2.0 async ORM.
 - **`database.py`** — async SQLAlchemy engine; supports both MySQL (prod) and SQLite (tests/dev)
 - **`routers/`** — HTTP layer only; delegates to services
 - **`services/`** — business logic
-- **`models/`** — SQLAlchemy ORM models (`User`, `Job`)
+- **`models/`** — SQLAlchemy ORM models (`User`, `Job`, `UserProfile`)
 - **`schemas/`** — Pydantic request/response models
 - **`scripts/`** — data import utilities (`import_jobs.py`, `clean_jobs.py`)
 
@@ -66,21 +66,28 @@ FastAPI async app with SQLAlchemy 2.0 async ORM.
 - `POST /api/ai/match` — batch resume-to-job matching (Ollama)
 - `POST /api/ai/optimize` — resume optimization (LLM, streaming)
 - `POST /api/ai/optimize-module` — per-section streaming optimization
+- `POST /api/ai/chat` — multi-turn conversation with pixel assistant (SSE streaming)
+- `GET /api/ai/profile` — get user profile extracted from conversations
+- `POST /api/ai/recommend-jobs` — RAG-based job recommendations using user profile
+- `POST /api/ai/analyze-job-fit` — analyze fit between user profile and specific job (SSE streaming)
 - `POST /api/resume/parse` — parse uploaded resume (PDF/DOCX via pdfplumber/python-docx)
 
 **AI services:**
 - `ollama_service.py` — local Ollama for job matching scores
 - `llm_service.py` — resume optimization via DeepSeek or Qwen API
+- `chat_service.py` — multi-turn conversation, profile extraction, job fit analysis
 - `semantic_vector_service.py` — FAISS + `sentence-transformers` (BAAI/bge-small-zh-v1.5) for semantic job search
 
 ### Frontend (`pages/`, `js/`, `css/`, `assets/`)
 
 Vanilla HTML pages with no build step (except Tailwind CSS compilation).
 
-- `pages/home.html` — job search and listing
+- `pages/home.html` — job search and listing, pixel assistant integration
 - `pages/job-detail.html` — job detail with AI match
 - `pages/resume-editor-kinetic.html` — animated resume editor
 - `pages/resume-editor-precision.html` — structured resume editor
+- `js/pixel-assistant.js` — Canvas-based pixel sprite assistant with multi-turn chat UI
+- `js/resume-pdf.js` — PDF and Word export for resume snapshots
 
 `serve.py` acts as a dev proxy: static files are served directly, `/api/*` requests are forwarded to the backend.
 
@@ -89,6 +96,7 @@ Vanilla HTML pages with no build step (except Tailwind CSS compilation).
 - **Production**: MySQL 8.0 (via `aiomysql`)
 - **Dev/Tests**: SQLite (set `DATABASE_URL=sqlite+aiosqlite:///./yesjob_dev.db` in `.env`)
 - Jobs are seeded from `data/jobs.jsonl` on startup if the jobs table is empty
+- Tables: `users`, `jobs`, `user_profiles` (stores conversation history and extracted profile as JSON)
 
 ## Environment Setup
 

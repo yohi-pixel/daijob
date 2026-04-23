@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     JOBS_FILE: str = "data/jobs.jsonl"
     OLLAMA_PARSE_MODEL: str = "qwen2.5:0.5b"
     EMBEDDING_MODEL: str = "BAAI/bge-small-zh-v1.5"
+    AI_INVITE_CODE: str = "AYOHI2026"
 
     class Config:
         env_file = ".env"
