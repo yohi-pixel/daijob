@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.tsbuildinfo
+*.local
+.DS_Store
+
+# 构建产物（tsc -b 生成）
+vite.config.js
+vite.config.d.ts
+vite.config.js.map
