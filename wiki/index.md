@@ -16,6 +16,8 @@
 | [deployment.md](./deployment.md) | Docker/Nginx 云服务器部署与一键脚本 | DevOps |
 | [frontend.md](./frontend.md) | 前端页面与 JS 模块 | 前端 |
 
+> **2026-08-13 更新**：前端已用 React 现代化重写，位于独立 `frontend/` 目录（Vite + React 18 + TS + Tailwind + Router + zustand + TanStack Query）。旧 `pages/`、`js/` 保留用于回退。详见 [frontend-react.md](./frontend-react.md)。
+
 ## 快速事实
 
 - **数据来源**：`data/jobs.jsonl`（7477 条校招岗位），启动时若 `jobs` 表为空自动导入
