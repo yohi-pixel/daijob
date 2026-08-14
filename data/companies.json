@@ -50,7 +50,16 @@
       "recruit_url": "https://join.qq.com",
       "user_picked": true,
       "notes": "青云计划，AI 岗位弹性薪酬",
-      "base_city": "深圳"
+      "base_city": "深圳",
+      "platform": "self",
+      "data_source": "api",
+      "api": {
+        "host": "join.qq.com",
+        "method": "POST",
+        "path": "/api/v1/position/searchPosition",
+        "body": "{\"keyword\":\"\",\"pageIndex\":1,\"pageSize\":10,\"lang\":\"zh-cn\",\"recruitType\":1}",
+        "notes": "需Referer: join.qq.com；recruitType:1筛应届；实测返回真实岗位"
+      }
     },
     {
       "id": "alibaba",
@@ -60,7 +69,16 @@
       "recruit_url": "https://campus.alibaba.com",
       "user_picked": true,
       "notes": "阿里星计划，AI 岗位占比约 80%",
-      "base_city": "杭州"
+      "base_city": "杭州",
+      "platform": "self",
+      "data_source": "browser",
+      "api": {
+        "host": "talent.alibaba.com",
+        "method": "POST",
+        "path": "/position/search",
+        "body": "{\"channel\":\"campus_group_official_site\",\"language\":\"zh\",\"pageSize\":10,\"page\":1}",
+        "notes": "WAF 403（baxia风控），需csrf token+浏览器指纹"
+      }
     },
     {
       "id": "baidu",
@@ -70,17 +88,27 @@
       "recruit_url": "https://talent.baidu.com",
       "user_picked": true,
       "notes": "7 月已抢跑提前批",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "html",
+      "api": {
+        "host": "talent.baidu.com",
+        "method": "POST",
+        "path": "/httservice/getPostList",
+        "notes": "SSR HTML内嵌__INITIAL_DATA__可解析首页岗位；列表需登录"
+      }
     },
     {
       "id": "bytedance",
       "name": "字节跳动",
       "name_en": "ByteDance",
       "tier": 1,
-      "recruit_url": "https://jobs.bytedance.com",
+      "recruit_url": "https://jobs.bytedance.com/campus/position",
       "user_picked": true,
-      "notes": "AI 产品经理早鸟通道；千余 AI 岗位",
-      "base_city": "北京"
+      "notes": "飞书Hire平台(atsx-throne)，45+chunk，需Playwright抓XHR",
+      "base_city": "北京",
+      "platform": "feishu",
+      "data_source": "browser"
     },
     {
       "id": "meituan",
@@ -90,7 +118,15 @@
       "recruit_url": "https://campus.meituan.com",
       "user_picked": false,
       "notes": "8 月已开放网申",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "browser",
+      "api": {
+        "host": "campus.meituan.com",
+        "method": "POST",
+        "path": "/api/position/list",
+        "notes": "接口存在但强制登录（业务401）"
+      }
     },
     {
       "id": "jd",
@@ -100,17 +136,34 @@
       "recruit_url": "https://campus.jd.com",
       "user_picked": false,
       "notes": "TET 管培 7 月底截止，正式批跟进",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "api",
+      "api": {
+        "host": "campus.jd.com",
+        "method": "POST",
+        "path": "/api/wx/position/page?type=present",
+        "body": "{\"pageSize\":10,\"pageIndex\":1,\"parameter\":{\"positionName\":\"\",\"planIdList\":[],\"jobDirectionCodeList\":[],\"workCityCodeList\":[],\"positionDeptList\":[]}}",
+        "notes": "需X-Requested-With+Origin/Referer；实测98条；GET /api/wx/position/getProjectList取项目"
+      }
     },
     {
       "id": "pinduoduo",
       "name": "拼多多",
       "name_en": "Pinduoduo",
       "tier": 1,
-      "recruit_url": "https://recruit.pinduoduo.com",
+      "recruit_url": "https://careers.pddglobalhr.com/campus/grad",
       "user_picked": false,
       "notes": "8/1 提前批开启，招满即止",
-      "base_city": "上海"
+      "base_city": "上海",
+      "platform": "self",
+      "data_source": "browser",
+      "api": {
+        "host": "careers.pddglobalhr.com",
+        "method": "POST",
+        "path": "/api/campus/position/list",
+        "notes": "请求签名校验（error_code 40003）"
+      }
     },
     {
       "id": "netease",
@@ -119,18 +172,29 @@
       "tier": 1,
       "recruit_url": "https://campus.163.com",
       "user_picked": false,
-      "notes": "含网易游戏/雷火子站",
-      "base_city": "杭州"
+      "notes": "Module Federation微前端，API在远程微模块，需Playwright",
+      "base_city": "杭州",
+      "platform": "self",
+      "data_source": "browser"
     },
     {
       "id": "kuaishou",
       "name": "快手",
       "name_en": "Kuaishou",
       "tier": 1,
-      "recruit_url": "https://zhaopin.kuaishou.cn",
+      "recruit_url": "https://campus.kuaishou.cn/recruit/campus/e/",
       "user_picked": false,
       "notes": "8/1 正式批启动，AI 算法/多媒体；zhaopin.kuaishou.cn（200）",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "api",
+      "api": {
+        "host": "campus.kuaishou.cn",
+        "method": "POST",
+        "path": "/recruit/campus/e/api/v1/open/positions/simple",
+        "body": "{\"positionBO\":{}}",
+        "notes": "positionBO字段未破解，需Playwright抓一次XHR确认"
+      }
     },
     {
       "id": "xiaomi",
@@ -139,18 +203,29 @@
       "tier": 1,
       "recruit_url": "https://hr.xiaomi.com",
       "user_picked": false,
-      "notes": "8/5 正式批，手机/汽车/AIoT",
-      "base_city": "北京"
+      "notes": "强反爬（JS资源返回验证页），需完整浏览器指纹",
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "browser"
     },
     {
       "id": "didichuxing",
       "name": "滴滴",
       "name_en": "DiDi",
       "tier": 1,
-      "recruit_url": "https://campus.didiglobal.com",
+      "recruit_url": "https://campus.didiglobal.com/campus_apply/didiglobal/96064",
       "user_picked": false,
       "notes": "8/13 宣布 2027 届启动",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "campus.didiglobal.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"jobType\":\"campus\",\"keyword\":\"\",\"page\":1,\"pageSize\":10}",
+        "notes": "AES解密；302跳转MokaHR"
+      }
     },
     {
       "id": "bilibili",
@@ -169,7 +244,7 @@
       "tier": 2,
       "recruit_url": "https://job.xiaohongshu.com",
       "user_picked": true,
-      "notes": "",
+      "notes": "小红书校招入口未深探，待浏览器确认",
       "base_city": "上海"
     },
     {
@@ -189,7 +264,7 @@
       "tier": 2,
       "recruit_url": "https://zhaopin.zhihu.com",
       "user_picked": false,
-      "notes": "",
+      "notes": "知乎校招入口未深探，待确认",
       "base_city": "北京"
     },
     {
@@ -199,7 +274,7 @@
       "tier": 2,
       "recruit_url": "https://campus.ctrip.com",
       "user_picked": false,
-      "notes": "",
+      "notes": "携程校招 campus.ctrip.com 未深探，标记 HTML/待定",
       "base_city": "上海"
     },
     {
@@ -207,30 +282,55 @@
       "name": "SHEIN",
       "name_en": "SHEIN",
       "tier": 2,
-      "recruit_url": "https://jobs.shein.com",
+      "recruit_url": "https://careers.shein.cn/",
       "user_picked": false,
       "notes": "跨境电商头部",
-      "base_city": "广州"
+      "base_city": "广州",
+      "platform": "self",
+      "data_source": "browser",
+      "api": {
+        "host": "shein.uunn.cn",
+        "method": "POST",
+        "path": "/api/v1/open/grw/front/jobPage",
+        "notes": "直连502需正确网关header；另有jobDetail/jobCategoryList"
+      }
     },
     {
       "id": "weibo",
       "name": "微博",
       "name_en": "Weibo",
       "tier": 2,
-      "recruit_url": "https://jobs.weibo.com",
+      "recruit_url": "https://career.sina.com.cn/campus-recruitment/sina/43536",
       "user_picked": false,
       "notes": "",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"orgId\":\"sina\",\"siteId\":\"43536\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
+        "notes": "AES解密；新浪&微博校招同站"
+      }
     },
     {
       "id": "huya",
       "name": "虎牙",
       "name_en": "Huya",
       "tier": 2,
-      "recruit_url": "https://jobs.huya.com",
+      "recruit_url": "https://hr.huya.com/",
       "user_picked": false,
       "notes": "8/10 提前批，AI 算法/直播技术",
-      "base_city": "广州"
+      "base_city": "广州",
+      "platform": "self",
+      "data_source": "browser",
+      "api": {
+        "host": "hr.huya.com",
+        "method": "GET",
+        "path": "/api/campusRecruit/CampusRecruit/{zhinengId}",
+        "notes": "Spring Boot，需具体zhinengId"
+      }
     },
     {
       "id": "mihoyo",
@@ -239,7 +339,7 @@
       "tier": 3,
       "recruit_url": "https://jobs.mihoyo.com",
       "user_picked": false,
-      "notes": "7/27 技术提前批截止，正式批跟进",
+      "notes": "米哈游 jobs.mihoyo.com 未深探，标记 HTML/待定",
       "base_city": "上海"
     },
     {
@@ -249,7 +349,7 @@
       "tier": 3,
       "recruit_url": "https://lilith.zhiye.com",
       "user_picked": false,
-      "notes": "8/7 提前批",
+      "notes": "莉莉丝 lilith.zhiye.com 空壳，待确认",
       "base_city": "上海"
     },
     {
@@ -269,7 +369,7 @@
       "tier": 3,
       "recruit_url": "https://leihuo.163.com",
       "user_picked": false,
-      "notes": "游戏研发/策划",
+      "notes": "网易雷火同属网易系，校招入口 campus.163.com 或 leihuo 独立站",
       "base_city": "杭州"
     },
     {
@@ -277,10 +377,19 @@
       "name": "完美世界",
       "name_en": "Perfect World",
       "tier": 3,
-      "recruit_url": "https://jobs.wanmei.com",
+      "recruit_url": "https://app.mokahr.com/campus-recruitment/pwrd/144582",
       "user_picked": false,
       "notes": "8/8 提前批，游戏研发/策划",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"orgId\":\"pwrd\",\"siteId\":\"144582\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
+        "notes": "AES解密；宣传页jobs.games.wanmei.com/school.html"
+      }
     },
     {
       "id": "sohu-changyou",
@@ -299,7 +408,7 @@
       "tier": 4,
       "recruit_url": "https://career.huawei.com",
       "user_picked": false,
-      "notes": "",
+      "notes": "华为 career.huawei.com 未深探，标记 HTML/待定",
       "base_city": "深圳"
     },
     {
@@ -307,10 +416,12 @@
       "name": "荣耀",
       "name_en": "HONOR",
       "tier": 4,
-      "recruit_url": "https://hr.honor.cn",
+      "recruit_url": "https://career.honor.com/SU60eea1aa0dcad47a7e1ce1ed/pb/school.html",
       "user_picked": false,
-      "notes": "",
-      "base_city": "深圳"
+      "notes": "北森pb系统SPA壳，API需浏览器逆向",
+      "base_city": "深圳",
+      "platform": "zhiye",
+      "data_source": "browser"
     },
     {
       "id": "oppo",
@@ -319,7 +430,7 @@
       "tier": 4,
       "recruit_url": "https://careers.oppo.com",
       "user_picked": false,
-      "notes": "8/22 提前批",
+      "notes": "OPPO careers.oppo.com 未深探，标记 HTML/待定",
       "base_city": "东莞"
     },
     {
@@ -329,7 +440,7 @@
       "tier": 4,
       "recruit_url": "https://hr.vivo.com",
       "user_picked": false,
-      "notes": "",
+      "notes": "vivo hr.vivo.com 未深探，标记 HTML/待定",
       "base_city": "东莞"
     },
     {
@@ -339,7 +450,7 @@
       "tier": 4,
       "recruit_url": "https://we.dji.com",
       "user_picked": true,
-      "notes": "用户点名",
+      "notes": "大疆校招 we.dji.com 未深探，标记 HTML/待定",
       "base_city": "深圳"
     },
     {
@@ -347,30 +458,36 @@
       "name": "影石",
       "name_en": "Insta360",
       "tier": 4,
-      "recruit_url": "https://www.insta360.com/recruit",
+      "recruit_url": "https://www.insta360.com/cn/jobs",
       "user_picked": true,
-      "notes": "用户点名；8 月已开校招",
-      "base_city": "深圳"
+      "notes": "校招走飞书hire arashivision.jobs.feishu.cn/campus",
+      "base_city": "深圳",
+      "platform": "feishu",
+      "data_source": "browser"
     },
     {
       "id": "cambricon",
       "name": "寒武纪",
       "name_en": "Cambricon",
       "tier": 4,
-      "recruit_url": "https://www.cambricon.com/join",
+      "recruit_url": "https://www.cambricon.com/",
       "user_picked": false,
-      "notes": "芯片类/软件类，北京上海深圳合肥",
-      "base_city": "北京"
+      "notes": "未找到独立招聘域名，仅官网'加入我们→校园招聘'+公众号；需人工确认",
+      "base_city": "北京",
+      "platform": "unknown",
+      "data_source": "unknown"
     },
     {
       "id": "smic",
       "name": "中芯国际",
       "name_en": "SMIC",
       "tier": 4,
-      "recruit_url": "https://www.smic.com/careers",
+      "recruit_url": "https://smics.zhiye.com/campus",
       "user_picked": false,
-      "notes": "半导体放量最猛",
-      "base_city": "上海"
+      "notes": "北森CMS门户SSR，岗位名直接嵌入HTML可解析",
+      "base_city": "上海",
+      "platform": "zhiye",
+      "data_source": "html"
     },
     {
       "id": "nio",
@@ -399,7 +516,7 @@
       "tier": 5,
       "recruit_url": "https://jobs.apple.com",
       "user_picked": false,
-      "notes": "8/7 秋招正式批，硬件/软件/AI",
+      "notes": "Apple jobs.apple.com 未深探，标记 HTML/待定",
       "base_city": "上海"
     },
     {
@@ -409,7 +526,7 @@
       "tier": 5,
       "recruit_url": "https://www.nvidia.com/en-us/about-nvidia/careers",
       "user_picked": false,
-      "notes": "8 月已开校招",
+      "notes": "英伟达 careers 未深探，标记 HTML/待定",
       "base_city": "北京"
     },
     {
@@ -419,7 +536,7 @@
       "tier": 5,
       "recruit_url": "https://careers.shopee.sg",
       "user_picked": false,
-      "notes": "东南亚电商，含深圳研发",
+      "notes": "Shopee careers 未深探，标记 HTML/待定",
       "base_city": "深圳"
     },
     {
@@ -429,7 +546,7 @@
       "tier": 5,
       "recruit_url": "https://careers.skhynix.com",
       "user_picked": false,
-      "notes": "8/13 校招，14 薪，半导体",
+      "notes": "SK海力士 careers 未深探，标记 HTML/待定",
       "base_city": "无锡"
     },
     {
@@ -437,10 +554,12 @@
       "name": "欧莱雅",
       "name_en": "L'Oréal",
       "tier": 5,
-      "recruit_url": "https://careers.loreal.com",
+      "recruit_url": "https://u.hrtps.com/r/cLO59ndeN",
       "user_picked": true,
-      "notes": "用户点名；快消头部",
-      "base_city": "上海"
+      "notes": "HRTPS短链→AI面试系统，无公开岗位列表",
+      "base_city": "上海",
+      "platform": "hrtps",
+      "data_source": "browser"
     },
     {
       "id": "pg",
@@ -449,7 +568,7 @@
       "tier": 5,
       "recruit_url": "https://www.pgcareers.com",
       "user_picked": false,
-      "notes": "",
+      "notes": "宝洁 pgcareers 未深探，标记 HTML/待定",
       "base_city": "广州"
     },
     {
@@ -457,10 +576,12 @@
       "name": "联合利华",
       "name_en": "Unilever",
       "tier": 5,
-      "recruit_url": "https://www.unilevercareers.com",
+      "recruit_url": "https://campus.51job.com/unilever2025",
       "user_picked": false,
-      "notes": "",
-      "base_city": "上海"
+      "notes": "51job平台专场SPA，接口待定",
+      "base_city": "上海",
+      "platform": "51job",
+      "data_source": "unknown"
     },
     {
       "id": "mars",
@@ -469,7 +590,7 @@
       "tier": 5,
       "recruit_url": "https://www.mars.com/careers",
       "user_picked": false,
-      "notes": "",
+      "notes": "玛氏 careers 未深探，标记 HTML/待定",
       "base_city": "北京"
     },
     {
@@ -479,7 +600,7 @@
       "tier": 6,
       "recruit_url": "https://jobs.deepseek.com",
       "user_picked": false,
-      "notes": "6 月大规模招聘，薪酬不设上限",
+      "notes": "DeepSeek deepseek.zhiye.com 空壳404，待确认（官方 jobs 入口）",
       "base_city": "杭州"
     },
     {
@@ -489,7 +610,7 @@
       "tier": 6,
       "recruit_url": "https://zhipuai.zhiye.com",
       "user_picked": false,
-      "notes": "GLM 大模型",
+      "notes": "智谱 zhipuai.zhiye.com 空壳404，待确认",
       "base_city": "北京"
     },
     {
@@ -499,7 +620,7 @@
       "tier": 6,
       "recruit_url": "https://moonshot.zhiye.com",
       "user_picked": false,
-      "notes": "Kimi",
+      "notes": "月之暗面 moonshot.zhiye.com 空壳404，待确认",
       "base_city": "北京"
     },
     {
@@ -509,7 +630,7 @@
       "tier": 6,
       "recruit_url": "https://minimax.zhiye.com",
       "user_picked": false,
-      "notes": "",
+      "notes": "MiniMax minimax.zhiye.com 空壳404，待确认",
       "base_city": "上海"
     },
     {
@@ -517,10 +638,19 @@
       "name": "泡泡玛特",
       "name_en": "POP MART",
       "tier": 6,
-      "recruit_url": "https://jobs.popmart.com",
+      "recruit_url": "https://popmart.zhiye.com",
       "user_picked": false,
       "notes": "潮玩头部",
-      "base_city": "北京"
+      "base_city": "北京",
+      "platform": "zhiye",
+      "data_source": "api",
+      "api": {
+        "host": "popmart.zhiye.com",
+        "method": "POST",
+        "path": "/api/Jobad/GetJobAdPageList",
+        "body": "{\"pageIndex\":1,\"pageSize\":50,\"categoryId\":2}",
+        "notes": "无需鉴权；Count=总数，返回48字段（JobAdName/LocNames/Salary/Duty/Require/Degree/Welfare）；tenantId=111276"
+      }
     },
     {
       "id": "zuru",
@@ -529,8 +659,10 @@
       "tier": 6,
       "recruit_url": "https://zuru.zhiye.com",
       "user_picked": true,
-      "notes": "用户点名；新西兰玩具独角兽",
-      "base_city": "深圳"
+      "notes": "zhiye子站为空壳404，需确认正确入口",
+      "base_city": "深圳",
+      "platform": "unknown",
+      "data_source": "unknown"
     },
     {
       "id": "miniso",
@@ -540,7 +672,16 @@
       "recruit_url": "https://miniso.zhiye.com",
       "user_picked": true,
       "notes": "用户点名；全球零售",
-      "base_city": "广州"
+      "base_city": "广州",
+      "platform": "zhiye",
+      "data_source": "api",
+      "api": {
+        "host": "miniso.zhiye.com",
+        "method": "POST",
+        "path": "/api/Jobad/GetJobAdPageList",
+        "body": "{\"pageIndex\":1,\"pageSize\":50,\"categoryId\":2}",
+        "notes": "无需鉴权；Count=42；tenantId=109979"
+      }
     },
     {
       "id": "kurogames",
@@ -550,7 +691,7 @@
       "recruit_url": "https://www.kurogames.com/join",
       "user_picked": true,
       "base_city": "广州",
-      "notes": "《鸣潮》开发商，二次元赛道头部"
+      "notes": "库洛 www.kurogames.com/join 待深探"
     },
     {
       "id": "shenlan",
@@ -560,37 +701,56 @@
       "recruit_url": "https://job.shenlan-games.com",
       "user_picked": true,
       "base_city": "广州",
-      "notes": "《重返未来：1999》开发商"
+      "notes": "深蓝互动 job.shenlan-games.com ProxyError，待确认"
     },
     {
       "id": "37games",
       "name": "三七互娱",
       "name_en": "37 Interactive",
       "tier": 3,
-      "recruit_url": "https://jobs.37.com",
+      "recruit_url": "https://zhaopin.37.com/index.php?m=Home&c=recruit&a=recruit&recruit=1",
       "user_picked": false,
       "base_city": "广州",
-      "notes": "A股游戏龙头"
+      "notes": "PHP模板，岗位列表JS异步加载，需逆向entry.min.js",
+      "platform": "self",
+      "data_source": "unknown"
     },
     {
       "id": "shiyue",
       "name": "诗悦网络",
       "name_en": "Shiyue Games",
       "tier": 3,
-      "recruit_url": "https://www.shiyuegame.com/join",
+      "recruit_url": "https://campus.shiyue.com/campus-recruitment/shiyuehr/72055",
       "user_picked": false,
       "base_city": "广州",
-      "notes": ""
+      "notes": "",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"orgId\":\"shiyuehr\",\"siteId\":\"72055\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
+        "notes": "AES解密；域名注意是shiyue.com非shiyuegame.com"
+      }
     },
     {
       "id": "duoyi",
       "name": "多益网络",
       "name_en": "Duoyi",
       "tier": 3,
-      "recruit_url": "https://www.duoyi.com/join",
+      "recruit_url": "https://xz.duoyi.com/",
       "user_picked": false,
       "base_city": "广州",
-      "notes": ""
+      "notes": "",
+      "platform": "self",
+      "data_source": "api",
+      "api": {
+        "host": "xz.duoyi.com",
+        "method": "POST",
+        "path": "/v40/api/index/positions/jds/page",
+        "notes": "另有/api/index/positions/jds/filters"
+      }
     },
     {
       "id": "anker",
@@ -617,20 +777,38 @@
       "name": "传音控股",
       "name_en": "Transsion",
       "tier": 4,
-      "recruit_url": "https://careers.transsion.com",
+      "recruit_url": "https://transsion.zhiye.com",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "非洲手机之王，出海硬件性价比高"
+      "notes": "非洲手机之王，出海硬件性价比高",
+      "platform": "zhiye",
+      "data_source": "api",
+      "api": {
+        "host": "transsion.zhiye.com",
+        "method": "POST",
+        "path": "/api/Jobad/GetJobAdPageList",
+        "body": "{\"pageIndex\":1,\"pageSize\":50,\"categoryId\":2}",
+        "notes": "无需鉴权；Count=793；tenantId=107447"
+      }
     },
     {
       "id": "shokz",
       "name": "韶音科技",
       "name_en": "Shokz",
       "tier": 4,
-      "recruit_url": "https://www.shokz.com/careers",
+      "recruit_url": "https://hr.shokz.com.cn/apply/aftershokzhr/40779/",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "骨传导耳机龙头，小而美高薪"
+      "notes": "骨传导耳机龙头，小而美高薪",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"orgId\":\"aftershokzhr\",\"siteId\":\"40779\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
+        "notes": "AES解密；域名注意shokz.com.cn非shokz.com"
+      }
     },
     {
       "id": "zte",
@@ -640,7 +818,7 @@
       "recruit_url": "https://job.zte.com.cn",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "通信设备大厂"
+      "notes": "中兴 job.zte.com.cn 未深探，标记 HTML/待定"
     },
     {
       "id": "byd",
@@ -650,27 +828,45 @@
       "recruit_url": "https://job.byd.com",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "新能源车+电池，HC 巨大"
+      "notes": "比亚迪 job.byd.com 未深探，标记 HTML/待定"
     },
     {
       "id": "mindray",
       "name": "迈瑞医疗",
       "name_en": "Mindray",
       "tier": 4,
-      "recruit_url": "https://careers.mindray.com",
+      "recruit_url": "https://mindray.zhiye.com",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "医疗器械龙头"
+      "notes": "医疗器械龙头",
+      "platform": "zhiye",
+      "data_source": "api",
+      "api": {
+        "host": "mindray.zhiye.com",
+        "method": "POST",
+        "path": "/api/Jobad/GetJobAdPageList",
+        "body": "{\"pageIndex\":1,\"pageSize\":50,\"categoryId\":2}",
+        "notes": "无需鉴权；Count=218；tenantId=106239"
+      }
     },
     {
       "id": "tecdo",
       "name": "钛动科技",
       "name_en": "Tec-Do",
       "tier": 6,
-      "recruit_url": "https://www.tec-do.com/join",
+      "recruit_url": "https://app.mokahr.com/campus-recruitment/tec-do/41717",
       "user_picked": true,
       "base_city": "广州",
-      "notes": "出海营销 AI SaaS，赴港上市推进中，15 薪"
+      "notes": "出海营销 AI SaaS，赴港上市推进中，15 薪",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"orgId\":\"tec-do\",\"siteId\":\"41717\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
+        "notes": "AES解密"
+      }
     },
     {
       "id": "vipshop",
@@ -680,7 +876,16 @@
       "recruit_url": "https://app-tc.mokahr.com/campus-recruitment/vipshophr/10039",
       "user_picked": false,
       "base_city": "广州",
-      "notes": "特卖电商，广州 base；MokaHR SaaS 平台"
+      "notes": "特卖电商，广州 base；MokaHR SaaS 平台",
+      "platform": "mokahr",
+      "data_source": "api",
+      "api": {
+        "host": "app-tc.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "body": "{\"orgId\":\"vipshophr\",\"siteId\":\"10039\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
+        "notes": "AES-128-CBC解密（key=响应的necromancer字段，iv=页面init-data的aesIv，pycryptodome验证通过）；siteId 10039当前0条（秋招未发布），8015实习门户有3条"
+      }
     },
     {
       "id": "ximalaya",
