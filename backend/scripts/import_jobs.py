@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from sqlalchemy import select, func, text
 from sqlalchemy.dialects.mysql import insert as mysql_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from database import Base
 from models.job import Job
@@ -52,6 +53,13 @@ def record_to_dict(record: dict) -> dict:
     }
 
 
+def _insert_stmt():
+    """MySQL 用 INSERT IGNORE，SQLite 用 INSERT OR IGNORE（幂等去重）。"""
+    if settings.DATABASE_URL.startswith("sqlite"):
+        return sqlite_insert(Job).prefix_with("OR IGNORE")
+    return mysql_insert(Job).prefix_with("IGNORE")
+
+
 async def run_import(jobs_file: str, session: AsyncSession | None = None):
     """Import jobs from JSONL file. Idempotent — skips if table already has rows."""
     file_path = Path(jobs_file)
@@ -87,13 +95,13 @@ async def run_import(jobs_file: str, session: AsyncSession | None = None):
                     continue
                 batch.append(record_to_dict(record))
                 if len(batch) >= 500:
-                    await session.execute(mysql_insert(Job).prefix_with("IGNORE"), batch)
+                    await session.execute(_insert_stmt(), batch)
                     await session.commit()
                     total += len(batch)
                     batch = []
 
         if batch:
-            await session.execute(mysql_insert(Job).prefix_with("IGNORE"), batch)
+            await session.execute(_insert_stmt(), batch)
             await session.commit()
             total += len(batch)
 
