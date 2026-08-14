@@ -1,13 +1,13 @@
-# YesJob - AI 驱动的求职平台
+# 逮JOB - AI 驱动的求职平台
 
-YesJob 是一个智能求职平台，提供 AI 简历匹配、岗位推荐和简历优化功能。
+逮JOB 是一个智能求职平台，提供 AI 简历匹配、岗位推荐和简历优化功能。多网站校园招聘数据采集（Scrapy + Playwright）+ AI 求职助手。
 
 ## 快速开始
 
 ### 环境要求
 
-- **Python 3.11** 或 3.10（⚠️ 不支持 Python 3.14）
-- Node.js 16+
+- **Python 3.13**（后端，SQLAlchemy ≥2.0.31）
+- **Node.js 20+**（前端）
 - Git
 
 ### 安装与启动
@@ -15,30 +15,25 @@ YesJob 是一个智能求职平台，提供 AI 简历匹配、岗位推荐和简
 ```bash
 # 1. 克隆项目
 git clone <repository-url>
-cd YesJob
+cd daijob
 
-# 2. 配置环境变量
-cp .env.example .env
-# 编辑 .env 填写必要配置
+# 2. 配置后端环境变量
+cp .env.example backend/.env
+# 编辑 backend/.env 填写必要配置（本地开发用 SQLite，见 .env.example 注释）
 
-# 3. 创建虚拟环境（使用 Python 3.11）
-python3.11 -m venv .venv311
-source .venv311/Scripts/activate  # Windows Git Bash
-# source .venv311/bin/activate    # Linux/Mac
-
-# 4. 安装后端依赖
-pip install -r backend/requirements.txt
-
-# 5. 启动后端（新终端）
+# 3. 安装后端依赖并启动（端口 8000）
 cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 
-# 6. 启动前端（新终端）
-cd YesJob
-python serve.py 3000
+# 4. 安装前端依赖并启动（端口 5173，/api 自动代理到后端）
+cd ../frontend
+npm install
+npm run dev
 ```
 
-访问 http://localhost:3000 开始使用。
+访问 http://localhost:5173 开始使用。
 
 ## 功能特性
 
@@ -50,54 +45,47 @@ python serve.py 3000
 
 ## 技术栈
 
-- **后端**: FastAPI + SQLAlchemy 2.0 + AsyncOpenAI
-- **前端**: Vanilla JS + Tailwind CSS + Canvas API
+- **后端**: FastAPI + SQLAlchemy 2.0 (async) + AsyncOpenAI
+- **前端**: React 18 + TypeScript + Tailwind CSS + zustand + TanStack Query
 - **AI**: DeepSeek/Qwen API + BGE-small-zh 向量模型
 - **数据库**: SQLite (开发) / MySQL (生产)
 
 ## 文档
 
 - [开发指南](./docs/development-guide.md) - 详细的启动流程和问题排查
-- [CLAUDE.md](./CLAUDE.md) - Claude Code 开发指南
+- [CLAUDE.md](./CLAUDE.md) - 开发指南
 - [API 文档](http://127.0.0.1:8000/docs) - FastAPI 自动生成
+- [代码知识库](./wiki/index.md) - 架构/API/数据模型/AI 功能文档
 
 ## 项目结构
 
 ```
-YesJob/
+daijob/
 ├── backend/              # FastAPI 后端
 │   ├── main.py          # 应用入口
 │   ├── routers/         # API 路由
 │   ├── services/        # 业务逻辑
 │   ├── models/          # 数据库模型
 │   └── tests/           # 单元测试
-├── pages/               # 前端页面
-├── js/                  # 前端 JS 模块
-│   ├── pixel-assistant.js  # AI 助手浮窗
-│   ├── resume-store.js     # 简历数据管理
-│   └── resume-pdf.js       # 简历导出
-├── css/                 # 样式文件
-├── serve.py             # 开发服务器
-└── docs/                # 文档
+├── frontend/            # React 前端（独立 npm 项目）
+│   ├── src/             # 组件/页面/状态/store
+│   ├── __tests__/       # Vitest 测试
+│   └── vite.config.ts   # Vite 配置（/api 代理到 :8000）
+├── data/                # 岗位数据（jobs.jsonl）
+├── docs/                # 部署/开发文档
+├── wiki/                # 代码知识库
+└── docker-compose.yml   # 生产部署（MySQL + 后端 + Nginx 前端）
 ```
 
 ## 常见问题
 
-### Python 版本问题
+### 本地启动后岗位列表为空
 
-⚠️ **项目不支持 Python 3.14**，会导致 SQLAlchemy 兼容性错误。请使用 Python 3.11 或 3.10。
-
-如果遇到 `TypeError: Can't replace canonical symbol` 错误：
-```bash
-rm -rf .venv
-python3.11 -m venv .venv311
-source .venv311/Scripts/activate
-pip install -r backend/requirements.txt
-```
+`backend/.env` 中 `JOBS_FILE` 需指向数据文件：本地开发用 `JOBS_FILE=../data/jobs.jsonl`（相对 backend 目录）。
 
 ### AI 功能邀请码
 
-首次使用 AI 功能需要输入邀请码。邀请码在 `.env` 文件的 `AI_INVITE_CODE` 中配置。
+首次使用 AI 功能需要输入邀请码。邀请码在 `backend/.env` 文件的 `AI_INVITE_CODE` 中配置。
 
 ### 更多问题
 

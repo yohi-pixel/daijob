@@ -4,10 +4,10 @@
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  前端 (Vanilla JS + Tailwind + Canvas)              │
-│  pages/*.html  js/*.js  css/  serve.py (dev 代理)   │
+│  前端 (React 18 + TS + Tailwind)                    │
+│  frontend/  Vite dev server (:5173) 或 Nginx 托管    │
 └──────────────────────┬──────────────────────────────┘
-                       │ /api/* → localhost:8000 (serve.py 转发)
+                       │ /api/* → localhost:8000 (Vite proxy / Nginx 反代)
 ┌──────────────────────▼──────────────────────────────┐
 │  FastAPI 后端 (backend/)                            │
 │  main.py → routers/ → services/ → models/           │
@@ -67,7 +67,7 @@ POST /api/ai/recommend-jobs (需邀请码)
 2. **混合检索 + RRF**：标题 BM25 + 职责/要求/加分项向量相似度，RRF(k=60) 融合，标题精确命中额外 boost（0.08 + token 重叠 0.06）。
 3. **AI 多供应商降级链**：DeepSeek → Qwen → 503，单供应商失败自动切换；向量服务不可用降级为 TF-IDF 余弦。
 4. **单例模型服务**：`semantic_vector_service` 全局单例 + 线程锁 + 20000 条向量缓存，避免重复加载模型。
-5. **纯前端无构建**：除 Tailwind CSS 编译外，页面零构建步骤；`serve.py` 兼任静态服务器与 API 反向代理。
+5. **前端 React SPA**：Vite + TS 构建，无服务端渲染；开发期 Vite proxy 代理 `/api/*` 到 :8000，生产由 Nginx 反代。
 
 ## 6. 目录全景
 
@@ -83,8 +83,9 @@ daijob/
 │   ├── schemas/        # auth / job / ai / resume_parse
 │   ├── scripts/        # import_jobs / clean_jobs / clean_jobs_file
 │   └── tests/          # 12 个测试文件，内存 SQLite
-├── pages/              # home / job-detail / resume-editor-kinetic / resume-editor-precision
-├── js/                 # api / pixel-assistant / resume-store / resume-ai / resume-pdf / resume
+├── frontend/           # React 前端（Vite + TS + Tailwind + zustand + TanStack Query）
+│   ├── src/            # pages / components / stores / lib / hooks / types
+│   └── __tests__/      # Vitest 测试
 ├── data/jobs.jsonl     # 7477 条校招岗位（16MB）
 ├── daijob.site_nginx/  # TLS 证书（crt/key/csr）
 ├── docs/               # 部署/调试/决策记录/设计 spec

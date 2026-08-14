@@ -7,7 +7,7 @@
 ```
 公网 :80/:443
   └─ Nginx (frontend 容器, Dockerfile.nginx)
-      ├─ 静态资源 (pages/, js/, css/)
+      ├─ 静态资源 (frontend/dist/)
       ├─ /api/* → 反代 backend:8080
       └─ TLS 证书: daijob.site_nginx/ (crt/key/csr)
             │
@@ -49,8 +49,8 @@ git clone https://github.com/yohi-pixel/daijob.git /opt/yesjob && cd /opt/yesjob
 cd backend && cp ../.env.example .env   # 改 DATABASE_URL 为 sqlite
 uvicorn main:app --reload --port 8000
 
-# 前端（serve.py 兼任 API 代理）
-python serve.py 3000   # / → pages/home.html，/api/* → localhost:8000
+# 前端（Vite dev server，/api 代理到 :8000）
+cd frontend && npm run dev   # http://localhost:5173，/api/* → localhost:8000
 ```
 
 ## 6. Nginx 关键配置（nginx.conf / Dockerfile.nginx）
@@ -63,5 +63,5 @@ python serve.py 3000   # / → pages/home.html，/api/* → localhost:8000
 - `.env` 不入库（gitignore）；生产密钥：SECRET_KEY 用 `openssl rand -hex 32` 生成
 - `AI_INVITE_CODE` 默认 `AYOHI2026`，上线必须改
 - CORS `allow_origins=["*"]`，若限制域名需收紧
-- 数据文件 `data/jobs.jsonl`（16MB/7477 条）已入库，但爬虫更新在公开 YesJob 仓库的 CI 中每周跑，需要手动合并新数据
+- 数据文件 `data/jobs.jsonl`（16MB/7477 条）已入库，但爬虫更新在公开 yohi-pixel/YesJob（数据采集版）仓库的 CI 中每周跑，需要手动合并新数据
 - 证书文件（crt/key）**已入库**——私有仓库可接受，若转公开需清理

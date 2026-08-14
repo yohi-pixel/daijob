@@ -20,12 +20,6 @@ COPY nginx.conf /etc/nginx/conf.d/
 # React 构建产物 → 根目录（SPA fallback 指向 /index.html）
 COPY --from=frontend-build /app/frontend/dist/ /usr/share/nginx/html/
 
-# 旧页面保留（灰度回退用）
-COPY pages/home.html /usr/share/nginx/html/index.legacy.html
-COPY pages/ /usr/share/nginx/html/pages/
-COPY css/ /usr/share/nginx/html/css/
-COPY js/ /usr/share/nginx/html/js/
-
 EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]

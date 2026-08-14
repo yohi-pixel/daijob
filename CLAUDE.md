@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-YesJob is a job search platform with AI-powered resume matching and optimization. It has a Python/FastAPI backend and a vanilla HTML/JS/Tailwind frontend.
+逮JOB is a job search platform with AI-powered resume matching and optimization. It has a Python/FastAPI backend and a React 18 + TypeScript frontend (in `frontend/`).
 
 ## Development Commands
 
@@ -32,11 +32,17 @@ Tests use an in-memory SQLite DB (no MySQL needed). The test fixtures are in `ba
 ### Frontend
 
 ```bash
-# Serve frontend with API proxy (proxies /api/* to localhost:8000)
-python serve.py 3000
+# Run from frontend/ directory (Vite dev server, proxies /api/* to localhost:8000)
+cd frontend
 
-# Build Tailwind CSS
-npm run build:css
+# Start dev server (http://localhost:5173)
+npm run dev
+
+# Run tests
+npm run test
+
+# Production build → frontend/dist/
+npm run build
 ```
 
 ### Docker (production)
@@ -78,34 +84,36 @@ FastAPI async app with SQLAlchemy 2.0 async ORM.
 - `chat_service.py` — multi-turn conversation, profile extraction, job fit analysis
 - `semantic_vector_service.py` — FAISS + `sentence-transformers` (BAAI/bge-small-zh-v1.5) for semantic job search
 
-### Frontend (`pages/`, `js/`, `css/`, `assets/`)
+### Frontend (`frontend/`)
 
-Vanilla HTML pages with no build step (except Tailwind CSS compilation).
+React 18 SPA: Vite + TypeScript + Tailwind CSS + React Router + zustand + TanStack Query.
 
-- `pages/home.html` — job search and listing, pixel assistant integration
-- `pages/job-detail.html` — job detail with AI match
-- `pages/resume-editor-kinetic.html` — animated resume editor
-- `pages/resume-editor-precision.html` — structured resume editor
-- `js/pixel-assistant.js` — Canvas-based pixel sprite assistant with multi-turn chat UI
-- `js/resume-pdf.js` — PDF and Word export for resume snapshots
+- `src/pages/` — route pages: `/jobs`, `/jobs/:id`, `/saved`, `/map`, `/resume`
+- `src/components/` — layout / common / jobs / map / saved / resume / pixel (Canvas sprite assistant)
+- `src/stores/` — zustand stores (auth / savedJobs / resume / resumeSnapshots), persisted to localStorage
+- `src/lib/` — apiClient, storage, SSE parser, resume schema compat (unifies legacy `module_type`/`type` naming)
+- `src/hooks/useSSE.ts` — custom SSE hook (POST + ReadableStream; backend SSE endpoints don't work with EventSource)
+- `__tests__/` — Vitest tests (quota, schema compat, SSE parsing, stores)
 
-`serve.py` acts as a dev proxy: static files are served directly, `/api/*` requests are forwarded to the backend.
+`vite.config.ts` proxies `/api/*` to `http://localhost:8000` in dev.
 
 ### Database
 
 - **Production**: MySQL 8.0 (via `aiomysql`)
-- **Dev/Tests**: SQLite (set `DATABASE_URL=sqlite+aiosqlite:///./yesjob_dev.db` in `.env`)
+- **Dev/Tests**: SQLite (set `DATABASE_URL=sqlite+aiosqlite:///./yesjob_dev.db` in `backend/.env`)
 - Jobs are seeded from `data/jobs.jsonl` on startup if the jobs table is empty
 - Tables: `users`, `jobs`, `user_profiles` (stores conversation history and extracted profile as JSON)
 
 ## Environment Setup
 
-Copy `.env.example` to `.env`. For local dev with SQLite:
+Copy `.env.example` to `backend/.env`. For local dev with SQLite:
 
 ```
 DATABASE_URL=sqlite+aiosqlite:///./yesjob_dev.db
 SECRET_KEY=any-dev-secret
-JOBS_FILE=data/jobs.jsonl
+JOBS_FILE=../data/jobs.jsonl
 ```
+
+Note: `JOBS_FILE` is relative to the `backend/` directory, so `../data/jobs.jsonl` points to the repo-root data file.
 
 AI features require either a running Ollama instance or API keys for DeepSeek/Qwen.

@@ -1,7 +1,7 @@
-# YesJob (daijob) 代码知识库
+# 逮JOB (daijob) 代码知识库
 
 > AI 驱动的求职平台：多网站校招数据采集 + AI 简历匹配/优化 + 像素精灵求职助手
-> 仓库：`yohi-pixel/daijob`（私有）｜ 项目内名：YesJob ｜ 主语言：Python (FastAPI) + Vanilla JS
+> 仓库：`yohi-pixel/daijob`（私有）｜ 项目内名：逮JOB ｜ 主语言：Python (FastAPI) + React
 
 ## 文档索引
 
@@ -31,10 +31,11 @@
 ```bash
 # 后端
 cd backend && uvicorn main:app --reload --port 8000
-# 前端（含 /api 代理）
-python serve.py 3000
-# 测试（内存 SQLite）
+# 前端（Vite dev server，含 /api 代理）
+cd frontend && npm run dev
+# 测试（后端 pytest / 前端 Vitest）
 cd backend && pytest
+cd frontend && npm run test
 # 生产
 docker-compose up --build
 ```

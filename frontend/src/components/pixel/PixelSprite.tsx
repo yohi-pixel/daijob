@@ -42,7 +42,7 @@ export function PixelSprite({ talking, onClick }: PixelSpriteProps) {
       onClick={onClick}
       className="cursor-pointer"
       style={{ imageRendering: 'pixelated', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.25))' }}
-      title="YesJob 求职助手"
+      title="逮JOB 求职助手"
     />
   );
 }
