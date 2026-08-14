@@ -6,7 +6,8 @@
     "求职者关注度：应届生关注度高，平台冷启动流量来源",
     "岗位充足度：秋招 HC 规模，大厂全年 80%+ HC 集中释放",
     "可爬取性：有公开招聘官网/结构化接口，反爬成本可控",
-    "领域差异化：大厂之外覆盖硬科技/游戏/外企/新锐，错位竞争"
+    "领域差异化：大厂之外覆盖硬科技/游戏/外企/新锐，错位竞争",
+    "广深性价比：base 深圳/广州的出海电子/游戏/硬科技企业，薪资性价比高，覆盖华南求职群体"
   ],
   "tiers": [
     {
@@ -41,61 +42,656 @@
     }
   ],
   "companies": [
-    { "id": "tencent", "name": "腾讯", "name_en": "Tencent", "tier": 1, "recruit_url": "https://join.qq.com", "user_picked": true, "notes": "青云计划，AI 岗位弹性薪酬" },
-    { "id": "alibaba", "name": "阿里巴巴", "name_en": "Alibaba", "tier": 1, "recruit_url": "https://campus.alibaba.com", "user_picked": true, "notes": "阿里星计划，AI 岗位占比约 80%" },
-    { "id": "baidu", "name": "百度", "name_en": "Baidu", "tier": 1, "recruit_url": "https://talent.baidu.com", "user_picked": true, "notes": "7 月已抢跑提前批" },
-    { "id": "bytedance", "name": "字节跳动", "name_en": "ByteDance", "tier": 1, "recruit_url": "https://jobs.bytedance.com", "user_picked": true, "notes": "AI 产品经理早鸟通道；千余 AI 岗位" },
-    { "id": "meituan", "name": "美团", "name_en": "Meituan", "tier": 1, "recruit_url": "https://campus.meituan.com", "user_picked": false, "notes": "8 月已开放网申" },
-    { "id": "jd", "name": "京东", "name_en": "JD.com", "tier": 1, "recruit_url": "https://campus.jd.com", "user_picked": false, "notes": "TET 管培 7 月底截止，正式批跟进" },
-    { "id": "pinduoduo", "name": "拼多多", "name_en": "Pinduoduo", "tier": 1, "recruit_url": "https://recruit.pinduoduo.com", "user_picked": false, "notes": "8/1 提前批开启，招满即止" },
-    { "id": "netease", "name": "网易", "name_en": "NetEase", "tier": 1, "recruit_url": "https://campus.163.com", "user_picked": false, "notes": "含网易游戏/雷火子站" },
-    { "id": "kuaishou", "name": "快手", "name_en": "Kuaishou", "tier": 1, "recruit_url": "https://campus.kuaishou.com", "user_picked": false, "notes": "8/1 正式批启动，AI 算法/多媒体" },
-    { "id": "xiaomi", "name": "小米", "name_en": "Xiaomi", "tier": 1, "recruit_url": "https://hr.xiaomi.com", "user_picked": false, "notes": "8/5 正式批，手机/汽车/AIoT" },
-    { "id": "didichuxing", "name": "滴滴", "name_en": "DiDi", "tier": 1, "recruit_url": "https://campus.didiglobal.com", "user_picked": false, "notes": "8/13 宣布 2027 届启动" },
-
-    { "id": "bilibili", "name": "哔哩哔哩", "name_en": "Bilibili", "tier": 2, "recruit_url": "https://jobs.bilibili.com", "user_picked": true, "notes": "B-UP 顶尖技术人才项目" },
-    { "id": "xiaohongshu", "name": "小红书", "name_en": "Xiaohongshu", "tier": 2, "recruit_url": "https://job.xiaohongshu.com", "user_picked": true, "notes": "" },
-    { "id": "dewu", "name": "得物", "name_en": "Dewu", "tier": 2, "recruit_url": "https://job.dewu.com", "user_picked": true, "notes": "8/12 秋招正式批启动" },
-    { "id": "zhihu", "name": "知乎", "name_en": "Zhihu", "tier": 2, "recruit_url": "https://zhaopin.zhihu.com", "user_picked": false, "notes": "" },
-    { "id": "ctrip", "name": "携程", "name_en": "Ctrip", "tier": 2, "recruit_url": "https://campus.ctrip.com", "user_picked": false, "notes": "" },
-    { "id": "shein", "name": "SHEIN", "name_en": "SHEIN", "tier": 2, "recruit_url": "https://jobs.shein.com", "user_picked": false, "notes": "跨境电商头部" },
-    { "id": "weibo", "name": "微博", "name_en": "Weibo", "tier": 2, "recruit_url": "https://jobs.weibo.com", "user_picked": false, "notes": "" },
-    { "id": "huya", "name": "虎牙", "name_en": "Huya", "tier": 2, "recruit_url": "https://jobs.huya.com", "user_picked": false, "notes": "8/10 提前批，AI 算法/直播技术" },
-
-    { "id": "mihoyo", "name": "米哈游", "name_en": "miHoYo", "tier": 3, "recruit_url": "https://jobs.mihoyo.com", "user_picked": false, "notes": "7/27 技术提前批截止，正式批跟进" },
-    { "id": "lilith", "name": "莉莉丝", "name_en": "Lilith", "tier": 3, "recruit_url": "https://lilith.zhiye.com", "user_picked": false, "notes": "8/7 提前批" },
-    { "id": "papergames", "name": "叠纸游戏", "name_en": "Papergames", "tier": 3, "recruit_url": "https://jobs.papegames.cn", "user_picked": false, "notes": "" },
-    { "id": "netease-leihuo", "name": "网易雷火", "name_en": "NetEase Leihuo", "tier": 3, "recruit_url": "https://leihuo.163.com", "user_picked": false, "notes": "游戏研发/策划" },
-    { "id": "wanmei", "name": "完美世界", "name_en": "Perfect World", "tier": 3, "recruit_url": "https://jobs.wanmei.com", "user_picked": false, "notes": "8/8 提前批，游戏研发/策划" },
-    { "id": "sohu-changyou", "name": "搜狐畅游", "name_en": "Sohu Changyou", "tier": 3, "recruit_url": "https://campus.cyou.com", "user_picked": false, "notes": "8/11 提前批" },
-
-    { "id": "huawei", "name": "华为", "name_en": "Huawei", "tier": 4, "recruit_url": "https://career.huawei.com", "user_picked": false, "notes": "" },
-    { "id": "honor", "name": "荣耀", "name_en": "HONOR", "tier": 4, "recruit_url": "https://hr.honor.cn", "user_picked": false, "notes": "" },
-    { "id": "oppo", "name": "OPPO", "name_en": "OPPO", "tier": 4, "recruit_url": "https://careers.oppo.com", "user_picked": false, "notes": "8/22 提前批" },
-    { "id": "vivo", "name": "vivo", "name_en": "vivo", "tier": 4, "recruit_url": "https://hr.vivo.com", "user_picked": false, "notes": "" },
-    { "id": "dji", "name": "大疆", "name_en": "DJI", "tier": 4, "recruit_url": "https://we.dji.com", "user_picked": true, "notes": "用户点名" },
-    { "id": "insta360", "name": "影石", "name_en": "Insta360", "tier": 4, "recruit_url": "https://www.insta360.com/recruit", "user_picked": true, "notes": "用户点名；8 月已开校招" },
-    { "id": "cambricon", "name": "寒武纪", "name_en": "Cambricon", "tier": 4, "recruit_url": "https://www.cambricon.com/join", "user_picked": false, "notes": "芯片类/软件类，北京上海深圳合肥" },
-    { "id": "smic", "name": "中芯国际", "name_en": "SMIC", "tier": 4, "recruit_url": "https://www.smic.com/careers", "user_picked": false, "notes": "半导体放量最猛" },
-    { "id": "nio", "name": "蔚来", "name_en": "NIO", "tier": 4, "recruit_url": "https://nio.zhiye.com", "user_picked": false, "notes": "8/14 提前批" },
-    { "id": "xpeng", "name": "小鹏", "name_en": "XPeng", "tier": 4, "recruit_url": "https://campus.xiaopeng.com", "user_picked": false, "notes": "" },
-
-    { "id": "apple", "name": "Apple", "name_en": "Apple", "tier": 5, "recruit_url": "https://jobs.apple.com", "user_picked": false, "notes": "8/7 秋招正式批，硬件/软件/AI" },
-    { "id": "nvidia", "name": "英伟达", "name_en": "NVIDIA", "tier": 5, "recruit_url": "https://www.nvidia.com/en-us/about-nvidia/careers", "user_picked": false, "notes": "8 月已开校招" },
-    { "id": "shopee", "name": "Shopee", "name_en": "Shopee", "tier": 5, "recruit_url": "https://careers.shopee.sg", "user_picked": false, "notes": "东南亚电商，含深圳研发" },
-    { "id": "skhynix", "name": "SK海力士", "name_en": "SK hynix", "tier": 5, "recruit_url": "https://careers.skhynix.com", "user_picked": false, "notes": "8/13 校招，14 薪，半导体" },
-    { "id": "loreal", "name": "欧莱雅", "name_en": "L'Oréal", "tier": 5, "recruit_url": "https://careers.loreal.com", "user_picked": true, "notes": "用户点名；快消头部" },
-    { "id": "pg", "name": "宝洁", "name_en": "P&G", "tier": 5, "recruit_url": "https://www.pgcareers.com", "user_picked": false, "notes": "" },
-    { "id": "unilever", "name": "联合利华", "name_en": "Unilever", "tier": 5, "recruit_url": "https://www.unilevercareers.com", "user_picked": false, "notes": "" },
-    { "id": "mars", "name": "玛氏", "name_en": "Mars", "tier": 5, "recruit_url": "https://www.mars.com/careers", "user_picked": false, "notes": "" },
-
-    { "id": "deepseek", "name": "DeepSeek", "name_en": "DeepSeek", "tier": 6, "recruit_url": "https://jobs.deepseek.com", "user_picked": false, "notes": "6 月大规模招聘，薪酬不设上限" },
-    { "id": "zhipu", "name": "智谱", "name_en": "Zhipu AI", "tier": 6, "recruit_url": "https://zhipuai.zhiye.com", "user_picked": false, "notes": "GLM 大模型" },
-    { "id": "moonshot", "name": "月之暗面", "name_en": "Moonshot AI", "tier": 6, "recruit_url": "https://moonshot.zhiye.com", "user_picked": false, "notes": "Kimi" },
-    { "id": "minimax", "name": "MiniMax", "name_en": "MiniMax", "tier": 6, "recruit_url": "https://minimax.zhiye.com", "user_picked": false, "notes": "" },
-    { "id": "popmart", "name": "泡泡玛特", "name_en": "POP MART", "tier": 6, "recruit_url": "https://jobs.popmart.com", "user_picked": false, "notes": "潮玩头部" },
-    { "id": "zuru", "name": "ZURU", "name_en": "ZURU", "tier": 6, "recruit_url": "https://zuru.zhiye.com", "user_picked": true, "notes": "用户点名；新西兰玩具独角兽" },
-    { "id": "miniso", "name": "名创优品", "name_en": "MINISO", "tier": 6, "recruit_url": "https://miniso.zhiye.com", "user_picked": true, "notes": "用户点名；全球零售" }
+    {
+      "id": "tencent",
+      "name": "腾讯",
+      "name_en": "Tencent",
+      "tier": 1,
+      "recruit_url": "https://join.qq.com",
+      "user_picked": true,
+      "notes": "青云计划，AI 岗位弹性薪酬",
+      "base_city": "深圳"
+    },
+    {
+      "id": "alibaba",
+      "name": "阿里巴巴",
+      "name_en": "Alibaba",
+      "tier": 1,
+      "recruit_url": "https://campus.alibaba.com",
+      "user_picked": true,
+      "notes": "阿里星计划，AI 岗位占比约 80%",
+      "base_city": "杭州"
+    },
+    {
+      "id": "baidu",
+      "name": "百度",
+      "name_en": "Baidu",
+      "tier": 1,
+      "recruit_url": "https://talent.baidu.com",
+      "user_picked": true,
+      "notes": "7 月已抢跑提前批",
+      "base_city": "北京"
+    },
+    {
+      "id": "bytedance",
+      "name": "字节跳动",
+      "name_en": "ByteDance",
+      "tier": 1,
+      "recruit_url": "https://jobs.bytedance.com",
+      "user_picked": true,
+      "notes": "AI 产品经理早鸟通道；千余 AI 岗位",
+      "base_city": "北京"
+    },
+    {
+      "id": "meituan",
+      "name": "美团",
+      "name_en": "Meituan",
+      "tier": 1,
+      "recruit_url": "https://campus.meituan.com",
+      "user_picked": false,
+      "notes": "8 月已开放网申",
+      "base_city": "北京"
+    },
+    {
+      "id": "jd",
+      "name": "京东",
+      "name_en": "JD.com",
+      "tier": 1,
+      "recruit_url": "https://campus.jd.com",
+      "user_picked": false,
+      "notes": "TET 管培 7 月底截止，正式批跟进",
+      "base_city": "北京"
+    },
+    {
+      "id": "pinduoduo",
+      "name": "拼多多",
+      "name_en": "Pinduoduo",
+      "tier": 1,
+      "recruit_url": "https://recruit.pinduoduo.com",
+      "user_picked": false,
+      "notes": "8/1 提前批开启，招满即止",
+      "base_city": "上海"
+    },
+    {
+      "id": "netease",
+      "name": "网易",
+      "name_en": "NetEase",
+      "tier": 1,
+      "recruit_url": "https://campus.163.com",
+      "user_picked": false,
+      "notes": "含网易游戏/雷火子站",
+      "base_city": "杭州"
+    },
+    {
+      "id": "kuaishou",
+      "name": "快手",
+      "name_en": "Kuaishou",
+      "tier": 1,
+      "recruit_url": "https://campus.kuaishou.com",
+      "user_picked": false,
+      "notes": "8/1 正式批启动，AI 算法/多媒体",
+      "base_city": "北京"
+    },
+    {
+      "id": "xiaomi",
+      "name": "小米",
+      "name_en": "Xiaomi",
+      "tier": 1,
+      "recruit_url": "https://hr.xiaomi.com",
+      "user_picked": false,
+      "notes": "8/5 正式批，手机/汽车/AIoT",
+      "base_city": "北京"
+    },
+    {
+      "id": "didichuxing",
+      "name": "滴滴",
+      "name_en": "DiDi",
+      "tier": 1,
+      "recruit_url": "https://campus.didiglobal.com",
+      "user_picked": false,
+      "notes": "8/13 宣布 2027 届启动",
+      "base_city": "北京"
+    },
+    {
+      "id": "bilibili",
+      "name": "哔哩哔哩",
+      "name_en": "Bilibili",
+      "tier": 2,
+      "recruit_url": "https://jobs.bilibili.com",
+      "user_picked": true,
+      "notes": "B-UP 顶尖技术人才项目",
+      "base_city": "上海"
+    },
+    {
+      "id": "xiaohongshu",
+      "name": "小红书",
+      "name_en": "Xiaohongshu",
+      "tier": 2,
+      "recruit_url": "https://job.xiaohongshu.com",
+      "user_picked": true,
+      "notes": "",
+      "base_city": "上海"
+    },
+    {
+      "id": "dewu",
+      "name": "得物",
+      "name_en": "Dewu",
+      "tier": 2,
+      "recruit_url": "https://job.dewu.com",
+      "user_picked": true,
+      "notes": "8/12 秋招正式批启动",
+      "base_city": "上海"
+    },
+    {
+      "id": "zhihu",
+      "name": "知乎",
+      "name_en": "Zhihu",
+      "tier": 2,
+      "recruit_url": "https://zhaopin.zhihu.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "北京"
+    },
+    {
+      "id": "ctrip",
+      "name": "携程",
+      "name_en": "Ctrip",
+      "tier": 2,
+      "recruit_url": "https://campus.ctrip.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "上海"
+    },
+    {
+      "id": "shein",
+      "name": "SHEIN",
+      "name_en": "SHEIN",
+      "tier": 2,
+      "recruit_url": "https://jobs.shein.com",
+      "user_picked": false,
+      "notes": "跨境电商头部",
+      "base_city": "广州"
+    },
+    {
+      "id": "weibo",
+      "name": "微博",
+      "name_en": "Weibo",
+      "tier": 2,
+      "recruit_url": "https://jobs.weibo.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "北京"
+    },
+    {
+      "id": "huya",
+      "name": "虎牙",
+      "name_en": "Huya",
+      "tier": 2,
+      "recruit_url": "https://jobs.huya.com",
+      "user_picked": false,
+      "notes": "8/10 提前批，AI 算法/直播技术",
+      "base_city": "广州"
+    },
+    {
+      "id": "mihoyo",
+      "name": "米哈游",
+      "name_en": "miHoYo",
+      "tier": 3,
+      "recruit_url": "https://jobs.mihoyo.com",
+      "user_picked": false,
+      "notes": "7/27 技术提前批截止，正式批跟进",
+      "base_city": "上海"
+    },
+    {
+      "id": "lilith",
+      "name": "莉莉丝",
+      "name_en": "Lilith",
+      "tier": 3,
+      "recruit_url": "https://lilith.zhiye.com",
+      "user_picked": false,
+      "notes": "8/7 提前批",
+      "base_city": "上海"
+    },
+    {
+      "id": "papergames",
+      "name": "叠纸游戏",
+      "name_en": "Papergames",
+      "tier": 3,
+      "recruit_url": "https://jobs.papegames.cn",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "上海"
+    },
+    {
+      "id": "netease-leihuo",
+      "name": "网易雷火",
+      "name_en": "NetEase Leihuo",
+      "tier": 3,
+      "recruit_url": "https://leihuo.163.com",
+      "user_picked": false,
+      "notes": "游戏研发/策划",
+      "base_city": "杭州"
+    },
+    {
+      "id": "wanmei",
+      "name": "完美世界",
+      "name_en": "Perfect World",
+      "tier": 3,
+      "recruit_url": "https://jobs.wanmei.com",
+      "user_picked": false,
+      "notes": "8/8 提前批，游戏研发/策划",
+      "base_city": "北京"
+    },
+    {
+      "id": "sohu-changyou",
+      "name": "搜狐畅游",
+      "name_en": "Sohu Changyou",
+      "tier": 3,
+      "recruit_url": "https://campus.cyou.com",
+      "user_picked": false,
+      "notes": "8/11 提前批",
+      "base_city": "北京"
+    },
+    {
+      "id": "huawei",
+      "name": "华为",
+      "name_en": "Huawei",
+      "tier": 4,
+      "recruit_url": "https://career.huawei.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "深圳"
+    },
+    {
+      "id": "honor",
+      "name": "荣耀",
+      "name_en": "HONOR",
+      "tier": 4,
+      "recruit_url": "https://hr.honor.cn",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "深圳"
+    },
+    {
+      "id": "oppo",
+      "name": "OPPO",
+      "name_en": "OPPO",
+      "tier": 4,
+      "recruit_url": "https://careers.oppo.com",
+      "user_picked": false,
+      "notes": "8/22 提前批",
+      "base_city": "东莞"
+    },
+    {
+      "id": "vivo",
+      "name": "vivo",
+      "name_en": "vivo",
+      "tier": 4,
+      "recruit_url": "https://hr.vivo.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "东莞"
+    },
+    {
+      "id": "dji",
+      "name": "大疆",
+      "name_en": "DJI",
+      "tier": 4,
+      "recruit_url": "https://we.dji.com",
+      "user_picked": true,
+      "notes": "用户点名",
+      "base_city": "深圳"
+    },
+    {
+      "id": "insta360",
+      "name": "影石",
+      "name_en": "Insta360",
+      "tier": 4,
+      "recruit_url": "https://www.insta360.com/recruit",
+      "user_picked": true,
+      "notes": "用户点名；8 月已开校招",
+      "base_city": "深圳"
+    },
+    {
+      "id": "cambricon",
+      "name": "寒武纪",
+      "name_en": "Cambricon",
+      "tier": 4,
+      "recruit_url": "https://www.cambricon.com/join",
+      "user_picked": false,
+      "notes": "芯片类/软件类，北京上海深圳合肥",
+      "base_city": "北京"
+    },
+    {
+      "id": "smic",
+      "name": "中芯国际",
+      "name_en": "SMIC",
+      "tier": 4,
+      "recruit_url": "https://www.smic.com/careers",
+      "user_picked": false,
+      "notes": "半导体放量最猛",
+      "base_city": "上海"
+    },
+    {
+      "id": "nio",
+      "name": "蔚来",
+      "name_en": "NIO",
+      "tier": 4,
+      "recruit_url": "https://nio.zhiye.com",
+      "user_picked": false,
+      "notes": "8/14 提前批",
+      "base_city": "上海"
+    },
+    {
+      "id": "xpeng",
+      "name": "小鹏",
+      "name_en": "XPeng",
+      "tier": 4,
+      "recruit_url": "https://campus.xiaopeng.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "广州"
+    },
+    {
+      "id": "apple",
+      "name": "Apple",
+      "name_en": "Apple",
+      "tier": 5,
+      "recruit_url": "https://jobs.apple.com",
+      "user_picked": false,
+      "notes": "8/7 秋招正式批，硬件/软件/AI",
+      "base_city": "上海"
+    },
+    {
+      "id": "nvidia",
+      "name": "英伟达",
+      "name_en": "NVIDIA",
+      "tier": 5,
+      "recruit_url": "https://www.nvidia.com/en-us/about-nvidia/careers",
+      "user_picked": false,
+      "notes": "8 月已开校招",
+      "base_city": "北京"
+    },
+    {
+      "id": "shopee",
+      "name": "Shopee",
+      "name_en": "Shopee",
+      "tier": 5,
+      "recruit_url": "https://careers.shopee.sg",
+      "user_picked": false,
+      "notes": "东南亚电商，含深圳研发",
+      "base_city": "深圳"
+    },
+    {
+      "id": "skhynix",
+      "name": "SK海力士",
+      "name_en": "SK hynix",
+      "tier": 5,
+      "recruit_url": "https://careers.skhynix.com",
+      "user_picked": false,
+      "notes": "8/13 校招，14 薪，半导体",
+      "base_city": "无锡"
+    },
+    {
+      "id": "loreal",
+      "name": "欧莱雅",
+      "name_en": "L'Oréal",
+      "tier": 5,
+      "recruit_url": "https://careers.loreal.com",
+      "user_picked": true,
+      "notes": "用户点名；快消头部",
+      "base_city": "上海"
+    },
+    {
+      "id": "pg",
+      "name": "宝洁",
+      "name_en": "P&G",
+      "tier": 5,
+      "recruit_url": "https://www.pgcareers.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "广州"
+    },
+    {
+      "id": "unilever",
+      "name": "联合利华",
+      "name_en": "Unilever",
+      "tier": 5,
+      "recruit_url": "https://www.unilevercareers.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "上海"
+    },
+    {
+      "id": "mars",
+      "name": "玛氏",
+      "name_en": "Mars",
+      "tier": 5,
+      "recruit_url": "https://www.mars.com/careers",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "北京"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "name_en": "DeepSeek",
+      "tier": 6,
+      "recruit_url": "https://jobs.deepseek.com",
+      "user_picked": false,
+      "notes": "6 月大规模招聘，薪酬不设上限",
+      "base_city": "杭州"
+    },
+    {
+      "id": "zhipu",
+      "name": "智谱",
+      "name_en": "Zhipu AI",
+      "tier": 6,
+      "recruit_url": "https://zhipuai.zhiye.com",
+      "user_picked": false,
+      "notes": "GLM 大模型",
+      "base_city": "北京"
+    },
+    {
+      "id": "moonshot",
+      "name": "月之暗面",
+      "name_en": "Moonshot AI",
+      "tier": 6,
+      "recruit_url": "https://moonshot.zhiye.com",
+      "user_picked": false,
+      "notes": "Kimi",
+      "base_city": "北京"
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "name_en": "MiniMax",
+      "tier": 6,
+      "recruit_url": "https://minimax.zhiye.com",
+      "user_picked": false,
+      "notes": "",
+      "base_city": "上海"
+    },
+    {
+      "id": "popmart",
+      "name": "泡泡玛特",
+      "name_en": "POP MART",
+      "tier": 6,
+      "recruit_url": "https://jobs.popmart.com",
+      "user_picked": false,
+      "notes": "潮玩头部",
+      "base_city": "北京"
+    },
+    {
+      "id": "zuru",
+      "name": "ZURU",
+      "name_en": "ZURU",
+      "tier": 6,
+      "recruit_url": "https://zuru.zhiye.com",
+      "user_picked": true,
+      "notes": "用户点名；新西兰玩具独角兽",
+      "base_city": "深圳"
+    },
+    {
+      "id": "miniso",
+      "name": "名创优品",
+      "name_en": "MINISO",
+      "tier": 6,
+      "recruit_url": "https://miniso.zhiye.com",
+      "user_picked": true,
+      "notes": "用户点名；全球零售",
+      "base_city": "广州"
+    },
+    {
+      "id": "kurogames",
+      "name": "库洛科技",
+      "name_en": "Kuro Games",
+      "tier": 3,
+      "recruit_url": "https://www.kurogames.com/join",
+      "user_picked": true,
+      "base_city": "广州",
+      "notes": "《鸣潮》开发商，二次元赛道头部"
+    },
+    {
+      "id": "shenlan",
+      "name": "深蓝互动",
+      "name_en": "Shenlan Interactive",
+      "tier": 3,
+      "recruit_url": "https://job.shenlan-games.com",
+      "user_picked": true,
+      "base_city": "广州",
+      "notes": "《重返未来：1999》开发商"
+    },
+    {
+      "id": "37games",
+      "name": "三七互娱",
+      "name_en": "37 Interactive",
+      "tier": 3,
+      "recruit_url": "https://jobs.37.com",
+      "user_picked": false,
+      "base_city": "广州",
+      "notes": "A股游戏龙头"
+    },
+    {
+      "id": "shiyue",
+      "name": "诗悦网络",
+      "name_en": "Shiyue Games",
+      "tier": 3,
+      "recruit_url": "https://www.shiyuegame.com/join",
+      "user_picked": false,
+      "base_city": "广州",
+      "notes": ""
+    },
+    {
+      "id": "duoyi",
+      "name": "多益网络",
+      "name_en": "Duoyi",
+      "tier": 3,
+      "recruit_url": "https://www.duoyi.com/join",
+      "user_picked": false,
+      "base_city": "广州",
+      "notes": ""
+    },
+    {
+      "id": "anker",
+      "name": "安克创新",
+      "name_en": "Anker",
+      "tier": 4,
+      "recruit_url": "https://career.anker-in.com",
+      "user_picked": true,
+      "base_city": "深圳",
+      "notes": "A股上市出海消费电子龙头，充电/音频/储能，秋招提前批已开"
+    },
+    {
+      "id": "tcl",
+      "name": "TCL",
+      "name_en": "TCL",
+      "tier": 4,
+      "recruit_url": "https://careers.tcl.com",
+      "user_picked": true,
+      "base_city": "深圳",
+      "notes": "家电+华星光电面板，含惠州基地"
+    },
+    {
+      "id": "transsion",
+      "name": "传音控股",
+      "name_en": "Transsion",
+      "tier": 4,
+      "recruit_url": "https://careers.transsion.com",
+      "user_picked": false,
+      "base_city": "深圳",
+      "notes": "非洲手机之王，出海硬件性价比高"
+    },
+    {
+      "id": "shokz",
+      "name": "韶音科技",
+      "name_en": "Shokz",
+      "tier": 4,
+      "recruit_url": "https://www.shokz.com/careers",
+      "user_picked": false,
+      "base_city": "深圳",
+      "notes": "骨传导耳机龙头，小而美高薪"
+    },
+    {
+      "id": "zte",
+      "name": "中兴通讯",
+      "name_en": "ZTE",
+      "tier": 4,
+      "recruit_url": "https://job.zte.com.cn",
+      "user_picked": false,
+      "base_city": "深圳",
+      "notes": "通信设备大厂"
+    },
+    {
+      "id": "byd",
+      "name": "比亚迪",
+      "name_en": "BYD",
+      "tier": 4,
+      "recruit_url": "https://job.byd.com",
+      "user_picked": false,
+      "base_city": "深圳",
+      "notes": "新能源车+电池，HC 巨大"
+    },
+    {
+      "id": "mindray",
+      "name": "迈瑞医疗",
+      "name_en": "Mindray",
+      "tier": 4,
+      "recruit_url": "https://careers.mindray.com",
+      "user_picked": false,
+      "base_city": "深圳",
+      "notes": "医疗器械龙头"
+    },
+    {
+      "id": "tecdo",
+      "name": "钛动科技",
+      "name_en": "Tec-Do",
+      "tier": 6,
+      "recruit_url": "https://www.tec-do.com/join",
+      "user_picked": true,
+      "base_city": "广州",
+      "notes": "出海营销 AI SaaS，赴港上市推进中，15 薪"
+    },
+    {
+      "id": "vipshop",
+      "name": "唯品会",
+      "name_en": "Vipshop",
+      "tier": 2,
+      "recruit_url": "https://campus.vip.com",
+      "user_picked": false,
+      "base_city": "广州",
+      "notes": "特卖电商，广州 base"
+    },
+    {
+      "id": "ximalaya",
+      "name": "荔枝FM",
+      "name_en": "Lizhi",
+      "tier": 2,
+      "recruit_url": "https://www.lizhi.fm/join",
+      "user_picked": false,
+      "base_city": "广州",
+      "notes": "美股音频，广州 base"
+    }
   ],
   "pending_confirmation": [
     {
