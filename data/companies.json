@@ -127,9 +127,9 @@
       "name": "快手",
       "name_en": "Kuaishou",
       "tier": 1,
-      "recruit_url": "https://campus.kuaishou.com",
+      "recruit_url": "https://zhaopin.kuaishou.cn",
       "user_picked": false,
-      "notes": "8/1 正式批启动，AI 算法/多媒体",
+      "notes": "8/1 正式批启动，AI 算法/多媒体；zhaopin.kuaishou.cn（200）",
       "base_city": "北京"
     },
     {
@@ -677,10 +677,10 @@
       "name": "唯品会",
       "name_en": "Vipshop",
       "tier": 2,
-      "recruit_url": "https://campus.vip.com",
+      "recruit_url": "https://app-tc.mokahr.com/campus-recruitment/vipshophr/10039",
       "user_picked": false,
       "base_city": "广州",
-      "notes": "特卖电商，广州 base"
+      "notes": "特卖电商，广州 base；MokaHR SaaS 平台"
     },
     {
       "id": "ximalaya",
