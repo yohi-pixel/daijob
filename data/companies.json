@@ -51,7 +51,7 @@
       "user_picked": true,
       "notes": "青云计划，AI 岗位弹性薪酬",
       "base_city": "深圳",
-      "platform": "self",
+      "platform": "tencent",
       "data_source": "api",
       "api": {
         "host": "join.qq.com",
@@ -137,7 +137,7 @@
       "user_picked": false,
       "notes": "TET 管培 7 月底截止，正式批跟进",
       "base_city": "北京",
-      "platform": "self",
+      "platform": "jd",
       "data_source": "api",
       "api": {
         "host": "campus.jd.com",
@@ -225,7 +225,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"jobType\":\"campus\",\"keyword\":\"\",\"page\":1,\"pageSize\":10}",
         "notes": "AES解密；302跳转MokaHR"
-      }
+      },
+      "org_id": "didiglobal",
+      "site_id": "96064"
     },
     {
       "id": "bilibili",
@@ -312,7 +314,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"orgId\":\"sina\",\"siteId\":\"43536\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
         "notes": "AES解密；新浪&微博校招同站"
-      }
+      },
+      "org_id": "sina",
+      "site_id": "43536"
     },
     {
       "id": "huya",
@@ -389,7 +393,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"orgId\":\"pwrd\",\"siteId\":\"144582\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
         "notes": "AES解密；宣传页jobs.games.wanmei.com/school.html"
-      }
+      },
+      "org_id": "pwrd",
+      "site_id": "144582"
     },
     {
       "id": "sohu-changyou",
@@ -732,7 +738,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"orgId\":\"shiyuehr\",\"siteId\":\"72055\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
         "notes": "AES解密；域名注意是shiyue.com非shiyuegame.com"
-      }
+      },
+      "org_id": "shiyuehr",
+      "site_id": "72055"
     },
     {
       "id": "duoyi",
@@ -808,7 +816,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"orgId\":\"aftershokzhr\",\"siteId\":\"40779\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
         "notes": "AES解密；域名注意shokz.com.cn非shokz.com"
-      }
+      },
+      "org_id": "aftershokzhr",
+      "site_id": "40779"
     },
     {
       "id": "zte",
@@ -866,7 +876,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"orgId\":\"tec-do\",\"siteId\":\"41717\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
         "notes": "AES解密"
-      }
+      },
+      "org_id": "tec-do",
+      "site_id": "41717"
     },
     {
       "id": "vipshop",
@@ -885,7 +897,9 @@
         "path": "/api/outer/ats-apply/website/jobs/v2",
         "body": "{\"orgId\":\"vipshophr\",\"siteId\":\"10039\",\"limit\":50,\"offset\":0,\"isCampusJob\":true,\"locale\":\"zh-CN\"}",
         "notes": "AES-128-CBC解密（key=响应的necromancer字段，iv=页面init-data的aesIv，pycryptodome验证通过）；siteId 10039当前0条（秋招未发布），8015实习门户有3条"
-      }
+      },
+      "org_id": "vipshophr",
+      "site_id": "10039"
     },
     {
       "id": "ximalaya",
