@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.pool import StaticPool
 
 # Import all models so Base.metadata knows about them
-from models import user, job  # noqa: F401
+from models import user, job, user_profile  # noqa: F401
 from database import Base, get_db
 from main import app
 
