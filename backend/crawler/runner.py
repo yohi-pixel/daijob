@@ -24,13 +24,16 @@ from .zhiye import ZhiyeAdapter
 from .mokahr import MokahrAdapter
 from .tencent import TencentAdapter
 from .jd import JDAdapter
+from .html_adapters import SmicAdapter, LizhiAdapter
 
-# data_source -> 适配器
+# platform -> 适配器
 API_ADAPTERS = {
     "zhiye": ZhiyeAdapter,
     "mokahr": MokahrAdapter,
     "tencent": TencentAdapter,
     "jd": JDAdapter,
+    "smic": SmicAdapter,
+    "lizhi": LizhiAdapter,
 }
 
 ROOT = Path(__file__).resolve().parents[2]

@@ -492,7 +492,7 @@
       "user_picked": false,
       "notes": "北森CMS门户SSR，岗位名直接嵌入HTML可解析",
       "base_city": "上海",
-      "platform": "zhiye",
+      "platform": "smic",
       "data_source": "html"
     },
     {
@@ -909,7 +909,9 @@
       "recruit_url": "https://www.lizhi.fm/join",
       "user_picked": false,
       "base_city": "广州",
-      "notes": "美股音频，广州 base"
+      "notes": "荔枝FM（注意 id 沿用 ximalaya 历史值，实为 lizhiinc.com 招聘站）",
+      "platform": "lizhi",
+      "data_source": "html"
     }
   ],
   "pending_confirmation": [
