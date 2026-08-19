@@ -121,6 +121,16 @@ class MokahrAdapter(BaseAdapter):
         # MokaHR 返回 title 可能含 HTML 实体/span 标签
         title = re.sub(r"<[^>]+>", "", str(j.get("title") or "")).strip()
         detail_url = self._detail_url(j)
+        # 城市：job.locations 含 provinceName（如"北京市"）/cityName（如"朝阳区"）
+        # 优先省名（市级粒度，去"市"字后与平台归一化一致）
+        locations = j.get("locations") or []
+        cities: list[str] = []
+        for loc in locations:
+            if not isinstance(loc, dict):
+                continue
+            name = loc.get("provinceName") or loc.get("cityName") or ""
+            if name and name not in cities:
+                cities.append(name)
         return {
             "job_id": j.get("id") or j.get("jobId"),
             "company": self.company_name,
@@ -128,8 +138,8 @@ class MokahrAdapter(BaseAdapter):
             "recruit_type": "校招" if j.get("showIsCampus") else None,
             "job_category": j.get("category2Id"),
             "job_function": None,
-            "work_city": None,  # MokaHR 城市在 group-by-job 接口，此处从标题/详情补
-            "work_cities": [],
+            "work_city": cities[0] if cities else None,
+            "work_cities": cities,
             "team_intro": "",
             "responsibilities": "",
             "requirements": "",
