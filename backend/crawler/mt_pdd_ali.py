@@ -91,7 +91,7 @@ class PddAdapter(BaseAdapter):
         url = "https://careers.pddglobalhr.com/api/careers/api/recruit/position/list"
         records: list[dict[str, Any]] = []
         page = 1
-        page_size = 50
+        page_size = 10  # 实测拼多多接口单页上限 10（pageSize=100 也只返回 10）
         headers = {
             "Referer": "https://careers.pddglobalhr.com/",
             "Origin": "https://careers.pddglobalhr.com",

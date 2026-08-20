@@ -22,7 +22,7 @@ class JDAdapter(BaseAdapter):
         url = "https://campus.jd.com/api/wx/position/page?type=present"
         records: list[dict[str, Any]] = []
         page = 1
-        page_size = 50
+        page_size = 20  # 实测京东接口单页上限约 20（pageSize=100 也只返回 21）
         headers = {
             "X-Requested-With": "XMLHttpRequest",
             "Referer": "https://campus.jd.com/",

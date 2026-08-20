@@ -21,7 +21,7 @@ class TencentAdapter(BaseAdapter):
         url = "https://join.qq.com/api/v1/position/searchPosition"
         records: list[dict[str, Any]] = []
         page = 1
-        page_size = 50
+        page_size = 100  # 实测 pageSize=100 可用（totalCount 字段恒 None，靠"空即停"翻页）
         while True:
             body = {"keyword": "", "pageIndex": page, "pageSize": page_size,
                     "lang": "zh-cn", "recruitType": 1}
@@ -29,10 +29,12 @@ class TencentAdapter(BaseAdapter):
             pos_list = ((data or {}).get("data") or {}).get("positionList") or []
             for it in pos_list:
                 records.append(self._raw_to_record(it))
-            total = ((data or {}).get("data") or {}).get("totalCount") or 0
-            if not pos_list or page * page_size >= total:
+            # 实测 totalCount 字段不可靠（None），翻页以"返回不满页即停"为准
+            if not pos_list or len(pos_list) < page_size:
                 break
             page += 1
+            if page > 100:  # 安全上限
+                break
         return [self.normalize_record(r) for r in records]
 
     def _raw_to_record(self, it: dict[str, Any]) -> dict[str, Any]:

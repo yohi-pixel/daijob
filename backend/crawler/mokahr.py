@@ -82,9 +82,11 @@ class MokahrAdapter(BaseAdapter):
             jobs = ((plain or {}).get("data") or {}).get("jobs") or []
             for j in jobs:
                 records.append(self._raw_to_record(j))
-            total = ((plain or {}).get("data") or {}).get("jobStats", {}).get("total", 0)
+            # 实测 jobStats.total 恒为 0（字段不可靠），翻页以"返回空即停"为准
             offset += limit
-            if not jobs or offset >= total:
+            if not jobs:
+                break
+            if offset > 2000:  # 安全上限
                 break
 
         return [self.normalize_record(r) for r in records]
