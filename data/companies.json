@@ -273,12 +273,12 @@
       "name": "得物",
       "name_en": "Dewu",
       "tier": 2,
-      "recruit_url": "https://job.dewu.com",
+      "recruit_url": "https://campus.dewu.com",
       "user_picked": true,
-      "notes": "dewu.zhiye.com 404；job.dewu.com ProxyError，待确认",
+      "notes": "飞书Hire（poizon.jobs.feishu.cn/578078），portal_type/频道待定位；待深挖",
       "base_city": "上海",
       "platform": "",
-      "data_source": "待确认"
+      "data_source": "待深探"
     },
     {
       "id": "zhihu",
@@ -385,12 +385,12 @@
       "name": "莉莉丝",
       "name_en": "Lilith",
       "tier": 3,
-      "recruit_url": "https://lilith.zhiye.com",
+      "recruit_url": "https://jobs.lilith.com",
       "user_picked": false,
-      "notes": "lilith.zhiye.com 404 空壳，未找到入口",
+      "notes": "自建 29KB HTML（jQuery），无 mokahr/zhiye/feishu 特征；待深挖接口",
       "base_city": "上海",
       "platform": "",
-      "data_source": "待确认"
+      "data_source": "待深探"
     },
     {
       "id": "papergames",
@@ -448,12 +448,20 @@
       "name": "搜狐畅游",
       "name_en": "Sohu Changyou",
       "tier": 3,
-      "recruit_url": "https://campus.cyou.com",
+      "recruit_url": "https://app.mokahr.com/campus-recruitment/cyou-inc/42233",
       "user_picked": false,
       "notes": "campus.cyou.com ProxyError，待确认",
       "base_city": "北京",
-      "platform": "",
-      "data_source": "待确认"
+      "platform": "mokahr",
+      "data_source": "api",
+      "org_id": "cyou-inc",
+      "site_id": "42233",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "notes": "MokaHR，campus.changyou.com 跳转；org=cyou-inc/42233"
+      }
     },
     {
       "id": "huawei",
@@ -568,12 +576,19 @@
       "name": "蔚来",
       "name_en": "NIO",
       "tier": 4,
-      "recruit_url": "https://nio.zhiye.com",
+      "recruit_url": "https://nio.jobs.feishu.cn/campus/",
       "user_picked": false,
       "notes": "nio.zhiye.com 404 空壳，未找到入口",
       "base_city": "上海",
-      "platform": "",
-      "data_source": "待确认"
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "nio.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "portal_type": 6,
+        "notes": "飞书Hire，campus频道，实测 count=420 校招岗"
+      }
     },
     {
       "id": "xpeng",
@@ -635,9 +650,9 @@
       "name": "SK海力士",
       "name_en": "SK hynix",
       "tier": 5,
-      "recruit_url": "https://careers.skhynix.com",
+      "recruit_url": "https://job.skhynixsystemic.cn",
       "user_picked": false,
-      "notes": "careers.skhynix.com ProxyError，待确认",
+      "notes": "无锡=自建韩语HTML；大连=tupu360 ATS；多主体多系统，暂不采集",
       "base_city": "无锡",
       "platform": "",
       "data_source": "待确认"
@@ -695,48 +710,63 @@
       "name": "DeepSeek",
       "name_en": "DeepSeek",
       "tier": 6,
-      "recruit_url": "https://jobs.deepseek.com",
+      "recruit_url": "https://talent.deepseek.com",
       "user_picked": false,
-      "notes": "jobs.deepseek.com ProxyError；deepseek.zhiye.com 404，待确认入口",
+      "notes": "自建 SPA，岗位 JSON 内嵌 JS（数据源 MokaHR high-flyer/140576，33条）；可静态抓取",
       "base_city": "杭州",
       "platform": "",
-      "data_source": "待确认"
+      "data_source": "待深探"
     },
     {
       "id": "zhipu",
       "name": "智谱",
       "name_en": "Zhipu AI",
       "tier": 6,
-      "recruit_url": "https://zhipuai.zhiye.com",
+      "recruit_url": "https://zhipu-ai.jobs.feishu.cn/zhipucampus/position/list",
       "user_picked": false,
       "notes": "zhipuai.zhiye.com 404 空壳，未找到入口",
       "base_city": "北京",
-      "platform": "",
-      "data_source": "待确认"
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "zhipu-ai.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "portal_type": 6,
+        "notes": "飞书Hire，saas-career+zhipucampus 频道，实测 61 校招岗"
+      }
     },
     {
       "id": "moonshot",
       "name": "月之暗面",
       "name_en": "Moonshot AI",
       "tier": 6,
-      "recruit_url": "https://moonshot.zhiye.com",
+      "recruit_url": "https://app.mokahr.com/campus-recruitment/moonshot/148507",
       "user_picked": false,
       "notes": "moonshot.zhiye.com 404 空壳，未找到入口",
       "base_city": "北京",
-      "platform": "",
-      "data_source": "待确认"
+      "platform": "mokahr",
+      "data_source": "api",
+      "org_id": "moonshot",
+      "site_id": "148507",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "notes": "MokaHR，kimi母公司校招"
+      }
     },
     {
       "id": "minimax",
       "name": "MiniMax",
       "name_en": "MiniMax",
       "tier": 6,
-      "recruit_url": "https://minimax.zhiye.com",
+      "recruit_url": "https://vrfi1sk8a0.jobs.feishu.cn/",
       "user_picked": false,
-      "notes": "minimax.zhiye.com 404 空壳，未找到入口",
+      "notes": "飞书Hire 但校招走 project 参数 portal（首页 index 是社招 101）；待定位校招 portal",
       "base_city": "上海",
       "platform": "",
-      "data_source": "待确认"
+      "data_source": "待深探"
     },
     {
       "id": "popmart",
@@ -762,12 +792,12 @@
       "name": "ZURU",
       "name_en": "ZURU",
       "tier": 6,
-      "recruit_url": "https://zuru.zhiye.com",
+      "recruit_url": "https://www.zururecruit.cn/campus/",
       "user_picked": true,
-      "notes": "zhiye子站为空壳404，需确认正确入口",
+      "notes": "自建 WordPress 无岗位 API（表单+邮箱投递），2026届已收官；不采集",
       "base_city": "深圳",
-      "platform": "unknown",
-      "data_source": "unknown"
+      "platform": "",
+      "data_source": "不采集"
     },
     {
       "id": "miniso",
@@ -793,24 +823,39 @@
       "name": "库洛科技",
       "name_en": "Kuro Games",
       "tier": 3,
-      "recruit_url": "https://www.kurogames.com/join",
+      "recruit_url": "https://kurogame.jobs.feishu.cn/campus/",
       "user_picked": true,
       "base_city": "广州",
       "notes": "官网 join 页 4KB 壳，待深挖",
-      "platform": "",
-      "data_source": "待确认"
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "kurogame.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "portal_type": 6,
+        "notes": "飞书Hire，saas-career+campus 频道，实测 55 条"
+      }
     },
     {
       "id": "shenlan",
       "name": "深蓝互动",
       "name_en": "Shenlan Interactive",
       "tier": 3,
-      "recruit_url": "https://job.shenlan-games.com",
+      "recruit_url": "https://campus.bluepoch.com",
       "user_picked": true,
       "base_city": "广州",
       "notes": "job.shenlan-games.com ProxyError，待确认",
-      "platform": "",
-      "data_source": "待确认"
+      "platform": "mokahr",
+      "data_source": "api",
+      "org_id": "blueinteractive",
+      "site_id": "38434",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "notes": "MokaHR，campus.bluepoch.com 跳转；org=blueinteractive/38434"
+      }
     },
     {
       "id": "37games",
@@ -880,12 +925,12 @@
       "name": "TCL",
       "name_en": "TCL",
       "tier": 4,
-      "recruit_url": "https://careers.tcl.com",
+      "recruit_url": "https://campus.tcl.com",
       "user_picked": true,
       "base_city": "深圳",
-      "notes": "careers.tcl.com ProxyError；tcl.zhiye.com 404，待确认",
+      "notes": "自建 campus.tcl.com + zhaopin.tcl.com/campus，jquery/layui；待深挖接口",
       "platform": "",
-      "data_source": "待确认"
+      "data_source": "待深探"
     },
     {
       "id": "transsion",

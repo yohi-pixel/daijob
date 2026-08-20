@@ -87,3 +87,30 @@ GET https://campus.163.com/api/campuspc/position/getJobList?projectId=103&pageNu
 - 飞书 Hire 平台生态（字节/小米/影石/叠纸 + 大量中小企业）≈ 1 个适配器通吃
 - 分页无 total 的接口（飞书/美团）用"返回空即停"+ 页数上限
 - 大量岗位（字节/美团 2000+）必须后台运行采集
+
+## 空壳企业真实入口确认（2026-08-20 追加）
+
+13 家 zhiye 404 空壳/ProxyError 企业全部找到真实入口（3 组并行调研 + httpx 验证）：
+
+### 新增适配（+6 家，671 条）
+| 企业 | 平台 | 入口 | 数据 |
+|---|---|---|---|
+| 蔚来 nio | 飞书Hire | nio.jobs.feishu.cn/campus/ | 420 校招岗 |
+| 智谱 zhipu | 飞书Hire | zhipu-ai.jobs.feishu.cn/zhipucampus/ | 61 校招岗（saas-career+zhipucampus 频道） |
+| 库洛 kurogames | 飞书Hire | kurogame.jobs.feishu.cn/campus/ | 55 条（saas-career+campus 频道） |
+| 月之暗面 moonshot | MokaHR | app.mokahr.com/campus-recruitment/moonshot/148507 | 50 条 |
+| 搜狐畅游 cyou | MokaHR | app.mokahr.com/campus-recruitment/cyou-inc/42233 | 50 条 |
+| 深蓝互动 shenlan | MokaHR | campus.bluepoch.com → blueinteractive/38434 | 35 条 |
+
+### 关键发现
+- **飞书 hire 频道差异**：campus 站点用 portal-channel=campus；saas-career 频道（智谱/库洛）用 portal-channel=saas-career + 不同 website-path——适配器加 PER_COMPANY_PORTAL 配置
+- 大量"404/ProxyError"根因是**域名失效/猜错**：campus.cyou.com（→campus.changyou.com）、job.shenlan-games.com（→campus.bluepoch.com）、jobs.deepseek.com（DNS 不存在，→talent.deepseek.com）
+
+### 待深挖/不采集
+- DeepSeek：talent.deepseek.com 自建 SPA，岗位 JSON 内嵌 JS（33 条，源 MokaHR high-flyer/140576）——可静态抓取
+- MiniMax：飞书Hire 但校招走 project 参数 portal（首页 index 是社招）
+- 得物 dewu：飞书Hire（poizon.jobs.feishu.cn/578078），portal 频道待定位
+- 莉莉丝：自建 29KB HTML（jQuery）待深挖接口
+- TCL：自建 campus.tcl.com 待深挖
+- ZURU：自建 WordPress 无岗位 API（表单投递）→ 不采集
+- SK海力士：多主体多系统（无锡自建/大连 tupu360）→ 暂不采集

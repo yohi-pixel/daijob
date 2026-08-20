@@ -31,12 +31,27 @@ PORTAL_HEADERS = {
     "portal-platform": "pc",
 }
 
+#: 各企业专属门户头（部分站点用 saas-career 频道，website-path 各异）
+#: 覆盖 Portal 的 website-path/portal-channel；未列出的企业用 PORTAL_HEADERS
+PER_COMPANY_PORTAL = {
+    # 智谱校招：saas-career 频道 + zhipucampus 路径（实测 61 条）
+    "zhipu": {"website-path": "zhipucampus", "portal-channel": "saas-career"},
+    # 库洛：saas-career 频道 + campus 路径（实测 55 条）
+    "kurogames": {"website-path": "campus", "portal-channel": "saas-career"},
+}
+
 
 class FeishuHireAdapter(BaseAdapter):
-    company_ids = ["bytedance", "insta360", "papergames", "xiaomi", "xpeng"]
+    company_ids = [
+        "bytedance", "insta360", "papergames", "xiaomi", "xpeng",
+        "nio", "zhipu", "kurogames",
+    ]
 
     #: 各企业 portal_type（飞书 hire 站点编号，实测）
-    PORTAL_TYPES = {"bytedance": 3, "insta360": 6, "papergames": 6, "xiaomi": 6, "xpeng": 6}
+    PORTAL_TYPES = {
+        "bytedance": 3, "insta360": 6, "papergames": 6, "xiaomi": 6, "xpeng": 6,
+        "nio": 6, "zhipu": 6, "kurogames": 6,
+    }
 
     async def fetch_jobs(self) -> list[dict[str, Any]]:
         host = self.company.get("api", {}).get("host") or self._host_from_url()
@@ -51,6 +66,7 @@ class FeishuHireAdapter(BaseAdapter):
             "Referer": referer,
             "Origin": f"https://{host}",
             **PORTAL_HEADERS,
+            **PER_COMPANY_PORTAL.get(self.company["id"], {}),
         }
         for _ in range(max_pages):
             url = (
