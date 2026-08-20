@@ -25,6 +25,10 @@ from .mokahr import MokahrAdapter
 from .tencent import TencentAdapter
 from .jd import JDAdapter
 from .html_adapters import SmicAdapter, LizhiAdapter
+from .feishu import FeishuHireAdapter
+from .shein import SheinAdapter
+from .netease import NeteaseAdapter
+from .mt_pdd_ali import MeituanAdapter, PddAdapter, AlibabaAdapter
 
 # platform -> 适配器
 API_ADAPTERS = {
@@ -34,6 +38,12 @@ API_ADAPTERS = {
     "jd": JDAdapter,
     "smic": SmicAdapter,
     "lizhi": LizhiAdapter,
+    "feishu": FeishuHireAdapter,
+    "shein": SheinAdapter,
+    "netease": NeteaseAdapter,
+    "meituan": MeituanAdapter,
+    "pdd": PddAdapter,
+    "alibaba": AlibabaAdapter,
 }
 
 ROOT = Path(__file__).resolve().parents[2]

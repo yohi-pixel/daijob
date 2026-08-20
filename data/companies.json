@@ -66,18 +66,17 @@
       "name": "阿里巴巴",
       "name_en": "Alibaba",
       "tier": 1,
-      "recruit_url": "https://campus.alibaba.com",
+      "recruit_url": "https://talent.alibaba.com/",
       "user_picked": true,
       "notes": "阿里星计划，AI 岗位占比约 80%",
       "base_city": "杭州",
-      "platform": "self",
-      "data_source": "browser",
+      "platform": "alibaba",
+      "data_source": "api",
       "api": {
         "host": "talent.alibaba.com",
         "method": "POST",
-        "path": "/position/search",
-        "body": "{\"channel\":\"campus_group_official_site\",\"language\":\"zh\",\"pageSize\":10,\"page\":1}",
-        "notes": "WAF 403（baxia风控），需csrf token+浏览器指纹"
+        "path": "/position/search?_csrf=<XSRF-TOKEN>",
+        "notes": "需先GET拿cookie；当前非招聘季返回0条"
       }
     },
     {
@@ -108,24 +107,30 @@
       "notes": "飞书Hire平台(atsx-throne)，45+chunk，需Playwright抓XHR",
       "base_city": "北京",
       "platform": "feishu",
-      "data_source": "browser"
+      "data_source": "api",
+      "api": {
+        "host": "jobs.bytedance.com",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "notes": "飞书Hire统一接口，无签名直连"
+      }
     },
     {
       "id": "meituan",
       "name": "美团",
       "name_en": "Meituan",
       "tier": 1,
-      "recruit_url": "https://campus.meituan.com",
+      "recruit_url": "https://zhaopin.meituan.com/",
       "user_picked": false,
       "notes": "8 月已开放网申",
       "base_city": "北京",
-      "platform": "self",
-      "data_source": "browser",
+      "platform": "meituan",
+      "data_source": "api",
       "api": {
-        "host": "campus.meituan.com",
+        "host": "zhaopin.meituan.com",
         "method": "POST",
-        "path": "/api/position/list",
-        "notes": "接口存在但强制登录（业务401）"
+        "path": "/api/official/job/getJobList",
+        "notes": "匿名cookie直连，555岗"
       }
     },
     {
@@ -156,13 +161,13 @@
       "user_picked": false,
       "notes": "8/1 提前批开启，招满即止",
       "base_city": "上海",
-      "platform": "self",
-      "data_source": "browser",
+      "platform": "pdd",
+      "data_source": "api",
       "api": {
         "host": "careers.pddglobalhr.com",
         "method": "POST",
-        "path": "/api/campus/position/list",
-        "notes": "请求签名校验（error_code 40003）"
+        "path": "/api/careers/api/recruit/position/list",
+        "notes": "裸请求直连，22条；上轮40003是路径错误"
       }
     },
     {
@@ -172,10 +177,15 @@
       "tier": 1,
       "recruit_url": "https://campus.163.com",
       "user_picked": false,
-      "notes": "Module Federation微前端，API在远程微模块，需Playwright",
+      "notes": "GET 分页；POST 会 402",
       "base_city": "杭州",
-      "platform": "self",
-      "data_source": "browser"
+      "platform": "netease",
+      "data_source": "api",
+      "api": {
+        "host": "campus.163.com",
+        "method": "GET",
+        "path": "/api/campuspc/position/getJobList?projectId=103"
+      }
     },
     {
       "id": "kuaishou",
@@ -201,12 +211,18 @@
       "name": "小米",
       "name_en": "Xiaomi",
       "tier": 1,
-      "recruit_url": "https://hr.xiaomi.com",
+      "recruit_url": "https://xiaomi.jobs.f.mioffice.cn/campus/",
       "user_picked": false,
       "notes": "强反爬（JS资源返回验证页），需完整浏览器指纹",
       "base_city": "北京",
-      "platform": "self",
-      "data_source": "browser"
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "xiaomi.jobs.f.mioffice.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "notes": "飞书Hire统一接口，无签名直连"
+      }
     },
     {
       "id": "didichuxing",
@@ -286,15 +302,14 @@
       "tier": 2,
       "recruit_url": "https://careers.shein.cn/",
       "user_picked": false,
-      "notes": "跨境电商头部",
+      "notes": "同域接口，jobTypeIds=[\"CAMPUS\"] 过滤校招",
       "base_city": "广州",
-      "platform": "self",
-      "data_source": "browser",
+      "platform": "shein",
+      "data_source": "api",
       "api": {
-        "host": "shein.uunn.cn",
+        "host": "careers.shein.cn",
         "method": "POST",
-        "path": "/api/v1/open/grw/front/jobPage",
-        "notes": "直连502需正确网关header；另有jobDetail/jobCategoryList"
+        "path": "/api/v1/open/grw/front/jobPage"
       }
     },
     {
@@ -373,8 +388,10 @@
       "tier": 3,
       "recruit_url": "https://leihuo.163.com",
       "user_picked": false,
-      "notes": "网易雷火同属网易系，校招入口 campus.163.com 或 leihuo 独立站",
-      "base_city": "杭州"
+      "notes": "projectId=102",
+      "base_city": "杭州",
+      "platform": "netease",
+      "data_source": "api"
     },
     {
       "id": "wanmei",
@@ -464,12 +481,18 @@
       "name": "影石",
       "name_en": "Insta360",
       "tier": 4,
-      "recruit_url": "https://www.insta360.com/cn/jobs",
+      "recruit_url": "https://arashivision.jobs.feishu.cn/campus",
       "user_picked": true,
       "notes": "校招走飞书hire arashivision.jobs.feishu.cn/campus",
       "base_city": "深圳",
       "platform": "feishu",
-      "data_source": "browser"
+      "data_source": "api",
+      "api": {
+        "host": "arashivision.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "notes": "飞书Hire统一接口，无签名直连"
+      }
     },
     {
       "id": "cambricon",
