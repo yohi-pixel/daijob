@@ -29,6 +29,7 @@ from .feishu import FeishuHireAdapter
 from .shein import SheinAdapter
 from .netease import NeteaseAdapter
 from .mt_pdd_ali import MeituanAdapter, PddAdapter, AlibabaAdapter
+from .kuaishou import KuaishouAdapter
 
 # platform -> 适配器
 API_ADAPTERS = {
@@ -44,6 +45,7 @@ API_ADAPTERS = {
     "meituan": MeituanAdapter,
     "pdd": PddAdapter,
     "alibaba": AlibabaAdapter,
+    "kuaishou": KuaishouAdapter,
 }
 
 ROOT = Path(__file__).resolve().parents[2]

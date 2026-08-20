@@ -1,6 +1,8 @@
-"""美团 / 拼多多 / 阿里 适配器（F5 补抓逆向，匿名可直连）
+"""美团 / 拼多多 / 阿里 适配器（匿名可直连）
 
-- 美团：POST zhaopin.meituan.com/api/official/job/getJobList（匿名 cookie，555 岗/56 页）
+- 美团：POST zhaopin.meituan.com/api/official/job/getJobList
+  - 校招入口：jobShareType="1" + jobType=[{code:1}(应届生),{code:2}(转正实习)]，单页上限 50
+  - 社招（jobShareType 缺省）jobType=3 海外岗，已废弃不采
 - 拼多多：POST careers.pddglobalhr.com/api/careers/api/recruit/position/list（裸请求，22 条）
 - 阿里：POST talent.alibaba.com/position/search?_csrf=<XSRF-TOKEN>（需先 GET 拿 cookie；当前非招聘季返回 0）
 """
@@ -13,6 +15,8 @@ import httpx
 
 from .base import BaseAdapter
 
+_MT_JOB_TYPE = {"1": "校招-应届", "2": "校招-转正实习"}
+
 
 class MeituanAdapter(BaseAdapter):
     company_ids = ["meituan"]
@@ -23,17 +27,28 @@ class MeituanAdapter(BaseAdapter):
         page = 1
         page_size = 50
         headers = {
-            "Referer": "https://zhaopin.meituan.com/",
+            "Referer": "https://zhaopin.meituan.com/web/campus",
             "Origin": "https://zhaopin.meituan.com",
         }
         while True:
-            body = {"pageNum": page, "pageSize": 20}  # 美团单页固定上限 20
+            # 校招：jobShareType=1 + jobType=[应届生, 转正实习]
+            body = {
+                "page": {"pageNo": page, "pageSize": page_size},
+                "jobShareType": "1",
+                "keywords": "",
+                "cityList": [],
+                "department": [],
+                "jfJgList": [],
+                "jobType": [{"code": "1", "subCode": []}, {"code": "2", "subCode": []}],
+                "typeCode": [],
+                "specialCode": [],
+            }
             data = await self._post_json(url, body, headers=headers)
             result = (data or {}).get("data") or {}
             items = result.get("list") or []
             for it in items:
                 records.append(self._raw_to_record(it))
-            if not items:  # 美团无 total 字段，返回空即结束
+            if len(items) < page_size:  # 美团无 total 字段，不满页即结束
                 break
             page += 1
             if page > 100:  # 安全上限
@@ -52,17 +67,17 @@ class MeituanAdapter(BaseAdapter):
             "job_id": it.get("jobUnionId") or it.get("id"),
             "company": self.company_name,
             "title": it.get("name"),
-            "recruit_type": it.get("jobType"),
+            "recruit_type": _MT_JOB_TYPE.get(str(it.get("jobType")), "校招"),
             "job_category": it.get("jobFamily"),
-            "job_function": None,
+            "job_function": it.get("jobFamilyGroup"),
             "work_city": cities[0] if cities else None,
             "work_cities": cities,
             "team_intro": "",
-            "responsibilities": it.get("desc") or "",
-            "requirements": "",
-            "bonus_points": "",
-            "tags": [],
-            "publish_time": it.get("publishTime") or it.get("createTime"),
+            "responsibilities": it.get("jobDuty") or "",
+            "requirements": it.get("jobRequirement") or "",
+            "bonus_points": it.get("highLight") or "",
+            "tags": it.get("tag") or [],
+            "publish_time": _ts_to_str(it.get("refreshTime") or it.get("firstPostTime")),
             "fetched_at": None,
             "detail_url": it.get("url") or it.get("positionUrl"),
             "source_page": self.company["name"],

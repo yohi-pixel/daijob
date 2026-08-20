@@ -192,18 +192,17 @@
       "name": "快手",
       "name_en": "Kuaishou",
       "tier": 1,
-      "recruit_url": "https://campus.kuaishou.cn/recruit/campus/e/",
+      "recruit_url": "https://zhaopin.kuaishou.cn/recruit/e/#/official/trainee/?workLocationCode=domestic",
       "user_picked": false,
-      "notes": "8/1 正式批启动，AI 算法/多媒体；zhaopin.kuaishou.cn（200）",
+      "notes": "8/1 正式批启动；校招列表需登录，公开仅日常实习（1102条）",
       "base_city": "北京",
-      "platform": "self",
-      "data_source": "api",
+      "platform": "kuaishou",
+      "data_source": "browser",
       "api": {
-        "host": "campus.kuaishou.cn",
-        "method": "POST",
-        "path": "/recruit/campus/e/api/v1/open/positions/simple",
-        "body": "{\"positionBO\":{}}",
-        "notes": "positionBO字段未破解，需Playwright抓一次XHR确认"
+        "host": "zhaopin.kuaishou.cn",
+        "method": "GET",
+        "path": "/recruit/e/api/v1/open/positions/simple?pageNum&pageSize=10&positionNatureCode=C002",
+        "notes": "日常实习入口（校招需登录）；接口需浏览器签名，适配器用响应拦截；label接口可直连城市字典"
       }
     },
     {
@@ -376,10 +375,18 @@
       "name": "叠纸游戏",
       "name_en": "Papergames",
       "tier": 3,
-      "recruit_url": "https://jobs.papegames.cn",
+      "recruit_url": "https://career.papegames.com/campus/position/list",
       "user_picked": false,
       "notes": "",
-      "base_city": "上海"
+      "base_city": "上海",
+      "platform": "feishu",
+      "data_source": "browser",
+      "api": {
+        "host": "career.papegames.com",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "notes": "飞书Hire；校招需浏览器签名（subject_id_list 过滤校招项目），httpx 直连仅返回社招"
+      }
     },
     {
       "id": "netease-leihuo",
@@ -441,10 +448,10 @@
       "tier": 4,
       "recruit_url": "https://career.honor.com/SU60eea1aa0dcad47a7e1ce1ed/pb/school.html",
       "user_picked": false,
-      "notes": "北森pb系统SPA壳，API需浏览器逆向",
+      "notes": "北森 pb 系统 SPA（career.honor.com/SUxxx/pb），API 待逆向；暂不采集",
       "base_city": "深圳",
-      "platform": "zhiye",
-      "data_source": "browser"
+      "platform": "",
+      "data_source": "待深探"
     },
     {
       "id": "oppo",
