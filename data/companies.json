@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "description": "逮JOB 秋招信源企业清单（2027 届）",
-  "updated_at": "2026-08-14",
+  "updated_at": "2026-08-20",
   "selection_criteria": [
     "求职者关注度：应届生关注度高，平台冷启动流量来源",
     "岗位充足度：秋招 HC 规模，大厂全年 80%+ HC 集中释放",
@@ -251,8 +251,10 @@
       "tier": 2,
       "recruit_url": "https://jobs.bilibili.com",
       "user_picked": true,
-      "notes": "B-UP 顶尖技术人才项目",
-      "base_city": "上海"
+      "notes": "自建 jobs.bilibili.com（4.7KB 壳），待深挖",
+      "base_city": "上海",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "xiaohongshu",
@@ -261,8 +263,10 @@
       "tier": 2,
       "recruit_url": "https://job.xiaohongshu.com",
       "user_picked": true,
-      "notes": "小红书校招入口未深探，待浏览器确认",
-      "base_city": "上海"
+      "notes": "自建 job.xiaohongshu.com（4KB 壳），待深挖",
+      "base_city": "上海",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "dewu",
@@ -271,8 +275,10 @@
       "tier": 2,
       "recruit_url": "https://job.dewu.com",
       "user_picked": true,
-      "notes": "8/12 秋招正式批启动",
-      "base_city": "上海"
+      "notes": "dewu.zhiye.com 404；job.dewu.com ProxyError，待确认",
+      "base_city": "上海",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "zhihu",
@@ -281,8 +287,18 @@
       "tier": 2,
       "recruit_url": "https://zhaopin.zhihu.com",
       "user_picked": false,
-      "notes": "知乎校招入口未深探，待确认",
-      "base_city": "北京"
+      "notes": "MokaHR 已配置；当前校招 0 条（未发布）",
+      "base_city": "北京",
+      "platform": "mokahr",
+      "data_source": "api",
+      "org_id": "zhihu",
+      "site_id": "3819",
+      "api": {
+        "host": "app.mokahr.com",
+        "method": "POST",
+        "path": "/api/outer/ats-apply/website/jobs/v2",
+        "notes": "MokaHR；当前校招 0 条（未发布）"
+      }
     },
     {
       "id": "ctrip",
@@ -291,8 +307,10 @@
       "tier": 2,
       "recruit_url": "https://campus.ctrip.com",
       "user_picked": false,
-      "notes": "携程校招 campus.ctrip.com 未深探，标记 HTML/待定",
-      "base_city": "上海"
+      "notes": "自建 SPA careers.ctrip.com，待深挖",
+      "base_city": "上海",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "shein",
@@ -357,8 +375,10 @@
       "tier": 3,
       "recruit_url": "https://jobs.mihoyo.com",
       "user_picked": false,
-      "notes": "米哈游 jobs.mihoyo.com 未深探，标记 HTML/待定",
-      "base_city": "上海"
+      "notes": "自建 jobs.mihoyo.com（1.7KB 壳），待深挖",
+      "base_city": "上海",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "lilith",
@@ -367,8 +387,10 @@
       "tier": 3,
       "recruit_url": "https://lilith.zhiye.com",
       "user_picked": false,
-      "notes": "莉莉丝 lilith.zhiye.com 空壳，待确认",
-      "base_city": "上海"
+      "notes": "lilith.zhiye.com 404 空壳，未找到入口",
+      "base_city": "上海",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "papergames",
@@ -428,8 +450,10 @@
       "tier": 3,
       "recruit_url": "https://campus.cyou.com",
       "user_picked": false,
-      "notes": "8/11 提前批",
-      "base_city": "北京"
+      "notes": "campus.cyou.com ProxyError，待确认",
+      "base_city": "北京",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "huawei",
@@ -438,8 +462,10 @@
       "tier": 4,
       "recruit_url": "https://career.huawei.com",
       "user_picked": false,
-      "notes": "华为 career.huawei.com 未深探，标记 HTML/待定",
-      "base_city": "深圳"
+      "notes": "自建系统(corp.hwp.huawei.com)，岗位在校招子页，待深挖",
+      "base_city": "深圳",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "honor",
@@ -460,18 +486,28 @@
       "tier": 4,
       "recruit_url": "https://careers.oppo.com",
       "user_picked": false,
-      "notes": "OPPO careers.oppo.com 未深探，标记 HTML/待定",
-      "base_city": "东莞"
+      "notes": "自建 careers.oppo.com（4.8KB 壳），待深挖",
+      "base_city": "东莞",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "vivo",
       "name": "vivo",
       "name_en": "vivo",
       "tier": 4,
-      "recruit_url": "https://hr.vivo.com",
+      "recruit_url": "https://vivo.zhiye.com",
       "user_picked": false,
-      "notes": "vivo hr.vivo.com 未深探，标记 HTML/待定",
-      "base_city": "东莞"
+      "notes": "北森zhiye 真门户已配置，32 条",
+      "base_city": "东莞",
+      "platform": "zhiye",
+      "data_source": "api",
+      "api": {
+        "host": "vivo.zhiye.com",
+        "method": "POST",
+        "path": "/api/Jobad/GetJobAdPageList",
+        "notes": "北森zhiye真门户（32条），城市字段残缺（平台行为）"
+      }
     },
     {
       "id": "dji",
@@ -480,8 +516,10 @@
       "tier": 4,
       "recruit_url": "https://we.dji.com",
       "user_picked": true,
-      "notes": "大疆校招 we.dji.com 未深探，标记 HTML/待定",
-      "base_city": "深圳"
+      "notes": "自建 careers.dji.com，待深挖",
+      "base_city": "深圳",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "insta360",
@@ -532,18 +570,29 @@
       "tier": 4,
       "recruit_url": "https://nio.zhiye.com",
       "user_picked": false,
-      "notes": "8/14 提前批",
-      "base_city": "上海"
+      "notes": "nio.zhiye.com 404 空壳，未找到入口",
+      "base_city": "上海",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "xpeng",
       "name": "小鹏",
       "name_en": "XPeng",
       "tier": 4,
-      "recruit_url": "https://campus.xiaopeng.com",
+      "recruit_url": "https://xiaopeng.jobs.feishu.cn/campus",
       "user_picked": false,
-      "notes": "",
-      "base_city": "广州"
+      "notes": "飞书Hire 已配置，490 校招岗",
+      "base_city": "广州",
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "xiaopeng.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "portal_type": 6,
+        "notes": "飞书Hire，portal头直连，count=490 校招岗"
+      }
     },
     {
       "id": "apple",
@@ -552,8 +601,10 @@
       "tier": 5,
       "recruit_url": "https://jobs.apple.com",
       "user_picked": false,
-      "notes": "Apple jobs.apple.com 未深探，标记 HTML/待定",
-      "base_city": "上海"
+      "notes": "海外全球站 jobs.apple.com，以海外岗为主",
+      "base_city": "上海",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "nvidia",
@@ -562,8 +613,10 @@
       "tier": 5,
       "recruit_url": "https://www.nvidia.com/en-us/about-nvidia/careers",
       "user_picked": false,
-      "notes": "英伟达 careers 未深探，标记 HTML/待定",
-      "base_city": "北京"
+      "notes": "海外全球站，以海外岗为主",
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "shopee",
@@ -572,8 +625,10 @@
       "tier": 5,
       "recruit_url": "https://careers.shopee.sg",
       "user_picked": false,
-      "notes": "Shopee careers 未深探，标记 HTML/待定",
-      "base_city": "深圳"
+      "notes": "careers.shopee.sg（3.5KB），待深挖",
+      "base_city": "深圳",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "skhynix",
@@ -582,8 +637,10 @@
       "tier": 5,
       "recruit_url": "https://careers.skhynix.com",
       "user_picked": false,
-      "notes": "SK海力士 careers 未深探，标记 HTML/待定",
-      "base_city": "无锡"
+      "notes": "careers.skhynix.com ProxyError，待确认",
+      "base_city": "无锡",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "loreal",
@@ -604,8 +661,10 @@
       "tier": 5,
       "recruit_url": "https://www.pgcareers.com",
       "user_picked": false,
-      "notes": "宝洁 pgcareers 未深探，标记 HTML/待定",
-      "base_city": "广州"
+      "notes": "海外全球站 pgcareers.com",
+      "base_city": "广州",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "unilever",
@@ -626,8 +685,10 @@
       "tier": 5,
       "recruit_url": "https://www.mars.com/careers",
       "user_picked": false,
-      "notes": "玛氏 careers 未深探，标记 HTML/待定",
-      "base_city": "北京"
+      "notes": "海外全球站 careers.mars.com",
+      "base_city": "北京",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "deepseek",
@@ -636,8 +697,10 @@
       "tier": 6,
       "recruit_url": "https://jobs.deepseek.com",
       "user_picked": false,
-      "notes": "DeepSeek deepseek.zhiye.com 空壳404，待确认（官方 jobs 入口）",
-      "base_city": "杭州"
+      "notes": "jobs.deepseek.com ProxyError；deepseek.zhiye.com 404，待确认入口",
+      "base_city": "杭州",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "zhipu",
@@ -646,8 +709,10 @@
       "tier": 6,
       "recruit_url": "https://zhipuai.zhiye.com",
       "user_picked": false,
-      "notes": "智谱 zhipuai.zhiye.com 空壳404，待确认",
-      "base_city": "北京"
+      "notes": "zhipuai.zhiye.com 404 空壳，未找到入口",
+      "base_city": "北京",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "moonshot",
@@ -656,8 +721,10 @@
       "tier": 6,
       "recruit_url": "https://moonshot.zhiye.com",
       "user_picked": false,
-      "notes": "月之暗面 moonshot.zhiye.com 空壳404，待确认",
-      "base_city": "北京"
+      "notes": "moonshot.zhiye.com 404 空壳，未找到入口",
+      "base_city": "北京",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "minimax",
@@ -666,8 +733,10 @@
       "tier": 6,
       "recruit_url": "https://minimax.zhiye.com",
       "user_picked": false,
-      "notes": "MiniMax minimax.zhiye.com 空壳404，待确认",
-      "base_city": "上海"
+      "notes": "minimax.zhiye.com 404 空壳，未找到入口",
+      "base_city": "上海",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "popmart",
@@ -727,7 +796,9 @@
       "recruit_url": "https://www.kurogames.com/join",
       "user_picked": true,
       "base_city": "广州",
-      "notes": "库洛 www.kurogames.com/join 待深探"
+      "notes": "官网 join 页 4KB 壳，待深挖",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "shenlan",
@@ -737,7 +808,9 @@
       "recruit_url": "https://job.shenlan-games.com",
       "user_picked": true,
       "base_city": "广州",
-      "notes": "深蓝互动 job.shenlan-games.com ProxyError，待确认"
+      "notes": "job.shenlan-games.com ProxyError，待确认",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "37games",
@@ -798,7 +871,9 @@
       "recruit_url": "https://career.anker-in.com",
       "user_picked": true,
       "base_city": "深圳",
-      "notes": "A股上市出海消费电子龙头，充电/音频/储能，秋招提前批已开"
+      "notes": "自建 career.anker-in.com（837KB SPA），待深挖",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "tcl",
@@ -808,7 +883,9 @@
       "recruit_url": "https://careers.tcl.com",
       "user_picked": true,
       "base_city": "深圳",
-      "notes": "家电+华星光电面板，含惠州基地"
+      "notes": "careers.tcl.com ProxyError；tcl.zhiye.com 404，待确认",
+      "platform": "",
+      "data_source": "待确认"
     },
     {
       "id": "transsion",
@@ -858,7 +935,9 @@
       "recruit_url": "https://job.zte.com.cn",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "中兴 job.zte.com.cn 未深探，标记 HTML/待定"
+      "notes": "自建 job.zte.com.cn（43KB HTML），待深挖",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "byd",
@@ -868,7 +947,9 @@
       "recruit_url": "https://job.byd.com",
       "user_picked": false,
       "base_city": "深圳",
-      "notes": "比亚迪 job.byd.com 未深探，标记 HTML/待定"
+      "notes": "自建 job.byd.com（927B 壳），待深挖",
+      "platform": "self",
+      "data_source": "待深探"
     },
     {
       "id": "mindray",

@@ -17,7 +17,7 @@ CATEGORY_HINTS = {"校招": 1, "实习": 2, "社招": 3}  # 依实测可调
 
 
 class ZhiyeAdapter(BaseAdapter):
-    company_ids = ["popmart", "transsion", "mindray", "miniso"]
+    company_ids = ["popmart", "transsion", "mindray", "miniso", "vivo"]
 
     # 实测结论（2026-08-14）：该平台列表/详情接口均不返回城市、发布日期、薪资
     # （LocNames 空、PostDate=0001-01-01、Salary=None，非参数问题）。

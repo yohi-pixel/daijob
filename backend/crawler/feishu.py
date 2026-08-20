@@ -1,101 +1,97 @@
-"""飞书 Hire 招聘 SaaS 适配器（字节/影石/叠纸/小米）—— Playwright 响应拦截版
+"""飞书 Hire 招聘 SaaS 适配器（字节/影石/叠纸/小米）—— httpx 直连版（最终版）
 
-重要结论（2026-08-20 实测）：
+重大突破（2026-08-20 实测）：
 - 统一接口 POST {host}/api/v1/search/job/posts，limit≤10（>10 返回 405）、完整 UA 必须
-- **校招/社招由请求上下文区分**：
-  - httpx 直连（无签名）→ 返回社招岗（recruit_type=101 正式，如"机器学习/检测算法高级工程师"）
-  - 浏览器校招页自身 XHR（动态 _signature + channel=campus cookie）→ 返回校招岗
-    （recruit_type=201 正式应届 / 202 实习，如"创意产品实习生-TikTok"）
-  - 校招项目过滤参数 subject_id_list（如字节 2027届校园招聘=7649336829398468869），
-    httpx 直连带该参数返回 count=0（签名环境外无效）
-- 因此本适配器必须用 Playwright 打开各校招 URL，拦截页面自身 XHR 响应，
-  滚动（window.scrollTo 到底部）触发懒加载翻页，直到无新响应
+- **校招/社招由请求头区分**（非签名！）：
+  - 不带 portal 头 → 返回社招岗（recruit_type=101 正式，如"机器学习/检测算法高级工程师"）
+  - 带 3 个自定义头 → 返回校招岗（recruit_type=201 校招正式 / 202 校招实习）：
+    - website-path: campus
+    - portal-channel: campus
+    - portal-platform: pc
+- **offset 翻页有效**（无需 Playwright/懒加载）：每家全量可采
+  - 字节 count=7428 / 小米 737 / 影石 318 / 叠纸 48
+- 之前 Playwright 拦截版废弃（每家仅首屏 10 条），本版为最终实现
 
-各校招 URL（recruit_url 已在 companies.json 配置）：
-- 字节：https://jobs.bytedance.com/campus/position
-- 影石：https://arashivision.jobs.feishu.cn/campus
-- 叠纸：https://career.papegames.com/campus/position/list
-- 小米：https://xiaomi.jobs.f.mioffice.cn/campus/
+portal_type：字节=3，影石=6，叠纸=6，小米=6
 """
 from __future__ import annotations
 
-import asyncio
 import re
-import time
 from typing import Any
 
-from playwright.sync_api import sync_playwright
+from .base import BaseAdapter, DEFAULT_UA
 
-from .base import BaseAdapter
-
-#: recruit_type.id -> 中文（仅校招站上下文内的类型）
+#: recruit_type.id -> 中文
 RT_NAMES = {"201": "校招-正式", "202": "校招-实习", "301": "实习"}
+
+#: 校招门户自定义请求头（关键：决定接口返回校招而非社招）
+PORTAL_HEADERS = {
+    "website-path": "campus",
+    "portal-channel": "campus",
+    "portal-platform": "pc",
+}
 
 
 class FeishuHireAdapter(BaseAdapter):
-    company_ids = ["bytedance", "insta360", "papergames", "xiaomi"]
+    company_ids = ["bytedance", "insta360", "papergames", "xiaomi", "xpeng"]
 
-    def _sync_fetch_items(self) -> list[dict[str, Any]]:
-        """同步版：打开校招 URL + 拦截 job/posts 响应 + 滚动翻页。"""
-        url = self.company.get("recruit_url") or ""
-        raw_items: list[dict[str, Any]] = []
-        seen_ids: set[str] = set()
-
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
-            ctx = browser.new_context(
-                user_agent=(
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-                )
-            )
-            page = ctx.new_page()
-
-            def on_response(resp):
-                if "/job/posts" not in resp.url:
-                    return
-                try:
-                    d = resp.json()
-                    posts = ((d or {}).get("data") or {}).get("job_post_list") or []
-                    for p in posts:
-                        # 只保留校招站上下文岗位（201 校招正式 / 202 校招实习 / 301 实习），
-                        # 排除 101 正式（社招）——防止签名环境外混入社招
-                        rt = str((p.get("recruit_type") or {}).get("id") or "")
-                        if rt and rt not in ("201", "202", "301"):
-                            continue
-                        pid = str(p.get("id") or "")
-                        if pid and pid in seen_ids:
-                            continue
-                        if pid:
-                            seen_ids.add(pid)
-                        raw_items.append(p)
-                except Exception:
-                    pass
-
-            page.on("response", on_response)
-            page.goto(url, wait_until="networkidle", timeout=60000)
-            time.sleep(4)
-
-            # 滚动到底部触发懒加载，直到响应不再增加
-            max_scrolls = 500  # 安全上限
-            for _ in range(max_scrolls):
-                before = len(raw_items)
-                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                time.sleep(1.2)
-                if len(raw_items) == before:
-                    # 再滚一次确认（懒加载可能有延迟）
-                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                    time.sleep(2)
-                if len(raw_items) == before:
-                    break
-
-            browser.close()
-        return raw_items
+    #: 各企业 portal_type（飞书 hire 站点编号，实测）
+    PORTAL_TYPES = {"bytedance": 3, "insta360": 6, "papergames": 6, "xiaomi": 6, "xpeng": 6}
 
     async def fetch_jobs(self) -> list[dict[str, Any]]:
-        raw_items = await asyncio.to_thread(self._sync_fetch_items)
-        records = [self._raw_to_record(p) for p in raw_items]
+        host = self.company.get("api", {}).get("host") or self._host_from_url()
+        portal_type = self.PORTAL_TYPES.get(self.company["id"], 6)
+        referer = self.company.get("recruit_url") or f"https://{host}/"
+        records: list[dict[str, Any]] = []
+        offset = 0
+        limit = 10
+        max_pages = 1000  # 安全上限（字节全站 7428 条 ≈ 743 页）
+        headers = {
+            "User-Agent": DEFAULT_UA,
+            "Referer": referer,
+            "Origin": f"https://{host}",
+            **PORTAL_HEADERS,
+        }
+        for _ in range(max_pages):
+            url = (
+                f"https://{host}/api/v1/search/job/posts"
+                f"?keyword=&limit={limit}&offset={offset}"
+                f"&job_category_id_list=&tag_id_list=&location_code_list="
+                f"&subject_id_list=&recruitment_id_list="
+                f"&portal_type={portal_type}&job_function_id_list="
+                f"&storefront_id_list=&portal_entrance=1"
+            )
+            body = {
+                "keyword": "",
+                "limit": limit,
+                "offset": offset,
+                "job_category_id_list": [],
+                "tag_id_list": [],
+                "location_code_list": [],
+                "subject_id_list": [],
+                "recruitment_id_list": [],
+                "portal_type": portal_type,
+                "job_function_id_list": [],
+                "storefront_id_list": [],
+                "portal_entrance": 1,
+            }
+            data = await self._post_json(url, body, headers=headers)
+            posts = ((data or {}).get("data") or {}).get("job_post_list") or []
+            for p in posts:
+                # 只保留校招岗（201/202/301），排除 101 社招（保险）
+                rt = str((p.get("recruit_type") or {}).get("id") or "")
+                if rt and rt not in ("201", "202", "301"):
+                    continue
+                records.append(self._raw_to_record(p))
+            if len(posts) < limit:
+                break
+            offset += limit
         return [self.normalize_record(r) for r in records]
+
+    def _host_from_url(self) -> str:
+        from urllib.parse import urlparse
+
+        return urlparse(self.company.get("recruit_url") or "").netloc
 
     def _raw_to_record(self, p: dict[str, Any]) -> dict[str, Any]:
         # 城市：city_info（字节/小米 dict）与 city_list（影石 list）都可能携带

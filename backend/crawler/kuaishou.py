@@ -112,6 +112,7 @@ class KuaishouAdapter(BaseAdapter):
             time.sleep(3)
 
             # 点击"下一页"循环翻页（antd 分页 next 有效，页码按钮无效），直到按钮禁用
+            # 注意：快手翻页响应延迟约 15-20s（服务端慢/风控放慢），需耐心等待
             max_pages = 120  # 安全上限（1102/10 ≈ 111 页）
             for _ in range(max_pages):
                 before = len(raw_items)
@@ -124,11 +125,11 @@ class KuaishouAdapter(BaseAdapter):
                     next_btn.click()
                 except Exception:
                     break
-                # 等待新响应（最多 10s）
+                # 等待新响应（快手服务端限速，响应延迟 15-40s，最多等 65s）
                 waited = 0
-                while len(raw_items) == before and waited < 10:
-                    time.sleep(0.5)
-                    waited += 0.5
+                while len(raw_items) == before and waited < 65:
+                    time.sleep(1)
+                    waited += 1
                 if len(raw_items) == before:
                     break  # 翻页无新数据，结束
 
