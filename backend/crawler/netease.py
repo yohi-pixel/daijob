@@ -28,7 +28,8 @@ class NeteaseAdapter(BaseAdapter):
         project_id = self.PROJECT_IDS.get(self.company["id"], 103)
         records: list[dict[str, Any]] = []
         page = 1
-        page_size = 50
+        page_size = 100  # 实测接口支持大 pageSize（100 一次拿全 57 条）
+        seen_ids: set[str] = set()
         headers = {"Referer": "https://campus.163.com/"}
         while True:
             url = (
@@ -38,10 +39,18 @@ class NeteaseAdapter(BaseAdapter):
             data = await self._get_json(url, headers=headers)
             body = (data or {}).get("data") or {}
             items = body.get("list") or []
+            added = 0
             for it in items:
+                # 实测接口忽略 pageNum（第 2 页返回与第 1 页相同），按 id 去重
+                jid = str(it.get("id") or "")
+                if jid and jid in seen_ids:
+                    continue
+                if jid:
+                    seen_ids.add(jid)
                 records.append(self._raw_to_record(it))
+                added += 1
             total = body.get("total") or 0
-            if not items or page * page_size >= total:
+            if not items or added == 0 or page * page_size >= total:
                 break
             page += 1
         return [self.normalize_record(r) for r in records]
