@@ -33,24 +33,33 @@ PORTAL_HEADERS = {
 
 #: 各企业专属门户头（部分站点用 saas-career 频道，website-path 各异）
 #: 覆盖 Portal 的 website-path/portal-channel；未列出的企业用 PORTAL_HEADERS
+#: subject_id：校招项目过滤（MiniMax 走 project 参数对应的 subject）
 PER_COMPANY_PORTAL = {
     # 智谱校招：saas-career 频道 + zhipucampus 路径（实测 61 条）
     "zhipu": {"website-path": "zhipucampus", "portal-channel": "saas-career"},
     # 库洛：saas-career 频道 + campus 路径（实测 55 条）
     "kurogames": {"website-path": "campus", "portal-channel": "saas-career"},
+    # MiniMax 校招：website-path=379481(公司ID) + subject_id=2027届项目（实测 7 条）
+    "minimax": {
+        "website-path": "379481",
+        "portal-channel": "saas-career",
+        "subject_id": "7496820276634634537",
+    },
+    # 得物校招：website-path=578078(公司ID)（实测 155 条，全 201 校招岗）
+    "dewu": {"website-path": "578078", "portal-channel": "saas-career"},
 }
 
 
 class FeishuHireAdapter(BaseAdapter):
     company_ids = [
         "bytedance", "insta360", "papergames", "xiaomi", "xpeng",
-        "nio", "zhipu", "kurogames",
+        "nio", "zhipu", "kurogames", "minimax", "dewu",
     ]
 
     #: 各企业 portal_type（飞书 hire 站点编号，实测）
     PORTAL_TYPES = {
         "bytedance": 3, "insta360": 6, "papergames": 6, "xiaomi": 6, "xpeng": 6,
-        "nio": 6, "zhipu": 6, "kurogames": 6,
+        "nio": 6, "zhipu": 6, "kurogames": 6, "minimax": 6, "dewu": 6,
     }
 
     async def fetch_jobs(self) -> list[dict[str, Any]]:
@@ -69,11 +78,13 @@ class FeishuHireAdapter(BaseAdapter):
             **PER_COMPANY_PORTAL.get(self.company["id"], {}),
         }
         for _ in range(max_pages):
+            company_portal = PER_COMPANY_PORTAL.get(self.company["id"], {})
+            subject_id = company_portal.get("subject_id", "")
             url = (
                 f"https://{host}/api/v1/search/job/posts"
                 f"?keyword=&limit={limit}&offset={offset}"
                 f"&job_category_id_list=&tag_id_list=&location_code_list="
-                f"&subject_id_list=&recruitment_id_list="
+                f"&subject_id_list={subject_id}&recruitment_id_list="
                 f"&portal_type={portal_type}&job_function_id_list="
                 f"&storefront_id_list=&portal_entrance=1"
             )
@@ -84,7 +95,7 @@ class FeishuHireAdapter(BaseAdapter):
                 "job_category_id_list": [],
                 "tag_id_list": [],
                 "location_code_list": [],
-                "subject_id_list": [],
+                "subject_id_list": [subject_id] if subject_id else [],
                 "recruitment_id_list": [],
                 "portal_type": portal_type,
                 "job_function_id_list": [],

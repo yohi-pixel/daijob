@@ -273,12 +273,19 @@
       "name": "得物",
       "name_en": "Dewu",
       "tier": 2,
-      "recruit_url": "https://campus.dewu.com",
+      "recruit_url": "https://poizon.jobs.feishu.cn/578078/position/list",
       "user_picked": true,
       "notes": "飞书Hire（poizon.jobs.feishu.cn/578078），portal_type/频道待定位；待深挖",
       "base_city": "上海",
-      "platform": "",
-      "data_source": "待深探"
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "poizon.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "portal_type": 6,
+        "notes": "飞书Hire，saas-career+578078 频道，实测 155 校招岗（27届）"
+      }
     },
     {
       "id": "zhihu",
@@ -710,12 +717,18 @@
       "name": "DeepSeek",
       "name_en": "DeepSeek",
       "tier": 6,
-      "recruit_url": "https://talent.deepseek.com",
+      "recruit_url": "https://talent.deepseek.com/",
       "user_picked": false,
       "notes": "自建 SPA，岗位 JSON 内嵌 JS（数据源 MokaHR high-flyer/140576，33条）；可静态抓取",
       "base_city": "杭州",
-      "platform": "",
-      "data_source": "待深探"
+      "platform": "deepseek",
+      "data_source": "api",
+      "api": {
+        "host": "talent.deepseek.com",
+        "method": "GET",
+        "path": "/static/main.{hash}.js",
+        "notes": "静态 JS 内嵌岗位 JSON（33 条，构建时从 MokaHR high-flyer/140576 抓取）"
+      }
     },
     {
       "id": "zhipu",
@@ -761,12 +774,19 @@
       "name": "MiniMax",
       "name_en": "MiniMax",
       "tier": 6,
-      "recruit_url": "https://vrfi1sk8a0.jobs.feishu.cn/",
+      "recruit_url": "https://vrfi1sk8a0.jobs.feishu.cn/379481/?project=7496820276634634537",
       "user_picked": false,
       "notes": "飞书Hire 但校招走 project 参数 portal（首页 index 是社招 101）；待定位校招 portal",
       "base_city": "上海",
-      "platform": "",
-      "data_source": "待深探"
+      "platform": "feishu",
+      "data_source": "api",
+      "api": {
+        "host": "vrfi1sk8a0.jobs.feishu.cn",
+        "method": "POST",
+        "path": "/api/v1/search/job/posts",
+        "portal_type": 6,
+        "notes": "飞书Hire，saas-career+379481 频道，subject_id=2027届项目，实测 7 校招岗"
+      }
     },
     {
       "id": "popmart",
