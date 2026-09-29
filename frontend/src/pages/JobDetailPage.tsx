@@ -44,11 +44,11 @@ export function JobDetailPage() {
                 <h1 className="text-xl font-bold text-on-surface">{data.title ?? '未命名职位'}</h1>
                 <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-on-surface-variant">
                   <span>{data.company}</span>
-                  {data.work_city && (
-                    <>
-                      <span className="text-outline-variant">•</span>
-                      <span>{data.work_city}</span>
-                    </>
+                  <span className="text-outline-variant">•</span>
+                  {data.work_city ? (
+                    <span>{data.work_city}</span>
+                  ) : (
+                    <span className="text-outline-variant italic">城市未提供</span>
                   )}
                   {data.recruit_type && (
                     <>
@@ -56,11 +56,11 @@ export function JobDetailPage() {
                       <span>{data.recruit_type}</span>
                     </>
                   )}
-                  {data.job_category && (
-                    <>
-                      <span className="text-outline-variant">•</span>
-                      <span>{data.job_category}</span>
-                    </>
+                  <span className="text-outline-variant">•</span>
+                  {data.job_category ? (
+                    <span>{data.job_category}</span>
+                  ) : (
+                    <span className="text-outline-variant italic">类别未提供</span>
                   )}
                 </div>
                 {data.tags && data.tags.length > 0 && (
@@ -86,11 +86,15 @@ export function JobDetailPage() {
           </div>
 
           {sections
-            .filter((s) => s.content)
+            .filter((s) => s.content || ['resp', 'req'].includes(s.key))
             .map((s) => (
               <div key={s.key} className="bg-surface rounded-2xl border border-outline-variant/20 p-6">
                 <h2 className="font-semibold text-on-surface mb-3">{s.title}</h2>
-                <div className="text-sm text-on-surface-variant leading-relaxed whitespace-pre-wrap">{s.content}</div>
+                {s.content ? (
+                  <div className="text-sm text-on-surface-variant leading-relaxed whitespace-pre-wrap">{s.content}</div>
+                ) : (
+                  <p className="text-sm text-outline-variant italic">该岗位未提供此部分信息</p>
+                )}
               </div>
             ))}
         </div>
@@ -106,20 +110,25 @@ export function JobDetailPage() {
                   <dd className="text-on-surface">{data.job_function}</dd>
                 </div>
               )}
-              {data.work_cities && data.work_cities.length > 0 && (
+              {data.work_cities && data.work_cities.length > 0 ? (
                 <div className="flex justify-between">
                   <dt className="text-on-surface-variant">工作城市</dt>
                   <dd className="text-on-surface">{data.work_cities.join(' / ')}</dd>
                 </div>
-              )}
-              {data.publish_time && (
+              ) : (
                 <div className="flex justify-between">
-                  <dt className="text-on-surface-variant">发布日期</dt>
-                  <dd className="text-on-surface">{new Date(data.publish_time).toLocaleDateString('zh-CN')}</dd>
+                  <dt className="text-on-surface-variant">工作城市</dt>
+                  <dd className="text-outline-variant italic">未提供</dd>
                 </div>
               )}
+              <div className="flex justify-between">
+                <dt className="text-on-surface-variant">发布日期</dt>
+                <dd className={data.publish_time ? 'text-on-surface' : 'text-outline-variant italic'}>
+                  {data.publish_time ? new Date(data.publish_time).toLocaleDateString('zh-CN') : '未提供'}
+                </dd>
+              </div>
             </dl>
-            {data.detail_url && (
+            {data.detail_url ? (
               <a
                 href={data.detail_url}
                 target="_blank"
@@ -128,6 +137,10 @@ export function JobDetailPage() {
               >
                 前往投递
               </a>
+            ) : (
+              <p className="text-xs text-on-surface-variant bg-surface-container-low rounded-xl px-3 py-2.5 leading-relaxed">
+                该岗位暂未提供官方投递链接，可前往 {data.company} 招聘官网搜索岗位名称投递
+              </p>
             )}
             <Link
               to="/resume"

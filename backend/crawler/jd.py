@@ -68,6 +68,7 @@ class JDAdapter(BaseAdapter):
             "tags": it.get("tagList") or [],
             "publish_time": it.get("publishTime") or it.get("createTime"),
             "fetched_at": None,
-            "detail_url": f"https://campus.jd.com/api/wx/position/detail/{it.get('publishId')}",
+            # 京东校招岗位详情需登录，无公开页面 URL（此前误用 API 路径，已废弃）
+            "detail_url": None,
             "source_page": self.company["name"],
         }

@@ -31,8 +31,12 @@ export function JobCard({ job, matchScore }: JobCardProps) {
           </div>
           <p className="text-sm text-on-surface-variant mt-1">
             {job.company ?? '未知公司'}
-            {job.work_city && <span className="mx-1.5 text-outline-variant">•</span>}
-            {job.work_city}
+            <span className="mx-1.5 text-outline-variant">•</span>
+            {job.work_city ? (
+              job.work_city
+            ) : (
+              <span className="text-outline-variant italic">城市未提供</span>
+            )}
             {job.recruit_type && <span className="mx-1.5 text-outline-variant">•</span>}
             {job.recruit_type}
           </p>
@@ -49,7 +53,11 @@ export function JobCard({ job, matchScore }: JobCardProps) {
       </div>
       <div className="flex items-center justify-between mt-3">
         <span className="text-xs text-on-surface-variant">
-          {job.job_category ?? ''}
+          {job.job_category ? (
+            job.job_category
+          ) : (
+            <span className="text-outline-variant italic">类别未提供</span>
+          )}
           {job.publish_time && (
             <>
               <span className="mx-1.5 text-outline-variant">•</span>
