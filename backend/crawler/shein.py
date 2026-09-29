@@ -54,6 +54,13 @@ class SheinAdapter(BaseAdapter):
         import re as _re
 
         desc = _re.sub(r"<[^>]+>", "", str(it.get("description") or "")).strip()
+        # 城市在 cityInfos 数组（[{"cityId","cityName","jobNum"}]），非顶层 cityName
+        cities: list[str] = []
+        for c in it.get("cityInfos") or []:
+            if isinstance(c, dict):
+                name = c.get("cityName") or c.get("name")
+                if name and name not in cities:
+                    cities.append(str(name))
         return {
             "job_id": it.get("jobId") or it.get("id"),
             "company": self.company_name,
@@ -61,8 +68,8 @@ class SheinAdapter(BaseAdapter):
             "recruit_type": "校招" if "CAMPUS" in (it.get("jobTypeId") or "") else None,
             "job_category": it.get("jobCategoryName"),
             "job_function": None,
-            "work_city": it.get("cityName"),
-            "work_cities": [it["cityName"]] if it.get("cityName") else [],
+            "work_city": cities[0] if cities else None,
+            "work_cities": cities,
             "team_intro": "",
             "responsibilities": desc,
             "requirements": "",
@@ -70,6 +77,6 @@ class SheinAdapter(BaseAdapter):
             "tags": [],
             "publish_time": it.get("releaseDate"),
             "fetched_at": None,
-            "detail_url": it.get("jobUrl"),
+            "detail_url": it.get("jobDetailUrl") or it.get("jobUrl"),
             "source_page": self.company["name"],
         }
