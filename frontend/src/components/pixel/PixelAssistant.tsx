@@ -104,7 +104,7 @@ export function PixelAssistant() {
                 <div className="space-y-2">
                   {extractModules.map((m, i) => (
                     <div key={i} className="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2">
-                      <span className="text-xs bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded-full shrink-0">
+                      <span className="text-xs bg-surface-container text-ink px-2 py-0.5 rounded-full shrink-0">
                         {m.module_type}
                       </span>
                       <span className="text-xs text-on-surface-variant truncate">
@@ -117,7 +117,7 @@ export function PixelAssistant() {
               {extractModules.length > 0 && (
                 <button
                   onClick={saveExtracted}
-                  className="w-full punch-gradient text-on-primary font-semibold py-2.5 rounded-xl text-sm"
+                  className="w-full bg-primary text-on-primary font-semibold py-2.5 rounded-xl text-sm"
                 >
                   保存到简历库
                 </button>
@@ -160,13 +160,13 @@ function InviteForm({
         value={code}
         onChange={(e) => setCode(e.target.value)}
         placeholder="请输入邀请码"
-        className="w-full rounded-lg border border-outline-variant px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+        className="w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
       />
       {error && <p className="text-xs text-error">{error}</p>}
       <button
         onClick={() => onSubmit(code)}
         disabled={pending || !code.trim()}
-        className="w-full punch-gradient text-on-primary font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
+        className="w-full bg-primary text-on-primary font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
       >
         {pending ? '验证中…' : '验证'}
       </button>

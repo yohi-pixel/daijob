@@ -47,3 +47,11 @@ export interface JobQueryParams {
   page?: number;
   page_size?: number;
 }
+
+/** 界面上的四组筛选状态 */
+export interface JobFilters {
+  city: string[];
+  recruit_type: string[];
+  job_category: string[];
+  company: string[];
+}

@@ -23,7 +23,7 @@ export function TagFilter() {
           key={t}
           onClick={() => setActiveTag(activeTag === t ? null : t)}
           className={`px-2.5 py-1 rounded-full text-xs transition-colors ${
-            activeTag === t ? 'bg-primary-container/30 text-on-primary-container' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+            activeTag === t ? 'bg-surface-container text-ink' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
           }`}
         >
           {t}

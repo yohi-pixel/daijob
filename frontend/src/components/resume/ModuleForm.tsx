@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ModuleType, SerializedModuleData } from '../../types/resume';
 import { FORM_FIELDS } from '../../lib/formFields';
 
+import { Icon } from '../common/Icon';
 interface ModuleFormProps {
   type: ModuleType;
   initialData?: SerializedModuleData;
@@ -67,10 +68,10 @@ export function ModuleForm({ type, initialData = {}, initialTags = [], onSubmit,
   };
 
   const inputCls =
-    'w-full px-3 py-2 rounded-xl border border-outline-variant bg-surface-container-lowest text-sm focus:outline-none focus:ring-2 focus:ring-primary/30';
+    'w-full px-3 py-2 rounded-xl border border-line bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/30';
 
   return (
-    <div className="bg-surface rounded-2xl border border-outline-variant/20 p-5 space-y-4">
+    <div className="bg-surface rounded-2xl border border-line p-5 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-on-surface">编辑模块</h3>
         <button onClick={onCancel} className="text-xs text-on-surface-variant hover:text-error">
@@ -122,7 +123,7 @@ export function ModuleForm({ type, initialData = {}, initialTags = [], onSubmit,
                 type="checkbox"
                 checked={Boolean(val)}
                 onChange={(e) => setField(f.key, e.target.checked)}
-                className="rounded border-outline-variant text-primary focus:ring-primary/30"
+                className="rounded border-line text-ink focus:ring-primary/30"
               />
               <label className="text-sm text-on-surface-variant">{f.label}</label>
             </div>
@@ -150,10 +151,10 @@ export function ModuleForm({ type, initialData = {}, initialTags = [], onSubmit,
         <label className="block text-xs font-medium text-on-surface-variant mb-1">标签</label>
         <div className="flex flex-wrap gap-1.5 items-center">
           {tags.map((t) => (
-            <span key={t} className="inline-flex items-center gap-1 text-xs bg-primary-container/20 text-on-primary-container px-2.5 py-1 rounded-full">
+            <span key={t} className="inline-flex items-center gap-1 text-xs bg-surface-container text-ink px-2.5 py-1 rounded-full">
               {t}
               <button onClick={() => setTags(tags.filter((x) => x !== t))} className="hover:text-error">
-                <span className="material-symbols-outlined text-[13px]">close</span>
+                <Icon name='close' size={13} />
               </button>
             </span>
           ))}
@@ -168,14 +169,14 @@ export function ModuleForm({ type, initialData = {}, initialTags = [], onSubmit,
             }}
             onBlur={() => addTag(tagInput)}
             placeholder={tags.length === 0 ? '输入标签后回车' : ''}
-            className="flex-1 min-w-[120px] px-2 py-1 text-sm border-b border-outline-variant bg-transparent focus:outline-none focus:border-primary"
+            className="flex-1 min-w-[120px] px-2 py-1 text-sm border-b border-line bg-transparent focus:outline-none focus:border-primary"
           />
         </div>
       </div>
 
       <button
         onClick={submit}
-        className="w-full punch-gradient text-on-primary font-semibold py-2.5 rounded-xl text-sm"
+        className="w-full bg-primary text-on-primary font-semibold py-2.5 rounded-xl text-sm"
       >
         保存模块
       </button>

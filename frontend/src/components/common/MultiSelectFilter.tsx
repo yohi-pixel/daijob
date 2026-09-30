@@ -1,91 +1,139 @@
 import { useEffect, useRef, useState } from 'react';
+import { Icon } from './Icon';
 
 interface MultiSelectFilterProps {
   label: string;
   options: string[];
   value: string[];
   onToggle: (opt: string) => void;
-  placeholder?: string;
+  /** 触发器宽度上限（桌面上四组筛选要挤在同一行） */
+  triggerClassName?: string;
 }
 
 /**
- * 多选筛选：chips + 下拉（选中态 ✓、点击外部关闭）。
- * 对应旧版 home.html 的 filter-dropdown / filter-multi / filter-chip 交互。
+ * 多选筛选。桌面是锚在触发器下的浮层，移动端变成贴底抽屉 ——
+ * 纯靠响应式类切换，不引 JS 媒体查询。移动端原先四个下拉占掉四成首屏，
+ * 现在收敛成一行可横滑的触发器。
  */
-export function MultiSelectFilter({ label, options, value, onToggle, placeholder }: MultiSelectFilterProps) {
+export function MultiSelectFilter({
+  label,
+  options,
+  value,
+  onToggle,
+  triggerClassName = 'max-w-[9rem]',
+}: MultiSelectFilterProps) {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!open) return;
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
     document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [open]);
 
-  const toggle = (opt: string) => {
-    onToggle(opt);
-  };
+  // 选项多（城市 200+）时要能就地过滤
+  const filtered = query.trim()
+    ? options.filter((o) => o.toLowerCase().includes(query.trim().toLowerCase()))
+    : options;
 
-  const clear = () => {
-    value.forEach((v) => onToggle(v));
-  };
+  const hasValue = value.length > 0;
 
   return (
-    <div className="relative" ref={ref}>
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className={`w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-sm border transition-colors ${
-          open ? 'border-primary/60 ring-2 ring-primary/20' : 'border-outline-variant'
-        } ${value.length > 0 ? 'bg-primary-container/10 text-on-primary-container' : 'bg-surface text-on-surface'}`}
-      >
-        <span className="truncate">
-          {value.length > 0 ? `${label} (${value.length})` : placeholder ?? label}
-        </span>
-        <span className="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0">
-          {open ? 'expand_less' : 'expand_more'}
-        </span>
-      </button>
+    <>
+      <div ref={ref} className="relative shrink-0">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className={`flex h-9 w-full items-center gap-1.5 rounded-md border px-2.5 text-body transition-colors ${triggerClassName} ${
+            open
+              ? 'border-ink bg-surface'
+              : hasValue
+                ? 'border-ink/30 bg-surface-container text-ink'
+                : 'border-line bg-surface text-muted hover:border-outline hover:text-ink'
+          }`}
+        >
+          <span className="truncate">{label}</span>
+          {hasValue && <span className="num shrink-0 text-micro text-muted">{value.length}</span>}
+          <Icon
+            name="chevron_down"
+            size={15}
+            className={`ml-auto shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+          />
+        </button>
 
-      {open && (
-        <div className="absolute z-30 mt-1.5 w-full bg-surface border border-outline-variant/40 rounded-xl shadow-lg max-h-64 overflow-y-auto">
-          <div className="p-1.5">
-            {options.length === 0 && (
-              <p className="px-3 py-2 text-xs text-on-surface-variant">无选项</p>
-            )}
-            {options.map((opt) => {
-              const selected = value.includes(opt);
-              return (
-                <button
-                  key={opt}
-                  onClick={() => toggle(opt)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-left transition-colors ${
-                    selected ? 'bg-primary-container/15 text-on-primary-container' : 'text-on-surface hover:bg-surface-container-low'
-                  }`}
-                >
-                  <span
-                    className={`material-symbols-outlined text-[18px] ${selected ? 'text-primary' : 'text-outline-variant'}`}
-                  >
-                    {selected ? 'check_box' : 'check_box_outline_blank'}
-                  </span>
-                  <span className="truncate">{opt}</span>
-                </button>
-              );
-            })}
-          </div>
-          {value.length > 0 && (
-            <div className="border-t border-outline-variant/20 p-1.5">
+        {open && (
+          <div className="fixed inset-x-0 bottom-0 z-[60] max-h-[70vh] overflow-y-auto rounded-t-3xl border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] shadow-lg md:absolute md:inset-x-auto md:bottom-auto md:left-0 md:top-full md:mt-1.5 md:max-h-80 md:w-72 md:rounded-xl md:border md:pb-0 md:shadow-md">
+            <div className="flex items-center justify-between px-4 pb-2 pt-3.5 md:px-3 md:pt-3">
+              <span className="text-body font-medium text-ink">{label}</span>
               <button
-                onClick={clear}
-                className="w-full px-3 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-low text-center"
+                type="button"
+                onClick={() => setOpen(false)}
+                className="rounded-md p-1 text-muted hover:text-ink md:hidden"
+                aria-label="关闭"
               >
-                清除选择
+                <Icon name="close" size={18} />
               </button>
             </div>
-          )}
-        </div>
-      )}
-    </div>
+
+            {options.length > 12 && (
+              <div className="px-4 pb-2 md:px-3">
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={`在 ${options.length} 个选项里查找`}
+                  aria-label={`查找${label}选项`}
+                  className="h-8 w-full rounded-md border border-line bg-surface-container-low px-2.5 text-meta text-ink placeholder:text-muted focus:border-ink focus:outline-none focus:ring-0"
+                />
+              </div>
+            )}
+
+            <div className="px-2 pb-2 md:max-h-56 md:overflow-y-auto">
+              {filtered.length === 0 && (
+                <p className="px-3 py-6 text-center text-meta text-muted">
+                  没有匹配「{query}」的选项
+                </p>
+              )}
+              {filtered.map((opt) => {
+                const selected = value.includes(opt);
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => onToggle(opt)}
+                    className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-body transition-colors ${
+                      selected
+                        ? 'bg-surface-container text-ink'
+                        : 'text-ink hover:bg-surface-container-low'
+                    }`}
+                  >
+                    <Icon
+                      name={selected ? 'check_box' : 'check_box_outline_blank'}
+                      size={17}
+                      className={selected ? 'text-ink' : 'text-line'}
+                    />
+                    <span className="truncate">{opt}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 移动端遮罩：点击冒泡到 document 的 mousedown 即关闭 */}
+      {open && <div className="fixed inset-0 z-[55] bg-ink/25 md:hidden" />}
+    </>
   );
 }

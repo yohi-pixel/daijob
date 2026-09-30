@@ -8,27 +8,44 @@
   *::after {
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background: #f6f6f4;
-    color: #2d2f2e;
-    margin: 0;
-    min-height: 100vh;
-  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #eff2f6;
+    color: #0e1b2c;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
+      'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJK SC', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  /* 键盘焦点必须看得见 */
+  :focus-visible {
+    outline: 2px solid #0e1b2c;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: #ffe4b0;
+    color: #0e1b2c;
   }
 }
 
-@layer components {
-  .glass-nav {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+@layer utilities {
+  /* 数字等宽：职位数、发布时间、匹配度对齐后可以竖着比大小 */
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
   }
-  .punch-gradient {
-    background-image: linear-gradient(135deg, #ff7a34 0%, #9d3d00 100%);
-  }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -36,18 +53,11 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
-    font-weight: normal;
-    font-style: normal;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
+
+  /* 贴顶栏：半透明 + 模糊，只在滚动时透出内容 */
+  .bar-blur {
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
   }
 }
 
@@ -56,6 +66,8 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -1,38 +1,37 @@
 import { NavLink } from 'react-router-dom';
 import { useSavedJobsStore } from '../../stores/savedJobsStore';
-
-const NAV_ITEMS = [
-  { to: '/jobs', label: '发现', icon: 'search' },
-  { to: '/map', label: '地图', icon: 'map' },
-  { to: '/saved', label: '收藏', icon: 'bookmark' },
-  { to: '/resume', label: '简历', icon: 'description' },
-];
+import { Icon } from '../common/Icon';
+import { NAV_ITEMS } from './navItems';
 
 export function MobileBottomNav() {
   const savedCount = useSavedJobsStore((s) => s.saved.length);
 
   return (
-    <nav className="md:hidden fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant/10 pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 z-50 w-full border-t border-line bg-white/95 bar-blur pb-[env(safe-area-inset-bottom)] md:hidden">
       <div className="grid grid-cols-4">
         {NAV_ITEMS.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium ${
-                isActive ? 'text-primary' : 'text-on-surface-variant'
+              `flex flex-col items-center gap-1 pb-2 pt-2.5 text-micro transition-colors ${
+                isActive ? 'font-medium text-ink' : 'text-muted'
               }`
             }
           >
-            <span className="relative">
-              <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
-              {item.to === '/saved' && savedCount > 0 && (
-                <span className="absolute -top-1 -right-2 text-[10px] bg-primary text-on-primary px-1 rounded-full min-w-[16px] text-center">
-                  {savedCount}
+            {({ isActive }) => (
+              <>
+                <span className="relative">
+                  <Icon name={item.icon} size={21} strokeWidth={isActive ? 2 : 1.6} />
+                  {item.to === '/saved' && savedCount > 0 && (
+                    <span className="num absolute -right-2.5 -top-1 min-w-[15px] rounded-full bg-primary px-1 text-center text-[10px] leading-[15px] text-on-primary">
+                      {savedCount}
+                    </span>
+                  )}
                 </span>
-              )}
-            </span>
-            {item.label}
+                {item.short}
+              </>
+            )}
           </NavLink>
         ))}
       </div>

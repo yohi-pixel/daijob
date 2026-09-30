@@ -107,13 +107,87 @@ def build_detail_url(company: str, job_id: str, prefix_map: dict[str, tuple[str,
     return FEISHU_DETAIL_TEMPLATE.format(host=host, prefix=prefix, job_id=job_id)
 
 
+#: 城市别名（港澳按中国地名规范书写）
+CITY_ALIAS = {
+    "香港": "中国香港",
+    "香港特别行政区": "中国香港",
+    "澳门": "中国澳门",
+    "澳门特别行政区": "中国澳门",
+    "台湾": "中国台湾",
+    "台湾省": "中国台湾",
+}
+
+
+def normalize_city(value: Any) -> tuple[str | None, bool]:
+    """城市字段归一化。
+
+    源站偶尔把省份、括号注释混进城市名，实测脏值：
+      '广东省-深圳市'（15 条）→ '深圳市'
+      '广东省（如肇庆'（1 条）→ '肇庆'
+      '香港特别行政区'（1 条）→ '中国香港'
+    """
+    if value is None:
+        return None, False
+    s = str(value).strip()
+    if not s or s in ("None", "null"):
+        return None, False
+
+    original = s
+
+    # 括号里的往往才是真城市：'广东省（如肇庆' → '肇庆'
+    m = re.match(r"^(?P<outside>[^（(【\[]*)[（(【\[](?P<inner>.*)$", s)
+    if m:
+        outside = m.group("outside").strip()
+        inner = re.sub(r"^(如|例如|比如)\s*", "", m.group("inner").strip()).strip()
+        s = inner or outside or s
+
+    # 多段用分隔符拼接时取最后一段：'广东省-深圳市' → '深圳市'
+    parts = [p for p in re.split(r"[-—–/、,，]+", s) if p.strip()]
+    if parts:
+        s = parts[-1].strip()
+
+    # 落单的右括号：'东莞)' → '东莞'
+    s = re.sub(r"^[）)】\]]+|[）)】\]]+$", "", s).strip()
+
+    s = CITY_ALIAS.get(s, s)
+    if not s:
+        s = original
+    return s, s != original
+
+
 def enrich_record(
     record: dict[str, Any],
     prefix_map: dict[str, tuple[str, str]],
     now: datetime,
 ) -> tuple[dict[str, Any], dict[str, bool]]:
     r = dict(record)
-    flags = {"time_normalized": False, "time_dropped": False, "url_filled": False, "bad_url_dropped": False}
+    flags = {
+        "time_normalized": False,
+        "time_dropped": False,
+        "url_filled": False,
+        "bad_url_dropped": False,
+        "city_normalized": False,
+    }
+
+    city, city_changed = normalize_city(r.get("work_city"))
+    if city_changed:
+        r["work_city"] = city
+        flags["city_normalized"] = True
+
+    # work_cities 是前端筛选与地图用的数组，同样要归一化（后端城市列表从它聚合）
+    raw_cities = r.get("work_cities")
+    if isinstance(raw_cities, list) and raw_cities:
+        cleaned: list[str] = []
+        for item in raw_cities:
+            name, changed = normalize_city(item)
+            if not name:
+                continue
+            if name not in cleaned:
+                cleaned.append(name)
+            if changed:
+                flags["city_normalized"] = True
+        if cleaned != raw_cities:
+            r["work_cities"] = cleaned
 
     iso, status = parse_to_iso(r.get("publish_time"), now)
     if status == "ok" and str(r.get("publish_time")) != iso:
@@ -199,6 +273,8 @@ def run(
                 stats["url_filled"] += 1
             if flags["bad_url_dropped"]:
                 stats["bad_url_dropped"] += 1
+            if flags["city_normalized"]:
+                stats["city_normalized"] += 1
             c = rec.get("company", "")
             by_company_url[c][0] += 1
             if rec.get("detail_url"):
@@ -241,6 +317,7 @@ def run(
         "time_dropped": stats["time_dropped"],
         "url_filled": stats["url_filled"],
         "bad_url_dropped": stats["bad_url_dropped"],
+        "city_normalized": stats["city_normalized"],
         "output": str(dst),
         "missing_url_companies": missing_url,
     }
@@ -266,6 +343,7 @@ def main() -> None:
     print(f"[enrich] 时间异常置空: {res['time_dropped']}")
     print(f"[enrich] 补全详情链接: {res['url_filled']}")
     print(f"[enrich] 坏链清理: {res['bad_url_dropped']}")
+    print(f"[enrich] 城市归一化: {res['city_normalized']}")
     if res.get("dropped_stale"):
         print(f"[enrich] 删除过期: {res['dropped_stale']}（往届批次 {res['dropped_past_batch']} + 发布超{args.stale_days}天 {res['dropped_old_publish']}）")
         print(f"[enrich] 保留: {res['kept']}")

@@ -4,6 +4,9 @@ import { getJobDetail } from '../services/jobsApi';
 import { useSavedJobs } from '../hooks/useSavedJobs';
 import { Spinner } from '../components/common/Spinner';
 import { ErrorState } from '../components/common/EmptyState';
+import { Icon } from '../components/common/Icon';
+import { FreshPill } from '../components/jobs/FreshPill';
+import { getFreshness } from '../lib/freshness';
 
 export function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,10 +19,18 @@ export function JobDetailPage() {
   const { isSaved, toggleSave } = useSavedJobs();
 
   if (isLoading) return <Spinner size="lg" />;
-  if (isError) return <ErrorState message={error instanceof Error ? error.message : '加载失败'} onRetry={() => refetch()} />;
-  if (!data) return <ErrorState message="职位不存在" />;
+  if (isError) {
+    return (
+      <ErrorState
+        message={error instanceof Error ? error.message : '没能取到这个职位'}
+        onRetry={() => refetch()}
+      />
+    );
+  }
+  if (!data) return <ErrorState message="这个职位可能已经下架" />;
 
   const saved = isSaved(data.id);
+  const fresh = getFreshness(data.publish_time);
 
   const sections: Array<{ key: string; title: string; content: string | null }> = [
     { key: 'team', title: '团队介绍', content: data.team_intro },
@@ -29,57 +40,75 @@ export function JobDetailPage() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      <Link to="/jobs" className="text-sm text-on-surface-variant hover:text-primary inline-flex items-center gap-1 mb-4">
-        <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+    <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6">
+      <Link
+        to="/jobs"
+        className="mb-4 inline-flex items-center gap-1.5 text-meta text-muted transition-colors hover:text-ink"
+      >
+        <Icon name="arrow_back" size={16} />
         返回职位列表
       </Link>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col gap-5 lg:flex-row">
         {/* 主内容 */}
-        <div className="flex-1 min-w-0 space-y-5">
-          <div className="bg-surface rounded-2xl border border-outline-variant/20 p-6">
+        <div className="min-w-0 flex-1 space-y-4">
+          <div className="rounded-xl border border-line bg-surface p-5 sm:p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="text-xl font-bold text-on-surface">{data.title ?? '未命名职位'}</h1>
-                <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-on-surface-variant">
-                  <span>{data.company}</span>
-                  <span className="text-outline-variant">•</span>
+                <h1 className="text-h1 font-medium leading-tight text-ink">
+                  {data.title ?? '未命名职位'}
+                </h1>
+
+                <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-body text-muted">
+                  <span className="font-medium text-ink/80">{data.company ?? '未知公司'}</span>
                   {data.work_city ? (
-                    <span>{data.work_city}</span>
+                    <span className="flex items-center gap-0.5 text-meta">
+                      <Icon name="pin" size={14} />
+                      {data.work_city}
+                    </span>
                   ) : (
-                    <span className="text-outline-variant italic">城市未提供</span>
+                    <span className="text-meta text-muted/70">城市未提供</span>
                   )}
                   {data.recruit_type && (
-                    <>
-                      <span className="text-outline-variant">•</span>
-                      <span>{data.recruit_type}</span>
-                    </>
+                    <span className="rounded-sm bg-surface-container px-1.5 text-meta leading-[19px]">
+                      {data.recruit_type}
+                    </span>
                   )}
-                  <span className="text-outline-variant">•</span>
-                  {data.job_category ? (
-                    <span>{data.job_category}</span>
+                  {data.job_category && <span className="text-meta">{data.job_category}</span>}
+                  {fresh.isFresh ? (
+                    <FreshPill label={fresh.label} variant={fresh.days === 0 ? 'solid' : 'quiet'} />
                   ) : (
-                    <span className="text-outline-variant italic">类别未提供</span>
+                    <span className="num text-meta" title={fresh.exact || undefined}>
+                      {fresh.exact || '时间未知'}
+                    </span>
                   )}
                 </div>
+
                 {data.tags && data.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-3">
+                  <div className="mt-3.5 flex flex-wrap gap-1.5">
                     {data.tags.map((t, i) => (
-                      <span key={i} className="text-xs bg-surface-container-low px-2.5 py-1 rounded-full text-on-surface-variant">
+                      <span
+                        key={`${t}-${i}`}
+                        className="rounded-sm border border-line px-1.5 py-px text-micro text-muted"
+                      >
                         {t}
                       </span>
                     ))}
                   </div>
                 )}
               </div>
+
               <button
+                type="button"
                 onClick={() => toggleSave(data)}
-                className={`shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  saved ? 'text-primary bg-primary-container/20' : 'text-on-surface-variant hover:bg-surface-container-low'
+                className={`flex shrink-0 items-center gap-1.5 rounded-md border px-3 py-2 text-meta font-medium transition-colors ${
+                  saved
+                    ? 'border-signal-dim bg-signal-soft text-signal-ink'
+                    : 'border-line text-ink hover:border-ink'
                 }`}
+                aria-pressed={saved}
               >
-                <span className="material-symbols-outlined text-[22px]">{saved ? 'bookmark' : 'bookmark_border'}</span>
+                <Icon name={saved ? 'bookmark' : 'bookmark_border'} size={16} />
                 {saved ? '已收藏' : '收藏'}
               </button>
             </div>
@@ -88,63 +117,71 @@ export function JobDetailPage() {
           {sections
             .filter((s) => s.content || ['resp', 'req'].includes(s.key))
             .map((s) => (
-              <div key={s.key} className="bg-surface rounded-2xl border border-outline-variant/20 p-6">
-                <h2 className="font-semibold text-on-surface mb-3">{s.title}</h2>
+              <section key={s.key} className="rounded-xl border border-line bg-surface p-5 sm:p-6">
+                <h2 className="text-lead font-medium text-ink">{s.title}</h2>
                 {s.content ? (
-                  <div className="text-sm text-on-surface-variant leading-relaxed whitespace-pre-wrap">{s.content}</div>
+                  <div className="mt-2.5 whitespace-pre-wrap text-body leading-relaxed text-ink/85">
+                    {s.content}
+                  </div>
                 ) : (
-                  <p className="text-sm text-outline-variant italic">该岗位未提供此部分信息</p>
+                  <p className="mt-2 text-body text-muted">
+                    这家公司没有在这条职位里写这一项，投递前可以在官方页面确认
+                  </p>
                 )}
-              </div>
+              </section>
             ))}
         </div>
 
         {/* 侧栏 */}
-        <aside className="lg:w-72 shrink-0 space-y-4 lg:sticky lg:top-20 self-start">
-          <div className="bg-surface rounded-2xl border border-outline-variant/20 p-5 space-y-4">
-            <h3 className="font-semibold text-sm text-on-surface">职位信息</h3>
-            <dl className="space-y-2.5 text-sm">
+        <aside className="shrink-0 space-y-4 self-start lg:sticky lg:top-[4.5rem] lg:w-72">
+          <div className="space-y-4 rounded-xl border border-line bg-surface p-5">
+            <h2 className="text-meta text-muted">职位信息</h2>
+            <dl className="space-y-2.5 text-body">
               {data.job_function && (
-                <div className="flex justify-between">
-                  <dt className="text-on-surface-variant">职能</dt>
-                  <dd className="text-on-surface">{data.job_function}</dd>
+                <div className="flex justify-between gap-4">
+                  <dt className="shrink-0 text-muted">职能</dt>
+                  <dd className="min-w-0 text-right text-ink">{data.job_function}</dd>
                 </div>
               )}
-              {data.work_cities && data.work_cities.length > 0 ? (
-                <div className="flex justify-between">
-                  <dt className="text-on-surface-variant">工作城市</dt>
-                  <dd className="text-on-surface">{data.work_cities.join(' / ')}</dd>
-                </div>
-              ) : (
-                <div className="flex justify-between">
-                  <dt className="text-on-surface-variant">工作城市</dt>
-                  <dd className="text-outline-variant italic">未提供</dd>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <dt className="text-on-surface-variant">发布日期</dt>
-                <dd className={data.publish_time ? 'text-on-surface' : 'text-outline-variant italic'}>
-                  {data.publish_time ? new Date(data.publish_time).toLocaleDateString('zh-CN') : '未提供'}
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-muted">工作城市</dt>
+                <dd className="min-w-0 text-right text-ink">
+                  {data.work_cities && data.work_cities.length > 0 ? (
+                    data.work_cities.join(' / ')
+                  ) : data.work_city ? (
+                    data.work_city
+                  ) : (
+                    <span className="text-muted">未提供</span>
+                  )}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-muted">发布日期</dt>
+                <dd className={`num min-w-0 text-right ${fresh.exact ? 'text-ink' : 'text-muted'}`}>
+                  {fresh.exact || '未提供'}
                 </dd>
               </div>
             </dl>
+
             {data.detail_url ? (
               <a
                 href={data.detail_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full block text-center punch-gradient text-on-primary font-semibold py-3 rounded-xl text-sm"
+                className="flex w-full items-center justify-center gap-1.5 rounded-md bg-primary py-2.5 text-body font-medium text-on-primary transition-colors hover:bg-secondary-dim"
               >
-                前往投递
+                去官网投递
+                <Icon name="external" size={15} />
               </a>
             ) : (
-              <p className="text-xs text-on-surface-variant bg-surface-container-low rounded-xl px-3 py-2.5 leading-relaxed">
-                该岗位暂未提供官方投递链接，可前往 {data.company} 招聘官网搜索岗位名称投递
+              <p className="rounded-md bg-surface-container-low px-3 py-2.5 text-meta leading-relaxed text-muted">
+                这条职位没有公开投递链接。可以到 {data.company} 招聘官网，用职位名搜索。
               </p>
             )}
+
             <Link
               to="/resume"
-              className="w-full block text-center text-sm font-medium text-primary border border-primary/40 py-3 rounded-xl hover:bg-primary-container/10 transition-colors"
+              className="block w-full rounded-md border border-ink/25 py-2.5 text-center text-body font-medium text-ink transition-colors hover:border-ink"
             >
               用 AI 优化简历
             </Link>

@@ -51,10 +51,10 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
       onClick={onClose}
     >
       <div
-        className="bg-surface rounded-2xl w-full max-w-md shadow-xl"
+        className="bg-surface rounded-2xl w-full max-w-md shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex border-b border-outline-variant/20">
+        <div className="flex border-b border-line">
           {(['login', 'register'] as const).map((t) => (
             <button
               key={t}
@@ -63,7 +63,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
                 setError(null);
               }}
               className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${
-                tab === t ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant'
+                tab === t ? 'text-ink border-b-2 border-primary' : 'text-on-surface-variant'
               }`}
             >
               {t === 'login' ? '登录' : '注册'}
@@ -78,7 +78,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
               <input
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full rounded-lg border border-outline-variant px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ink/20"
                 placeholder="你的昵称"
                 required
               />
@@ -90,7 +90,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-outline-variant px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className="w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ink/20"
               placeholder="you@example.com"
               required
             />
@@ -101,7 +101,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-outline-variant px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className="w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ink/20"
               placeholder="••••••••"
               required
             />
@@ -114,7 +114,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full punch-gradient text-on-primary font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
+            className="w-full bg-primary text-on-primary font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
           >
             {loading ? '处理中…' : tab === 'login' ? '登录' : '注册并登录'}
           </button>

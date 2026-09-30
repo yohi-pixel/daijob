@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
 
+import { Icon } from '../common/Icon';
 /** 打开时执行一次 reset 逻辑 */
 function useResetOnOpen(open: boolean, reset: () => void): void {
   const prevOpen = useRef(false);
@@ -52,7 +53,7 @@ export function SnapshotPanel() {
         <button
           onClick={() => setCreateOpen(true)}
           disabled={activeModules.length === 0}
-          className="text-xs font-medium text-primary border border-primary/40 px-3 py-1.5 rounded-lg hover:bg-primary-container/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="text-xs font-medium text-ink border border-ink/25 px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           + 新建快照
         </button>
@@ -74,24 +75,24 @@ export function SnapshotPanel() {
               <div className="flex gap-1 shrink-0">
                 <button
                   onClick={() => openExport(s.id, s.name)}
-                  className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high"
+                  className="p-1.5 rounded-lg text-on-surface-variant hover:text-ink hover:bg-surface-container-high"
                   title="导出 PDF"
                 >
-                  <span className="material-symbols-outlined text-[17px]">picture_as_pdf</span>
+                  <Icon name='picture_as_pdf' size={17} />
                 </button>
                 <button
                   onClick={() => exportSnapshotToWord(s)}
-                  className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high"
+                  className="p-1.5 rounded-lg text-on-surface-variant hover:text-ink hover:bg-surface-container-high"
                   title="导出 Word"
                 >
-                  <span className="material-symbols-outlined text-[17px]">description</span>
+                  <Icon name='description' size={17} />
                 </button>
                 <button
                   onClick={() => deleteSnapshot(s.id)}
                   className="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-surface-container-high"
                   title="删除"
                 >
-                  <span className="material-symbols-outlined text-[17px]">delete</span>
+                  <Icon name='delete' size={17} />
                 </button>
               </div>
             </div>
@@ -122,7 +123,7 @@ export function SnapshotPanel() {
                 key={t.id}
                 onClick={() => setTemplate(t.id)}
                 className={`p-3 rounded-xl border text-center transition-colors ${
-                  template === t.id ? 'border-primary bg-primary-container/15' : 'border-outline-variant hover:border-primary/40'
+                  template === t.id ? 'border-primary bg-surface-container' : 'border-line hover:border-ink/25'
                 }`}
               >
                 <p className="text-sm font-semibold text-on-surface">{t.label}</p>
@@ -133,7 +134,7 @@ export function SnapshotPanel() {
           <button
             onClick={doExport}
             disabled={exporting}
-            className="w-full punch-gradient text-on-primary font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
+            className="w-full bg-primary text-on-primary font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
           >
             {exporting ? '导出中…' : '导出 PDF'}
           </button>
@@ -201,7 +202,7 @@ function CreateSnapshotModal({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="快照名称，如：后端开发版"
-          className="w-full rounded-lg border border-outline-variant px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
         <div className="max-h-64 overflow-y-auto space-y-1">
           {modules.map((m) => (
@@ -213,9 +214,9 @@ function CreateSnapshotModal({
                 type="checkbox"
                 checked={selected.has(m.id)}
                 onChange={() => toggle(m.id)}
-                className="rounded border-outline-variant text-primary focus:ring-primary/30"
+                className="rounded border-line text-ink focus:ring-primary/30"
               />
-              <span className="text-xs bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded-full shrink-0">
+              <span className="text-xs bg-surface-container text-ink px-2 py-0.5 rounded-full shrink-0">
                 {MODULE_TYPE_LABELS[m.module_type]}
               </span>
               <span className="text-sm text-on-surface truncate">{moduleSummary(m)}</span>
@@ -224,7 +225,7 @@ function CreateSnapshotModal({
         </div>
         <button
           onClick={submit}
-          className="w-full punch-gradient text-on-primary font-semibold py-2.5 rounded-xl text-sm"
+          className="w-full bg-primary text-on-primary font-semibold py-2.5 rounded-xl text-sm"
         >
           创建快照
         </button>

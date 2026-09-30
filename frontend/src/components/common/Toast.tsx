@@ -1,5 +1,6 @@
 import { useToast } from '../../hooks/useToast';
 
+import { Icon } from '../common/Icon';
 export function ToastContainer() {
   const { toasts, dismiss } = useToast();
 
@@ -16,11 +17,11 @@ export function ToastContainer() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`${colorMap[t.type]} px-4 py-2.5 rounded-xl shadow-lg text-sm flex items-center gap-2`}
+          className={`${colorMap[t.type]} px-4 py-2.5 rounded-xl shadow-md text-sm flex items-center gap-2`}
         >
           <span>{t.message}</span>
           <button onClick={() => dismiss(t.id)} className="opacity-70 hover:opacity-100">
-            <span className="material-symbols-outlined text-[16px]">close</span>
+            <Icon name='close' size={16} />
           </button>
         </div>
       ))}

@@ -8,6 +8,7 @@ import { SnapshotPanel } from '../components/resume/SnapshotPanel';
 import { StorageUsageBar } from '../components/resume/StorageUsageBar';
 import { AIModal } from '../components/resume/AIModal';
 import { Modal } from '../components/common/Modal';
+import { Icon } from '../components/common/Icon';
 import { uploadResumeParse } from '../services/aiApi';
 import { useAuthStore } from '../stores/authStore';
 import type { ModuleType, SerializedModuleData } from '../types/resume';
@@ -76,38 +77,42 @@ export function ResumePage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-5">
+    <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
+      <div className="mb-5 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-on-surface">简历管理</h1>
-          <p className="text-xs text-on-surface-variant mt-1">模块化管理简历，支持 AI 优化与导出</p>
+          <h1 className="text-h2 font-medium text-ink">简历管理</h1>
+          <p className="mt-1 text-meta text-muted">
+            按模块写经历，AI 可以帮你改写成简历语言，再导出成 PDF / Word
+          </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           <button
+            type="button"
             onClick={() => setUploadOpen(true)}
-            className="text-sm font-medium text-on-surface-variant border border-outline-variant px-3.5 py-2 rounded-xl hover:border-primary/40 hover:text-primary transition-colors"
+            className="rounded-md border border-line px-3.5 py-2 text-meta font-medium text-ink transition-colors hover:border-ink"
           >
             上传解析
           </button>
           <button
+            type="button"
             onClick={startAdd}
-            className="punch-gradient text-on-primary text-sm font-semibold px-4 py-2 rounded-xl"
+            className="rounded-md bg-primary px-3.5 py-2 text-meta font-medium text-on-primary transition-colors hover:bg-secondary-dim"
           >
-            + 新增模块
+            新增模块
           </button>
         </div>
       </div>
 
       {/* 顶部：类型导航 + 标签筛选 + 用量 */}
-      <div className="space-y-4 mb-6">
+      <div className="mb-6 space-y-3">
         <ModuleTypeNav />
         <TagFilter />
-        <div className="bg-surface-container-low rounded-xl p-3.5">
+        <div className="rounded-xl border border-line bg-surface px-3.5 py-3">
           <StorageUsageBar />
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* 中栏：表单 + 模块列表 */}
         <div className="lg:col-span-2 space-y-4">
           {formOpen && (
@@ -121,14 +126,24 @@ export function ResumePage() {
           )}
 
           {list.length === 0 ? (
-            <div className="text-center py-16 text-on-surface-variant">
-              <p className="text-sm">暂无{activeTag ? `「${activeTag}」标签下的` : ''}模块</p>
-              <button onClick={startAdd} className="mt-3 text-sm text-primary font-medium hover:underline">
-                + 新增{currentType === 'all' ? '' : MODULE_TYPE_LABELS[currentType]}模块
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line px-6 py-14 text-center">
+              <Icon name="description" size={28} className="text-line" />
+              <p className="mt-3 text-body text-ink">
+                还没有{activeTag ? `「${activeTag}」标签下的` : ''}模块
+              </p>
+              <p className="mt-1 max-w-xs text-meta text-muted">
+                先填一条经历，AI 能把它改写成简历上的写法
+              </p>
+              <button
+                type="button"
+                onClick={startAdd}
+                className="mt-4 rounded-md bg-primary px-4 py-2 text-body font-medium text-on-primary transition-colors hover:bg-secondary-dim"
+              >
+                新增{currentType === 'all' ? '' : MODULE_TYPE_LABELS[currentType]}模块
               </button>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {list.map((m) => (
                 <ModuleCard
                   key={m.id}
@@ -235,7 +250,7 @@ function UploadModal({
         <button
           onClick={doParse}
           disabled={!file || loading}
-          className="w-full punch-gradient text-on-primary font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
+          className="w-full bg-primary text-on-primary font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
         >
           {loading ? '解析中…' : '开始解析'}
         </button>

@@ -2,76 +2,84 @@ import { Link } from 'react-router-dom';
 import type { JobSummary } from '../../types/job';
 import { useSavedJobs } from '../../hooks/useSavedJobs';
 import { MatchBadge } from '../common/MatchBadge';
+import { Icon } from '../common/Icon';
+import { FreshPill } from './FreshPill';
+import { getFreshness } from '../../lib/freshness';
 
 interface JobCardProps {
   job: JobSummary;
   matchScore?: number | null;
+  /**
+   * 列表是否已按发布时间排序。
+   * 已按时间排序时，首屏全是新岗位 —— 再给每条挂一个「刚发布」，
+   * 重复的是排序已经说过的话，信号就退化成装饰了。
+   */
+  sortedByDate?: boolean;
 }
 
-function formatDate(iso: string | null): string {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '';
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
-export function JobCard({ job, matchScore }: JobCardProps) {
+/**
+ * 两行卡片。公司提到与城市同级的上位（扫岗时先看「哪家公司」），
+ * 元信息靠图标和留白分隔，右边一列等宽日期可以竖着比新旧。
+ */
+export function JobCard({ job, matchScore, sortedByDate = false }: JobCardProps) {
   const { isSaved, toggleSave } = useSavedJobs();
   const saved = isSaved(job.id);
+  const fresh = getFreshness(job.publish_time);
 
   return (
-    <div className="group bg-surface rounded-2xl border border-outline-variant/20 p-4 hover:shadow-md hover:border-primary/30 transition-all">
-      <div className="flex items-start justify-between gap-3">
-        <Link to={`/jobs/${job.id}`} className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-semibold text-on-surface group-hover:text-primary transition-colors truncate">
-              {job.title ?? '未命名职位'}
-            </h3>
-            {matchScore != null && matchScore > 0 && <MatchBadge score={matchScore} />}
-          </div>
-          <p className="text-sm text-on-surface-variant mt-1">
-            {job.company ?? '未知公司'}
-            <span className="mx-1.5 text-outline-variant">•</span>
-            {job.work_city ? (
-              job.work_city
-            ) : (
-              <span className="text-outline-variant italic">城市未提供</span>
-            )}
-            {job.recruit_type && <span className="mx-1.5 text-outline-variant">•</span>}
-            {job.recruit_type}
-          </p>
-        </Link>
+    <div className="group relative rounded-xl border border-line bg-surface p-3 transition-colors hover:border-outline">
+      <div className="flex items-start gap-2">
+        <h3 className="min-w-0 flex-1 truncate text-title font-medium text-ink">
+          {job.title ?? '未命名职位'}
+        </h3>
+        {fresh.isFresh && !sortedByDate && (
+          <FreshPill label={fresh.label} variant={fresh.days === 0 ? 'solid' : 'quiet'} />
+        )}
+        {matchScore != null && matchScore > 0 && <MatchBadge score={matchScore} />}
         <button
+          type="button"
           onClick={() => toggleSave(job)}
-          className={`shrink-0 p-2 rounded-lg transition-colors ${
-            saved ? 'text-primary bg-primary-container/20' : 'text-outline-variant hover:text-primary hover:bg-primary-container/10'
+          className={`relative z-10 -mr-1 -mt-1 shrink-0 rounded-md p-1 transition-colors ${
+            saved ? 'text-signal-dim' : 'text-line hover:text-ink'
           }`}
+          aria-label={saved ? '取消收藏' : '收藏'}
           title={saved ? '取消收藏' : '收藏'}
         >
-          <span className="material-symbols-outlined text-[20px]">{saved ? 'bookmark' : 'bookmark_border'}</span>
+          <Icon name={saved ? 'bookmark' : 'bookmark_border'} size={16} />
         </button>
       </div>
-      <div className="flex items-center justify-between mt-3">
-        <span className="text-xs text-on-surface-variant">
-          {job.job_category ? (
-            job.job_category
-          ) : (
-            <span className="text-outline-variant italic">类别未提供</span>
-          )}
-          {job.publish_time && (
-            <>
-              <span className="mx-1.5 text-outline-variant">•</span>
-              {formatDate(job.publish_time)}
-            </>
-          )}
+
+      <div className="mt-1.5 flex items-center gap-2 text-meta">
+        <span className="max-w-[10rem] shrink-0 truncate font-medium text-ink/75">
+          {job.company ?? '未知公司'}
         </span>
-        <Link
-          to={`/jobs/${job.id}`}
-          className="text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          查看详情 →
-        </Link>
+        {job.work_city ? (
+          <span className="flex shrink-0 items-center gap-0.5 text-muted">
+            <Icon name="pin" size={13} />
+            {job.work_city}
+          </span>
+        ) : (
+          <span className="shrink-0 text-muted/70">城市未提供</span>
+        )}
+        {job.recruit_type && (
+          <span className="shrink-0 rounded-sm bg-surface-container px-1.5 text-micro leading-[17px] text-muted">
+            {job.recruit_type}
+          </span>
+        )}
+        {job.job_category && (
+          <span className="hidden min-w-0 truncate text-muted sm:block">{job.job_category}</span>
+        )}
+        <span className="num ml-auto shrink-0 text-muted" title={fresh.exact || undefined}>
+          {fresh.short}
+        </span>
       </div>
+
+      {/* 整卡可点：比「查看详情」这类小链接的命中面积大得多 */}
+      <Link
+        to={`/jobs/${job.id}`}
+        className="absolute inset-0 rounded-xl"
+        aria-label={`查看 ${job.title ?? '职位'} 详情`}
+      />
     </div>
   );
 }

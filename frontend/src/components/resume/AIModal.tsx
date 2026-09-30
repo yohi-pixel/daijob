@@ -83,7 +83,7 @@ export function AIModal({ open, moduleType, moduleData, onClose, onApply }: AIMo
           <select
             value={jobId}
             onChange={(e) => setJobId(e.target.value === '' ? '' : Number(e.target.value))}
-            className="flex-1 rounded-lg border border-outline-variant px-3 py-2 text-sm bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="flex-1 rounded-lg border border-line px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             <option value="">不指定（通用优化）</option>
             {jobs?.items.slice(0, 50).map((j) => (
@@ -95,7 +95,7 @@ export function AIModal({ open, moduleType, moduleData, onClose, onApply }: AIMo
           <button
             onClick={runOptimize}
             disabled={status === 'streaming' || status === 'loading'}
-            className="punch-gradient text-on-primary text-sm font-semibold px-4 py-2 rounded-lg disabled:opacity-50"
+            className="bg-primary text-on-primary text-sm font-semibold px-4 py-2 rounded-lg disabled:opacity-50"
           >
             {status === 'streaming' || status === 'loading' ? '优化中…' : '开始优化'}
           </button>
@@ -103,7 +103,7 @@ export function AIModal({ open, moduleType, moduleData, onClose, onApply }: AIMo
 
         {error && <p className="text-xs text-error bg-error-container/20 rounded-lg px-3 py-2">{error.message}</p>}
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* 原文 */}
           <div>
             <p className="text-xs font-medium text-on-surface-variant mb-2">原文</p>
@@ -116,11 +116,11 @@ export function AIModal({ open, moduleType, moduleData, onClose, onApply }: AIMo
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-medium text-on-surface-variant">优化结果</p>
               {status === 'loading' || status === 'streaming' ? (
-                <span className="text-[11px] text-primary flex items-center gap-1">
+                <span className="text-[11px] text-ink flex items-center gap-1">
                   <Spinner /> 生成中…
                 </span>
               ) : status === 'done' ? (
-                <span className="text-[11px] text-primary">✓ 完成</span>
+                <span className="text-[11px] text-ink">✓ 完成</span>
               ) : null}
             </div>
             <textarea
@@ -139,7 +139,7 @@ export function AIModal({ open, moduleType, moduleData, onClose, onApply }: AIMo
           <button
             onClick={apply}
             disabled={!result}
-            className="punch-gradient text-on-primary text-sm font-semibold px-5 py-2 rounded-xl disabled:opacity-40"
+            className="bg-primary text-on-primary text-sm font-semibold px-5 py-2 rounded-xl disabled:opacity-40"
           >
             应用结果
           </button>

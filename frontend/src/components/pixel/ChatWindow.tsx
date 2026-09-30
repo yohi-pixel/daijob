@@ -8,6 +8,7 @@ import { useAuthStore } from '../../stores/authStore';
 import type { ChatMessage } from '../../types/ai';
 import type { JobSummary } from '../../types/job';
 
+import { Icon } from '../common/Icon';
 interface ChatWindowProps {
   onClose: () => void;
   onProfileReady: () => void;
@@ -91,22 +92,22 @@ export function ChatWindow({ onClose, onProfileReady, onExtract }: ChatWindowPro
       {/* 头部 */}
       <div className="flex items-center justify-between px-4 py-3 bg-primary text-on-primary">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[18px]">smart_toy</span>
+          <Icon name='smart_toy' size={18} />
           <span className="text-sm font-semibold">小逮 · 求职助手</span>
           {user && <span className="text-[11px] opacity-70">{user.email}</span>}
         </div>
         <div className="flex gap-1">
           <button onClick={() => setExpanded((e) => !e)} className="p-1 rounded hover:bg-on-primary/10">
-            <span className="material-symbols-outlined text-[18px]">{expanded ? 'close_fullscreen' : 'open_in_full'}</span>
+            <Icon name={expanded ? 'close_fullscreen' : 'open_in_full'} size={18} />
           </button>
           <button onClick={onClose} className="p-1 rounded hover:bg-on-primary/10">
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <Icon name='close' size={18} />
           </button>
         </div>
       </div>
 
       {/* 消息区 */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-surface-container-lowest/50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-surface/50">
         {messages.length === 0 && (
           <div className="text-center py-8 text-sm text-on-surface-variant">
             <p>你好！我是小逮 👋</p>
@@ -120,7 +121,7 @@ export function ChatWindow({ onClose, onProfileReady, onExtract }: ChatWindowPro
               className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm whitespace-pre-wrap ${
                 m.role === 'user'
                   ? 'bg-primary text-on-primary rounded-br-sm'
-                  : 'bg-surface border border-outline-variant/30 rounded-bl-sm text-on-surface'
+                  : 'bg-surface border border-line rounded-bl-sm text-on-surface'
               }`}
             >
               {m.content}
@@ -129,7 +130,7 @@ export function ChatWindow({ onClose, onProfileReady, onExtract }: ChatWindowPro
         ))}
         {busy && (
           <div className="flex justify-start">
-            <div className="bg-surface border border-outline-variant/30 px-4 py-2.5 rounded-2xl rounded-bl-sm">
+            <div className="bg-surface border border-line px-4 py-2.5 rounded-2xl rounded-bl-sm">
               <span className="inline-flex gap-1">
                 <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce" />
                 <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce [animation-delay:0.15s]" />
@@ -143,13 +144,13 @@ export function ChatWindow({ onClose, onProfileReady, onExtract }: ChatWindowPro
 
       {/* 推荐区 */}
       {profileReady && (
-        <div className="border-t border-outline-variant/20 bg-surface-container-low p-3">
+        <div className="border-t border-line bg-surface-container-low p-3">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-semibold text-on-surface">为你推荐的岗位</p>
             <div className="flex gap-2">
               <button
                 onClick={onExtract}
-                className="text-[11px] text-primary font-medium hover:underline"
+                className="text-[11px] text-ink font-medium hover:underline"
               >
                 保存简历
               </button>
@@ -174,7 +175,7 @@ export function ChatWindow({ onClose, onProfileReady, onExtract }: ChatWindowPro
                     navigate(`/jobs/${j.id}`);
                     onClose();
                   }}
-                  className="w-full text-left bg-surface rounded-lg px-3 py-2 hover:border-primary/40 border border-transparent transition-colors"
+                  className="w-full text-left bg-surface rounded-lg px-3 py-2 hover:border-ink/25 border border-transparent transition-colors"
                 >
                   <p className="text-xs font-medium text-on-surface truncate">{j.title}</p>
                   <p className="text-[11px] text-on-surface-variant truncate">
@@ -188,21 +189,21 @@ export function ChatWindow({ onClose, onProfileReady, onExtract }: ChatWindowPro
       )}
 
       {/* 输入区 */}
-      <div className="flex items-center gap-2 p-3 border-t border-outline-variant/20">
+      <div className="flex items-center gap-2 p-3 border-t border-line">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && send()}
           placeholder={busy ? '正在回复…' : '聊聊你的求职情况…'}
           disabled={busy}
-          className="flex-1 rounded-xl border border-outline-variant px-3.5 py-2.5 text-sm bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-50"
+          className="flex-1 rounded-xl border border-line px-3.5 py-2.5 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-ink/20 disabled:opacity-50"
         />
         <button
           onClick={send}
           disabled={busy || !input.trim()}
-          className="p-2.5 rounded-xl punch-gradient text-on-primary disabled:opacity-40 shrink-0"
+          className="p-2.5 rounded-xl bg-primary text-on-primary disabled:opacity-40 shrink-0"
         >
-          <span className="material-symbols-outlined text-[20px]">send</span>
+          <Icon name='send' size={20} />
         </button>
       </div>
     </div>
